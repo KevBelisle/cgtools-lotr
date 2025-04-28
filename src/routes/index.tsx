@@ -1,14 +1,17 @@
-import * as React from 'react'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
+import { Card } from "@chakra-ui/react";
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute("/")({
   component: Home,
-})
+});
 
 function Home() {
   return (
-    <div className="p-2">
-      <h3>Welcome Home!</h3>
-    </div>
-  )
+    <Card.Root>
+      <Card.Header>
+        <Card.Title>Home</Card.Title>
+        <Card.Description>Welcome to the home page!</Card.Description>
+      </Card.Header>
+    </Card.Root>
+  );
 }
