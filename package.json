@@ -6,7 +6,8 @@
     "dev": "vite --port 3000",
     "build": "vite build && tsc --noEmit",
     "serve": "vite preview",
-    "start": "vite"
+    "start": "vite",
+    "postinstall": "cp node_modules/sql.js/dist/sql-wasm.wasm ./src/sqlite/sql-wasm.wasm"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.16.1",
@@ -18,12 +19,15 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
-    "redaxios": "^0.5.1"
+    "redaxios": "^0.5.1",
+    "sql.js": "^1.13.0"
   },
   "devDependencies": {
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
+    "@types/sql.js": "^1.4.9",
     "@vitejs/plugin-react": "^4.3.4",
+    "eslint-plugin-react-refresh": "^0.4.20",
     "typescript": "^5.7.2",
     "vite": "^6.1.0",
     "vite-tsconfig-paths": "^5.1.4"

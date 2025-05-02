@@ -1,16 +1,26 @@
 {
   "compilerOptions": {
-    "strict": true,
     "esModuleInterop": true,
-    "jsx": "react-jsx",
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "skipLibCheck": true,
-
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "Bundler",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+
+    /* Bundler mode */
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
   }
 }

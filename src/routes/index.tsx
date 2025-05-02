@@ -1,17 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Card } from "@chakra-ui/react";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
   component: Home,
 });
 
 function Home() {
-  return (
-    <Card.Root>
-      <Card.Header>
-        <Card.Title>Home</Card.Title>
-        <Card.Description>Welcome to the home page!</Card.Description>
-      </Card.Header>
-    </Card.Root>
-  );
+  return <Navigate to="/cards/search" search={{ query: "" }} replace={true} />;
 }
