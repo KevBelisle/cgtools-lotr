@@ -13,6 +13,7 @@ const router = createRouter({
   defaultPreload: "intent",
   defaultStaleTime: 5000,
   scrollRestoration: true,
+  basepath: "/cgtools-lotr/",
 });
 
 // Register things for typesafety
