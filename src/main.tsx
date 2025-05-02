@@ -1,15 +1,22 @@
 import { StrictMode, Suspense } from "react";
 import ReactDOM from "react-dom/client";
-import { RouterProvider, createRouter } from "@tanstack/react-router";
+import {
+  RouterProvider,
+  createHashHistory,
+  createRouter,
+} from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 
 import { ChakraProvider } from "@/components/ui/chakra-provider";
 import { loadDatabase, SqljsProvider } from "@/sqlite/SqljsProvider";
 import "./styles.css";
 
+const hashHistory = createHashHistory();
+
 // Set up a Router instance
 const router = createRouter({
   routeTree,
+  history: hashHistory,
   defaultPreload: "intent",
   defaultStaleTime: 5000,
   scrollRestoration: true,
