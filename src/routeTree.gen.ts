@@ -11,10 +11,17 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as DebugImport } from './routes/debug'
 import { Route as IndexImport } from './routes/index'
 import { Route as CardsSearchImport } from './routes/cards/search'
 
 // Create/Update Routes
+
+const DebugRoute = DebugImport.update({
+  id: '/debug',
+  path: '/debug',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -39,6 +46,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/debug': {
+      id: '/debug'
+      path: '/debug'
+      fullPath: '/debug'
+      preLoaderRoute: typeof DebugImport
+      parentRoute: typeof rootRoute
+    }
     '/cards/search': {
       id: '/cards/search'
       path: '/cards/search'
@@ -53,36 +67,41 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/debug': typeof DebugRoute
   '/cards/search': typeof CardsSearchRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/debug': typeof DebugRoute
   '/cards/search': typeof CardsSearchRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/debug': typeof DebugRoute
   '/cards/search': typeof CardsSearchRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/cards/search'
+  fullPaths: '/' | '/debug' | '/cards/search'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cards/search'
-  id: '__root__' | '/' | '/cards/search'
+  to: '/' | '/debug' | '/cards/search'
+  id: '__root__' | '/' | '/debug' | '/cards/search'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DebugRoute: typeof DebugRoute
   CardsSearchRoute: typeof CardsSearchRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DebugRoute: DebugRoute,
   CardsSearchRoute: CardsSearchRoute,
 }
 
@@ -97,11 +116,15 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/debug",
         "/cards/search"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/debug": {
+      "filePath": "debug.tsx"
     },
     "/cards/search": {
       "filePath": "cards/search.tsx"
