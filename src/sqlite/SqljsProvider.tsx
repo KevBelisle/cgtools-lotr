@@ -35,15 +35,19 @@ const loadDatabase = async (dbFileUrl: string): Promise<Uint8Array> => {
       const response = await fetch(dbFileUrl);
       const buffer = new Uint8Array(await response.arrayBuffer());
       console.log("File loaded from server");
-
-      // And save it to OPFS
-      const fileHandle = await opfsRoot.getFileHandle(dbFileUrl, {
-        create: true,
-      });
-      const writable = await fileHandle.createWritable();
-      await writable.write(buffer);
-      await writable.close();
-      console.log("File saved to OPFS");
+      try {
+        // And save it to OPFS
+        const fileHandle = await opfsRoot.getFileHandle(dbFileUrl, {
+          create: true,
+        });
+        const writable = await fileHandle.createWritable();
+        await writable.write(buffer);
+        await writable.close();
+        console.log("File saved to OPFS");
+      } catch (error) {
+        await opfsRoot.removeEntry(dbFileUrl);
+        console.error("Error saving file to OPFS", error);
+      }
       return buffer;
     } else {
       throw error;
