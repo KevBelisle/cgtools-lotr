@@ -14,8 +14,8 @@ import type {
   Database,
   SqlValue,
 } from "./sqlean.d.ts";
-import sqlite3InitModule from "./sqlean.mjs";
-import sqleanWasmUrl from "@/sqlean/sqlean.wasm?url";
+import sqlite3InitModule from "@/sqlean/sqlean";
+//import sqleanWasmUrl from "@/sqlean/sqlean.wasm?url";
 
 // Helper function to load the database
 const loadDatabase = async (dbFileUrl: string): Promise<Uint8Array> => {
