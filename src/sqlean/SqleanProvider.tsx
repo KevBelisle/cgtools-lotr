@@ -146,10 +146,6 @@ const useSqleanQuery = (query: string) => {
     throw new Error("useSqljsQuery must be used within a SqljsProvider");
   }
 
-  if (query.length === 0) {
-    return { error: "", results: [] };
-  }
-
   const [error, setError] = useState<string>("");
   const [results, setResults] = useState<
     {
@@ -157,10 +153,14 @@ const useSqleanQuery = (query: string) => {
     }[]
   >([]);
 
-  console.log("Querying", query);
-
   useMemo(() => {
     if (sqleanContext.sqleanDb === null) {
+      return;
+    }
+
+    if (query.length === 0) {
+      setResults([]);
+      setError("");
       return;
     }
 
