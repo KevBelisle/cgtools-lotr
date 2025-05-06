@@ -29,7 +29,17 @@ function CardSearchRouteComponent() {
         LEFT JOIN cardSides f ON c.FrontSlug = f.Slug
         LEFT JOIN cardSides b ON c.Backslug = b.Slug
         LEFT JOIN productCards pc ON pc.CardSlug = c.Slug
-        WHERE text_translate(f.Title, 'É', 'E') LIKE '%${query}%' OR text_translate(b.Title, 'É', 'E') LIKE '%${query}%'
+        WHERE
+        text_translate(
+          f.Title,
+          'ÀÁÂÃÄÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäèéêëìíîïñòóôõöùúûüýÿŸ',
+          'AAAAAEEEEIIIINOOOOOUUUUYaaaaaeeeeiiiinooooouuuuyyY'
+        ) LIKE '%${query}%' OR
+        text_translate(
+          b.Title,
+          'ÀÁÂÃÄÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäèéêëìíîïñòóôõöùúûüýÿŸ',
+          'AAAAAEEEEIIIINOOOOOUUUUYaaaaaeeeeiiiinooooouuuuyyY'
+        ) LIKE '%${query}%'
         GROUP BY pc.FrontImageUrl, f.Title, f.Text, f.FlavorText, f.Sphere, f.Type
         LIMIT 50`,
     [query]
