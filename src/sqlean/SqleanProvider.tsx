@@ -77,7 +77,7 @@ const SQL = (await sqlite3InitModule(CONFIG)) as Sqlite3Static;
 const version = SQL.capi.sqlite3_libversion();
 console.log(`Loaded SQLite ${version}`);
 
-window.SQL = SQL;
+//window.SQL = SQL;
 
 // Step 2: Create a Provider Component
 const SqleanProvider = ({
@@ -111,7 +111,7 @@ const SqleanProvider = ({
           dbBuffer!.length,
           SQL.capi.SQLITE_DESERIALIZE_FREEONCLOSE
         );
-        window.sqleandb = db;
+        //window.sqleandb = db;
         setSqleanContext({ sqleanDb: db });
       } catch (error) {
         if (error instanceof Error) {

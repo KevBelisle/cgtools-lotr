@@ -11,18 +11,11 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as SqleanImport } from './routes/sqlean'
 import { Route as DebugImport } from './routes/debug'
 import { Route as IndexImport } from './routes/index'
 import { Route as CardsSearchImport } from './routes/cards/search'
 
 // Create/Update Routes
-
-const SqleanRoute = SqleanImport.update({
-  id: '/sqlean',
-  path: '/sqlean',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const DebugRoute = DebugImport.update({
   id: '/debug',
@@ -60,13 +53,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DebugImport
       parentRoute: typeof rootRoute
     }
-    '/sqlean': {
-      id: '/sqlean'
-      path: '/sqlean'
-      fullPath: '/sqlean'
-      preLoaderRoute: typeof SqleanImport
-      parentRoute: typeof rootRoute
-    }
     '/cards/search': {
       id: '/cards/search'
       path: '/cards/search'
@@ -82,14 +68,12 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/debug': typeof DebugRoute
-  '/sqlean': typeof SqleanRoute
   '/cards/search': typeof CardsSearchRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/debug': typeof DebugRoute
-  '/sqlean': typeof SqleanRoute
   '/cards/search': typeof CardsSearchRoute
 }
 
@@ -97,30 +81,27 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/debug': typeof DebugRoute
-  '/sqlean': typeof SqleanRoute
   '/cards/search': typeof CardsSearchRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/debug' | '/sqlean' | '/cards/search'
+  fullPaths: '/' | '/debug' | '/cards/search'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/debug' | '/sqlean' | '/cards/search'
-  id: '__root__' | '/' | '/debug' | '/sqlean' | '/cards/search'
+  to: '/' | '/debug' | '/cards/search'
+  id: '__root__' | '/' | '/debug' | '/cards/search'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DebugRoute: typeof DebugRoute
-  SqleanRoute: typeof SqleanRoute
   CardsSearchRoute: typeof CardsSearchRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DebugRoute: DebugRoute,
-  SqleanRoute: SqleanRoute,
   CardsSearchRoute: CardsSearchRoute,
 }
 
@@ -136,7 +117,6 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/debug",
-        "/sqlean",
         "/cards/search"
       ]
     },
@@ -145,9 +125,6 @@ export const routeTree = rootRoute
     },
     "/debug": {
       "filePath": "debug.tsx"
-    },
-    "/sqlean": {
-      "filePath": "sqlean.tsx"
     },
     "/cards/search": {
       "filePath": "cards/search.tsx"

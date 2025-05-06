@@ -1,5 +1,5 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useSqljsQuery } from "@/sqlite/SqljsProvider";
+import { createFileRoute, useNavigate, Navigate } from "@tanstack/react-router";
+import { useSqleanQuery } from "@/sqlean/SqleanProvider";
 import { CardSearch } from "@/components/pages/debug";
 
 type SearchFilters = {
@@ -16,6 +16,8 @@ export const Route = createFileRoute("/debug")({
 });
 
 function CardSearchRouteComponent() {
+  return <Navigate to="/cards/search" search={{ query: "" }} replace={true} />;
+
   const { query } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
 
@@ -27,7 +29,7 @@ function CardSearchRouteComponent() {
     });
   };
 
-  const { error, results } = useSqljsQuery(query);
+  const { error, results } = useSqleanQuery(query);
 
   return (
     <CardSearch
