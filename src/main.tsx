@@ -8,7 +8,7 @@ import {
 import { routeTree } from "./routeTree.gen";
 
 import { ChakraProvider } from "@/components/ui/chakra-provider";
-import { loadDatabase, SqljsProvider } from "@/sqlite/SqljsProvider";
+import { loadDatabase, SqleanProvider } from "@/sqlean/SqleanProvider";
 import "./styles.css";
 
 const hashHistory = createHashHistory();
@@ -37,9 +37,9 @@ const App = () => {
     <StrictMode>
       <ChakraProvider>
         <Suspense fallback={<div>Loading...</div>}>
-          <SqljsProvider dbBufferPromise={dbBufferPromise}>
+          <SqleanProvider dbBufferPromise={dbBufferPromise}>
             <RouterProvider router={router} />
-          </SqljsProvider>
+          </SqleanProvider>
         </Suspense>
       </ChakraProvider>
     </StrictMode>
