@@ -1,5 +1,4 @@
-import type { QueryExecResult } from "sql.js";
-
+import type { SqlValue } from "@/sqlean/sqlean";
 import { Input, Center, Container, Box } from "@chakra-ui/react";
 
 export const CardSearch = ({
@@ -11,7 +10,9 @@ export const CardSearch = ({
   query: string;
   setQuery: (query: string) => void;
   error: string;
-  results: QueryExecResult[];
+  results: {
+    [columnName: string]: SqlValue;
+  }[];
 }) => {
   return (
     <Container mb="16">

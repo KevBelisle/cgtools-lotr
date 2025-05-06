@@ -13,4 +13,7 @@ export default defineConfig({
     react(),
     tsconfigPaths(),
   ],
+  build: {
+    target: "ES2022", // Enables top-level await
+  },
 });
