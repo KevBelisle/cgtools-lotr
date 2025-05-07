@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo } from "react";
-import { useSqleanQuery } from "@/sqlean/SqleanProvider";
+import { useSqljsQuery } from "@/sqljs/SqljsProvider";
 import { CardSearch } from "@/components/pages/cardSearch";
 
 type SearchFilters = {
@@ -30,16 +30,8 @@ function CardSearchRouteComponent() {
         LEFT JOIN cardSides b ON c.Backslug = b.Slug
         LEFT JOIN productCards pc ON pc.CardSlug = c.Slug
         WHERE
-        text_translate(
-          f.Title,
-          'ÀÁÂÃÄÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäèéêëìíîïñòóôõöùúûüýÿŸ',
-          'AAAAAEEEEIIIINOOOOOUUUUYaaaaaeeeeiiiinooooouuuuyyY'
-        ) LIKE '%${query}%' OR
-        text_translate(
-          b.Title,
-          'ÀÁÂÃÄÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäèéêëìíîïñòóôõöùúûüýÿŸ',
-          'AAAAAEEEEIIIINOOOOOUUUUYaaaaaeeeeiiiinooooouuuuyyY'
-        ) LIKE '%${query}%'
+          f.Search_Title LIKE '%${query}%' OR
+          b.Search_Title LIKE '%${query}%'
         GROUP BY pc.FrontImageUrl, f.Title, f.Text, f.FlavorText, f.Sphere, f.Type
         LIMIT 50`,
     [query]
@@ -53,7 +45,7 @@ function CardSearchRouteComponent() {
     });
   };
 
-  const { error, results } = useSqleanQuery(sqlQuery);
+  const { error, results } = useSqljsQuery(sqlQuery);
 
   return (
     <CardSearch

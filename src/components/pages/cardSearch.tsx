@@ -1,4 +1,4 @@
-import type { SqlValue } from "@/sqlean/sqlean.d";
+import type { QueryExecResult } from "sql.js";
 
 import {
   Input,
@@ -62,22 +62,20 @@ export const CardSearch = ({
   query: string;
   setQuery: (query: string) => void;
   error: string;
-  results: {
-    [columnName: string]: SqlValue;
-  }[];
+  results: QueryExecResult[];
 }) => {
   let cardResults: ReactNode[] = [];
 
   if (results.length > 0) {
-    cardResults = results.map((result) => {
-      const {
+    cardResults = results[0].values.map((row) => {
+      const [
         FrontImageUrl,
         FrontTitle,
         FrontText,
         FrontFlavorText,
         FrontSphere,
         FrontType,
-      } = result;
+      ] = row;
 
       return (
         <LotrCard

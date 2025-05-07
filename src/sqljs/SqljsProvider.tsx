@@ -8,22 +8,19 @@ import {
   PropsWithChildren,
 } from "react";
 
-import type {
-  Sqlite3Static,
-  InitOptions,
-  Database,
-  SqlValue,
-} from "./sqlean.d.ts";
-import sqlite3InitModule from "@/sqlean/sqlean";
+import type { Database, QueryExecResult } from "sql.js";
+import initSqlJs from "sql.js";
+import sqliteUrl from "@/sqljs/sql-wasm.wasm?url";
+
+interface SqljsContextType {
+  sqljsDb: Database | null;
+}
 
 // Helper function to load the database
 const loadDatabase = async (dbFileUrl: string): Promise<Uint8Array> => {
   const opfsRoot = await navigator.storage.getDirectory();
 
   try {
-    let er = new Error();
-    er.name = "NotFoundError";
-    throw er;
     // If the file exists in OPFS, read it
     const fileHandle = await opfsRoot.getFileHandle(dbFileUrl, {
       create: false,
@@ -59,26 +56,10 @@ const loadDatabase = async (dbFileUrl: string): Promise<Uint8Array> => {
 };
 
 // Step 1: Create a Context
-interface SqleanContextType {
-  sqleanDb: Database | null;
-}
-
-const SqleanContext = createContext<SqleanContextType>({ sqleanDb: null });
-
-// required by the SQLite WASM API.
-const CONFIG = {
-  print: console.log,
-  printErr: console.error,
-} as InitOptions;
-
-const SQL = (await sqlite3InitModule(CONFIG)) as Sqlite3Static;
-const version = SQL.capi.sqlite3_libversion();
-console.log(`Loaded SQLite ${version}`);
-
-//window.SQL = SQL;
+const SqljsContext = createContext<SqljsContextType>({ sqljsDb: null });
 
 // Step 2: Create a Provider Component
-const SqleanProvider = ({
+const SqljsProvider = ({
   children,
   dbBuffer,
   dbBufferPromise,
@@ -86,8 +67,8 @@ const SqleanProvider = ({
   dbBuffer?: Uint8Array;
   dbBufferPromise: Promise<Uint8Array>;
 }>) => {
-  const [sqleanContext, setSqleanContext] = useState<SqleanContextType>({
-    sqleanDb: null,
+  const [sqljsContext, setSqljsContext] = useState<SqljsContextType>({
+    sqljsDb: null,
   });
 
   dbBuffer = (dbBuffer as Uint8Array) ?? use(dbBufferPromise);
@@ -95,22 +76,9 @@ const SqleanProvider = ({
   useEffect(() => {
     async function initializeDatabase() {
       try {
-        // Load the database from the buffer
-        const p = SQL.wasm.allocFromTypedArray(dbBuffer!);
-        const db = new SQL.oo1.DB({ filename: ":memory:", flags: "ct" });
-
-        console.log({ dbBufferLength: dbBuffer!.length });
-
-        SQL.capi.sqlite3_deserialize(
-          db.pointer!,
-          "main",
-          p,
-          dbBuffer!.length,
-          dbBuffer!.length,
-          SQL.capi.SQLITE_DESERIALIZE_FREEONCLOSE
-        );
-        //window.sqleandb = db;
-        setSqleanContext({ sqleanDb: db });
+        const SQL = await initSqlJs({ locateFile: () => sqliteUrl });
+        const db = new SQL.Database(dbBuffer);
+        setSqljsContext({ sqljsDb: db });
       } catch (error) {
         if (error instanceof Error) {
           alert(`An error occurred: ${error.message}`);
@@ -125,53 +93,37 @@ const SqleanProvider = ({
     initializeDatabase();
 
     return () => {
-      if (sqleanContext.sqleanDb) {
-        sqleanContext.sqleanDb.close();
+      if (sqljsContext.sqljsDb) {
+        sqljsContext.sqljsDb.close();
       }
     };
   }, [dbBuffer]);
 
   return (
-    <SqleanContext.Provider value={sqleanContext}>
+    <SqljsContext.Provider value={sqljsContext}>
       {children}
-    </SqleanContext.Provider>
+    </SqljsContext.Provider>
   );
 };
 
 // Step 3: Create a hook to query the db
-const useSqleanQuery = (query: string) => {
-  const sqleanContext = useContext(SqleanContext);
+const useSqljsQuery = (query: string) => {
+  const sqljsContext = useContext(SqljsContext);
 
-  if (!sqleanContext) {
+  if (!sqljsContext) {
     throw new Error("useSqljsQuery must be used within a SqljsProvider");
   }
 
   const [error, setError] = useState<string>("");
-  const [results, setResults] = useState<
-    {
-      [columnName: string]: SqlValue;
-    }[]
-  >([]);
+  const [results, setResults] = useState<QueryExecResult[]>([]);
 
   useMemo(() => {
-    if (sqleanContext.sqleanDb === null) {
-      return;
-    }
-
-    if (query.length === 0) {
-      setResults([]);
-      setError("");
+    if (sqljsContext.sqljsDb === null) {
       return;
     }
 
     try {
-      let rows = sqleanContext.sqleanDb.exec({
-        sql: query,
-        returnValue: "resultRows",
-        rowMode: "object",
-      });
-      console.log({ rows });
-      setResults(rows);
+      setResults(sqljsContext.sqljsDb!.exec(query));
       setError("");
     } catch (error) {
       if (error instanceof Error) {
@@ -183,10 +135,10 @@ const useSqleanQuery = (query: string) => {
       }
       setResults([]);
     }
-  }, [sqleanContext.sqleanDb, query]);
+  }, [sqljsContext.sqljsDb, query]);
 
   return { error, results };
 };
 
-export { loadDatabase, SqleanContext, SqleanProvider, useSqleanQuery };
-export type { SqleanContextType };
+export { loadDatabase, SqljsContext, SqljsProvider, useSqljsQuery };
+export type { SqljsContextType };

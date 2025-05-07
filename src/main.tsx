@@ -8,7 +8,7 @@ import {
 import { routeTree } from "./routeTree.gen";
 
 import { ChakraProvider } from "@/components/ui/chakra-provider";
-import { loadDatabase, SqleanProvider } from "@/sqlean/SqleanProvider";
+import { loadDatabase, SqljsProvider } from "@/sqljs/SqljsProvider";
 import "./styles.css";
 
 const hashHistory = createHashHistory();
@@ -31,15 +31,15 @@ declare module "@tanstack/react-router" {
 }
 
 const App = () => {
-  const dbBufferPromise = loadDatabase("lotr_lcg.sqlite3");
+  const dbBufferPromise = loadDatabase("lotr_lcg_searchcols.db");
 
   return (
     <StrictMode>
       <ChakraProvider>
         <Suspense fallback={<div>Loading...</div>}>
-          <SqleanProvider dbBufferPromise={dbBufferPromise}>
+          <SqljsProvider dbBufferPromise={dbBufferPromise}>
             <RouterProvider router={router} />
-          </SqleanProvider>
+          </SqljsProvider>
         </Suspense>
       </ChakraProvider>
     </StrictMode>
