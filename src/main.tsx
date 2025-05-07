@@ -1,4 +1,4 @@
-import { StrictMode, Suspense } from "react";
+import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import {
   RouterProvider,
@@ -8,7 +8,7 @@ import {
 import { routeTree } from "./routeTree.gen";
 
 import { ChakraProvider } from "@/components/ui/chakra-provider";
-import { loadDatabase, SqljsProvider } from "@/sqljs/SqljsProvider";
+import { SqljsProvider } from "@/sqljs/SqljsProvider";
 import "./styles.css";
 
 const hashHistory = createHashHistory();
@@ -31,16 +31,12 @@ declare module "@tanstack/react-router" {
 }
 
 const App = () => {
-  const dbBufferPromise = loadDatabase("lotr_lcg_searchcols.db");
-
   return (
     <StrictMode>
       <ChakraProvider>
-        <Suspense fallback={<div>Loading...</div>}>
-          <SqljsProvider dbBufferPromise={dbBufferPromise}>
-            <RouterProvider router={router} />
-          </SqljsProvider>
-        </Suspense>
+        <SqljsProvider>
+          <RouterProvider router={router} />
+        </SqljsProvider>
       </ChakraProvider>
     </StrictMode>
   );
