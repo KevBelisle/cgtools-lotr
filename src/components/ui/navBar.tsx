@@ -1,4 +1,5 @@
 import { Box, HStack, Heading, Flex } from "@chakra-ui/react";
+import { ColorModeButton } from "@/components/ui/color-mode";
 //import { CustomButtonLink } from "./customButtonLink";
 
 export default function NavBar() {
@@ -17,6 +18,7 @@ export default function NavBar() {
           >
             Find Cards
           </CustomButtonLink> */}
+          <ColorModeButton />
         </HStack>
       </Flex>
     </Box>
