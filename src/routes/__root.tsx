@@ -6,6 +6,7 @@ import { loadDatabase, SqljsDbProvider } from "@/sqljs/SqljsProvider";
 import { Suspense } from "react";
 import Loading from "@/components/ui/loading";
 import { Toaster } from "@/components/ui/toaster";
+import ReloadPrompt from "@/components/ui/reload-prompt";
 
 import NavBar from "@/components/ui/navBar";
 
@@ -37,6 +38,8 @@ function RootComponent() {
           <Outlet />
         </SqljsDbProvider>
       </Suspense>
+
+      <ReloadPrompt />
 
       <Toaster />
       <TanStackRouterDevtools position="bottom-right" />
