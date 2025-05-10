@@ -15,9 +15,10 @@ export default defineConfig({
     tsconfigPaths(),
     VitePWA({
       registerType: "prompt",
-      // workbox: {
-      //   globPatterns: ["**/*.{js,css,html,db,sqlite3}"],
-      // },
+      workbox: {
+        maximumFileSizeToCacheInBytes: 7.5 * 1024 * 1024, // 7.5MB
+        globPatterns: ["**/*.{js,css,html,db,sqlite3}"],
+      },
       devOptions: {
         enabled: true,
       },

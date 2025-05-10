@@ -25,7 +25,7 @@ export const Route = createRootRoute({
   },
 });
 
-const dbBufferPromise = loadDatabase("lotr_lcg_searchcols.db");
+const dbBufferPromise = loadDatabase("lotr_lcg.db");
 
 function RootComponent() {
   return (
