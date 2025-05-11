@@ -2,7 +2,7 @@ import { Outlet, createRootRoute } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Flex, Container, Text } from "@chakra-ui/react";
 import { CustomButtonLink } from "@/components/ui/customButtonLink";
-import { loadDatabase, SqljsDbProvider } from "@/sqljs/SqljsProvider";
+import { loadDatabase2, SqljsDbProvider } from "@/sqljs/SqljsProvider";
 import { Suspense } from "react";
 import Loading from "@/components/ui/loading";
 import { Toaster } from "@/components/ui/toaster";
@@ -26,7 +26,7 @@ export const Route = createRootRoute({
   },
 });
 
-const dbBufferPromise = loadDatabase("lotr_lcg.db");
+const dbBufferPromise = loadDatabase2("lotr_lcg.db");
 
 function RootComponent() {
   return (

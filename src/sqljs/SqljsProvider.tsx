@@ -11,6 +11,7 @@ import {
 import type { Database, QueryExecResult, SqlJsStatic } from "sql.js";
 import initSqlJs from "sql.js";
 import sqliteUrl from "@/sqljs/sql-wasm.wasm?url";
+import * as fs from "@happy-js/happy-opfs";
 
 import { toaster } from "@/components/ui/toaster";
 
@@ -84,6 +85,44 @@ const loadDatabase = async (dbFileUrl: string): Promise<Uint8Array> => {
     } else {
       throw error;
     }
+  }
+};
+
+const loadDatabase2 = async (dbFileUrl: string): Promise<Uint8Array> => {
+  const startLoadDatabase = performance.now();
+
+  const downloadTask = fs.downloadFile(dbFileUrl, "/lotr_lcg.db", {
+    timeout: 1000,
+    onProgress(progressResult): void {
+      progressResult.inspect((progress) => {
+        console.log(
+          `Downloaded ${(100 * progress.completedByteLength) / progress.totalByteLength} %`
+        );
+      });
+    },
+  });
+
+  const downloadRes = await downloadTask.response;
+
+  console.log(
+    `File loaded from server in ${(performance.now() - startLoadDatabase).toFixed(2)} ms`
+  );
+  // toaster.create({
+  //   title: `File loaded from server in ${(
+  //     performance.now() - startLoadDatabase
+  //   ).toFixed(2)} ms`,
+  //   type: "info",
+  //   duration: 10000,
+  // });
+
+  if (downloadRes.isOk()) {
+    console.assert(downloadRes.unwrap() instanceof Response);
+
+    const postData = (await fs.readFile("/lotr_lcg.db")).unwrap();
+    return new Uint8Array(postData);
+  } else {
+    console.assert(downloadRes.unwrapErr() instanceof Error);
+    throw downloadRes.unwrapErr();
   }
 };
 
@@ -269,6 +308,7 @@ const useSqljsQuery = (query: string) => {
 
 export {
   loadDatabase,
+  loadDatabase2,
   SqljsContext,
   SqljsProvider,
   SqljsDbContext,
