@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 3000",
-    "build": "vite build --base=/cgtools-lotr/ --sourcemap false --minify false && tsc --noEmit",
+    "build": "vite build --base=/cgtools-lotr/ && tsc --noEmit",
     "serve": "vite build && vite preview",
     "start": "vite",
     "postinstall": "cp ./node_modules/sql.js/dist/sql-wasm.wasm ./src/sqljs/sql-wasm.wasm"
