@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate, Navigate } from "@tanstack/react-router";
-import { useSqljsQuery } from "@/sqljs/SqljsProvider";
+import useSqljsQuery from "@/sqljs/useSqlJsQuery";
 import { CardSearch } from "@/components/pages/debug";
 
 type SearchFilters = {

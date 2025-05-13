@@ -2,18 +2,14 @@ import {
   use,
   useState,
   useEffect,
-  useMemo,
   useContext,
   createContext,
   PropsWithChildren,
 } from "react";
 
-import type { Database, QueryExecResult, SqlJsStatic } from "sql.js";
+import type { Database, SqlJsStatic } from "sql.js";
 import initSqlJs from "sql.js";
 import sqliteUrl from "@/sqljs/sql-wasm.wasm?url";
-import * as fs from "@happy-js/happy-opfs";
-
-import { toaster } from "@/components/ui/toaster";
 
 interface SqljsContextType {
   state: "loading" | "ready" | "error";
@@ -26,103 +22,73 @@ interface SqljsDbContextType {
   sqljsDb: Database | null;
 }
 
-// Helper function to load the database
-const loadDatabase = async (dbFileUrl: string): Promise<Uint8Array> => {
-  const startLoadDatabase = performance.now();
+// function onLoadedFromOpfs(ms: number) {
+//   toaster.create({
+//     title: `File loaded from OPFS in ${ms.toFixed(2)} ms`,
+//     type: "info",
+//     duration: 10000,
+//   });
+// }
+// function onLoadedFromServer(ms: number) {
+//   toaster.create({
+//     title: `File loaded from server in ${ms.toFixed(2)} ms`,
+//     type: "info",
+//     duration: 10000,
+//   });
+// }
 
+// Helper function to load the database
+const loadDatabase = async (
+  dbFileUrl: string
+): Promise<{ buffer: Uint8Array; source: "opfs" | "fetch" }> => {
   const opfsRoot = await navigator.storage.getDirectory();
 
   try {
+    throw (() => {
+      let e = new Error();
+      e.name = "NotFoundError";
+      return e;
+    })();
     // If the file exists in OPFS, read it
     const fileHandle = await opfsRoot.getFileHandle(dbFileUrl, {
       create: false,
     });
     const file = await fileHandle.getFile();
     const buffer = await file.arrayBuffer();
-    console.log("File loaded from OPFS");
-    toaster.create({
-      title: `File loaded from OPFS in ${(
-        performance.now() - startLoadDatabase
-      ).toFixed(2)} ms`,
-      type: "info",
-      duration: 10000,
-    });
-    return new Uint8Array(buffer);
+    return { buffer: new Uint8Array(buffer), source: "opfs" };
   } catch (error) {
     if (error instanceof Error && error.name === "NotFoundError") {
       // If the file doesn't exist, fetch it from the server
       const response = await fetch(dbFileUrl);
-      const buffer = new Uint8Array(await response.arrayBuffer());
-      toaster.create({
-        title: `File loaded from server in ${(
-          performance.now() - startLoadDatabase
-        ).toFixed(2)} ms`,
-        type: "info",
-        duration: 10000,
-      });
-      try {
-        // And save it to OPFS
-        const startSaveFile = performance.now();
-        const fileHandle = await opfsRoot.getFileHandle(dbFileUrl, {
-          create: true,
-        });
-        const writable = await fileHandle.createWritable();
-        await writable.write(buffer);
-        await writable.close();
-        toaster.create({
-          title: `File saved to OPFS in ${(
-            performance.now() - startSaveFile
-          ).toFixed(2)} ms`,
-          type: "info",
-          duration: 10000,
-        });
-        console.log("File saved to OPFS");
-      } catch (error) {
-        await opfsRoot.removeEntry(dbFileUrl);
-        console.error("Error saving file to OPFS", error);
-      }
-      return buffer;
+      return {
+        buffer: new Uint8Array(await response.arrayBuffer()),
+        source: "fetch",
+      };
+
+      // try {
+      //   // And save it to OPFS
+      //   const startSaveFile = performance.now();
+      //   const fileHandle = await opfsRoot.getFileHandle(dbFileUrl, {
+      //     create: true,
+      //   });
+      //   const writable = await fileHandle.createWritable();
+      //   await writable.write(buffer);
+      //   await writable.close();
+      //   toaster.create({
+      //     title: `File saved to OPFS in ${(
+      //       performance.now() - startSaveFile
+      //     ).toFixed(2)} ms`,
+      //     type: "info",
+      //     duration: 10000,
+      //   });
+      //   console.log("File saved to OPFS");
+      // } catch (error) {
+      //   await opfsRoot.removeEntry(dbFileUrl);
+      //   console.error("Error saving file to OPFS", error);
+      // }
     } else {
       throw error;
     }
-  }
-};
-
-const loadDatabase2 = async (dbFileUrl: string): Promise<Uint8Array> => {
-  const startLoadDatabase = performance.now();
-
-  const downloadTask = fs.downloadFile(dbFileUrl, "/lotr_lcg.db", {
-    timeout: 1000,
-    onProgress(progressResult): void {
-      progressResult.inspect((progress) => {
-        console.log(
-          `Downloaded ${(100 * progress.completedByteLength) / progress.totalByteLength} %`
-        );
-      });
-    },
-  });
-
-  const downloadRes = await downloadTask.response;
-
-  console.log(
-    `File loaded from server in ${(performance.now() - startLoadDatabase).toFixed(2)} ms`
-  );
-  // toaster.create({
-  //   title: `File loaded from server in ${(
-  //     performance.now() - startLoadDatabase
-  //   ).toFixed(2)} ms`,
-  //   type: "info",
-  //   duration: 10000,
-  // });
-
-  if (downloadRes.isOk()) {
-    console.assert(downloadRes.unwrap() instanceof Response);
-
-    const postData = (await fs.readFile("/lotr_lcg.db")).unwrap();
-    return new Uint8Array(postData);
-  } else {
-    console.assert(downloadRes.unwrapErr() instanceof Error);
-    throw downloadRes.unwrapErr();
   }
 };
 
@@ -264,55 +230,11 @@ const SqljsDbProvider = ({
   );
 };
 
-// Step 3: Create a hook to query the db
-const useSqljsQuery = (query: string) => {
-  const sqljsContext = useContext(SqljsDbContext);
-
-  if (!SqljsDbContext) {
-    throw new Error("useSqljsQuery must be used within a SqljsProvider");
-  }
-
-  const [error, setError] = useState<string>("");
-  const [results, setResults] = useState<QueryExecResult[]>([]);
-
-  useMemo(() => {
-    if (!sqljsContext.sqljsDb) {
-      return;
-    }
-
-    try {
-      const startTime = performance.now();
-      setResults(sqljsContext.sqljsDb.exec(query));
-      toaster.create({
-        title: `Query executed in ${(performance.now() - startTime).toFixed(
-          2
-        )} ms`,
-        type: "info",
-        duration: 1000,
-      });
-      setError("");
-    } catch (error) {
-      if (error instanceof Error) {
-        setError(`An error occurred: ${error.message}`);
-      } else if (typeof error === "string") {
-        setError(error);
-      } else {
-        setError("An unknown error occurred");
-      }
-      setResults([]);
-    }
-  }, [sqljsContext.sqljsDb, query]);
-
-  return { error, results };
-};
-
 export {
   loadDatabase,
-  loadDatabase2,
   SqljsContext,
   SqljsProvider,
   SqljsDbContext,
   SqljsDbProvider,
-  useSqljsQuery,
 };
 export type { SqljsContextType, SqljsDbContextType };

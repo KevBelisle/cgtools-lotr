@@ -2,11 +2,12 @@ import { Outlet, createRootRoute } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Flex, Container, Text } from "@chakra-ui/react";
 import { CustomButtonLink } from "@/components/ui/customButtonLink";
-import { loadDatabase2, SqljsDbProvider } from "@/sqljs/SqljsProvider";
+import { loadDatabase, SqljsDbProvider } from "@/sqljs/SqljsProvider";
 import { Suspense } from "react";
 import Loading from "@/components/ui/loading";
 import { Toaster } from "@/components/ui/toaster";
 import ReloadPrompt from "@/components/ui/reload-prompt";
+import { doWorkerTask, saveToOpfs } from "@/sqljs/opfsWriteWorker";
 
 import NavBar from "@/components/ui/navBar";
 
@@ -26,13 +27,33 @@ export const Route = createRootRoute({
   },
 });
 
-const dbBufferPromise = loadDatabase2("lotr_lcg.db");
+const loadingPromise = loadDatabase("lotr_lcg.db");
+
+loadingPromise.then(async ({ buffer, source }) => {
+  if (source == "fetch") {
+    console.log("Database loaded from fetch");
+    try {
+      await doWorkerTask(saveToOpfs, {
+        filename: "lotr_lcg.db",
+        array: buffer,
+      });
+      console.log("Database saved to OPFS");
+    } catch (error) {
+      console.error("Error saving to OPFS", error);
+    }
+  } else {
+    console.log("Database loaded from OPFS");
+  }
+});
+
+const dbBufferPromise = loadingPromise.then(({ buffer }) => {
+  return buffer;
+});
 
 function RootComponent() {
   return (
     <>
       <NavBar />
-
       <Suspense fallback={<Loading />}>
         <SqljsDbProvider dbBufferPromise={dbBufferPromise}>
           <Outlet />

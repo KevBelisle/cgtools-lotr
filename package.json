@@ -12,7 +12,6 @@
   "dependencies": {
     "@chakra-ui/react": "^3.16.1",
     "@emotion/react": "^11.14.0",
-    "@happy-js/happy-opfs": "npm:@jsr/happy-js__happy-opfs@^1.8.6",
     "@tanstack/react-router": "^1.117.1",
     "@tanstack/react-router-devtools": "^1.117.1",
     "@tanstack/router-plugin": "^1.117.2",
