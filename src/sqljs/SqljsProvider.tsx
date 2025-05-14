@@ -120,11 +120,11 @@ async function* loadDatabase(
   const opfsRoot = await navigator.storage.getDirectory();
 
   try {
-    throw (() => {
-      let e = new Error();
-      e.name = "NotFoundError";
-      return e;
-    })();
+    // throw (() => {
+    //   let e = new Error();
+    //   e.name = "NotFoundError";
+    //   return e;
+    // })();
     // If the file exists in OPFS, read it
     const fileHandle = await opfsRoot.getFileHandle(dbFileUrl, {
       create: false,
@@ -257,7 +257,7 @@ const InnerSqljsDbProvider = ({
   const sqljs = use(sqljsContext.sqljsPromise as Promise<SqlJsStatic>);
   dbBuffer = (dbBuffer as Uint8Array) ?? use(dbBufferPromise);
 
-  useEffect(() => {
+  useMemo(() => {
     try {
       const db = new sqljs.Database(dbBuffer);
       setSqljsDbContext({ state: "ready", error: null, sqljsDb: db });
