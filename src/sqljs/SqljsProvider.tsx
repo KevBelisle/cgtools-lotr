@@ -192,12 +192,11 @@ const SqljsDbProvider = ({
       do {
         const { value, done } = await generator.next();
         if (done) {
-          console.log("Loading complete");
-          console.log(value);
+          console.log("loadDatabase complete", value.source);
           resolve(value);
           return;
         } else {
-          console.log("Loading progress", value);
+          console.log("loadDatabase progress", value);
           setProgress(value);
         }
       } while (true);
@@ -206,15 +205,17 @@ const SqljsDbProvider = ({
     loadingPromise.then(async ({ buffer, source }) => {
       if (source == "fetch") {
         console.log("Database loaded from fetch");
-        try {
-          await doWorkerTask(saveToOpfs, {
-            filename: "lotr_lcg.db",
-            array: buffer,
-          });
-          console.log("Database saved to OPFS");
-        } catch (error) {
-          console.error("Error saving to OPFS", error);
-        }
+        await doWorkerTask(saveToOpfs, {
+          filename: "lotr_lcg.db",
+          array: buffer,
+        }).then(
+          () => {
+            console.log("Database saved to OPFS");
+          },
+          (error) => {
+            console.error("Error saving to OPFS", error);
+          }
+        );
       } else {
         console.log("Database loaded from OPFS");
       }

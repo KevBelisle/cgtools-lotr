@@ -7,14 +7,18 @@ export const saveToOpfs = async ({
 }) => {
   try {
     const root = await navigator.storage.getDirectory();
-    await root.removeEntry(filename);
+    try {
+      await root.removeEntry(filename);
+    } catch (e) {
+      /* ignore */
+    }
     const handle = await root.getFileHandle(filename, { create: true });
     // @ts-ignore
     const writer = await handle.createSyncAccessHandle();
     writer.write(array);
     writer.close();
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
 

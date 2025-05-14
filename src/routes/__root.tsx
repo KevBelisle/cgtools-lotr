@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { Outlet, createRootRoute } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Flex, Container, Text } from "@chakra-ui/react";
@@ -25,23 +26,27 @@ export const Route = createRootRoute({
   },
 });
 
+const dbUrl = "lotr_lcg.db";
+
 function RootComponent() {
+  const loading = useCallback(
+    (progress: number) => (
+      <Loading message="Loading database file..." progress={progress} />
+    ),
+    []
+  );
+
   return (
     <>
       <NavBar />
-      <SqljsDbProvider
-        dbUrl={"lotr_lcg.db"}
-        loading={(progress: number) => (
-          <Loading message="Loading database file..." progress={progress} />
-        )}
-      >
+      <SqljsDbProvider dbUrl={dbUrl} loading={loading}>
         <Outlet />
       </SqljsDbProvider>
 
       <ReloadPrompt />
 
       <Toaster />
-      <TanStackRouterDevtools position="bottom-right" />
+      <TanStackRouterDevtools />
     </>
   );
 }
