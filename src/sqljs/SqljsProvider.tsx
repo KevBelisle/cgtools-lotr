@@ -3,6 +3,7 @@ import {
   useState,
   useEffect,
   useContext,
+  useMemo,
   createContext,
   PropsWithChildren,
   ReactNode,
@@ -25,68 +26,12 @@ interface SqljsDbContextType {
   sqljsDb: Database | null;
 }
 
-// function onLoadedFromOpfs(ms: number) {
-//   toaster.create({
-//     title: `File loaded from OPFS in ${ms.toFixed(2)} ms`,
-//     type: "info",
-//     duration: 10000,
-//   });
-// }
-// function onLoadedFromServer(ms: number) {
-//   toaster.create({
-//     title: `File loaded from server in ${ms.toFixed(2)} ms`,
-//     type: "info",
-//     duration: 10000,
-//   });
-// }
-
-// Helper function to load the database
-const loadDatabase = async (
-  dbFileUrl: string
-): Promise<{ buffer: Uint8Array; source: "opfs" | "fetch" }> => {
-  const opfsRoot = await navigator.storage.getDirectory();
-
-  try {
-    throw (() => {
-      let e = new Error();
-      e.name = "NotFoundError";
-      return e;
-    })();
-    // If the file exists in OPFS, read it
-    const fileHandle = await opfsRoot.getFileHandle(dbFileUrl, {
-      create: false,
-    });
-    const file = await fileHandle.getFile();
-    const buffer = await file.arrayBuffer();
-    return { buffer: new Uint8Array(buffer), source: "opfs" };
-  } catch (error) {
-    if (error instanceof Error && error.name === "NotFoundError") {
-      // If the file doesn't exist, fetch it from the server
-      const response = await fetch(dbFileUrl);
-      return {
-        buffer: new Uint8Array(await response.arrayBuffer()),
-        source: "fetch",
-      };
-    } else {
-      throw error;
-    }
-  }
-};
-
-// Step 1: Create a Context
 const SqljsContext = createContext<SqljsContextType>({
   state: "loading",
   error: null,
   sqljsPromise: new Promise(() => {}) as Promise<SqlJsStatic>,
 });
 
-const SqljsDbContext = createContext<SqljsDbContextType>({
-  state: "loading",
-  error: null,
-  sqljsDb: null,
-});
-
-// Step 2: Create a Provider Component
 const SqljsProvider = ({ children }: PropsWithChildren<unknown>) => {
   const [sqljsContext, setSqljsContext] = useState<SqljsContextType>({
     state: "loading",
@@ -149,39 +94,139 @@ const SqljsProvider = ({ children }: PropsWithChildren<unknown>) => {
   );
 };
 
+// function onLoadedFromOpfs(ms: number) {
+//   toaster.create({
+//     title: `File loaded from OPFS in ${ms.toFixed(2)} ms`,
+//     type: "info",
+//     duration: 10000,
+//   });
+// }
+// function onLoadedFromServer(ms: number) {
+//   toaster.create({
+//     title: `File loaded from server in ${ms.toFixed(2)} ms`,
+//     type: "info",
+//     duration: 10000,
+//   });
+// }
+
+// Helper function to load the database
+async function* loadDatabase(
+  dbFileUrl: string
+): AsyncGenerator<
+  number,
+  { buffer: Uint8Array; source: "opfs" | "fetch" },
+  void
+> {
+  const opfsRoot = await navigator.storage.getDirectory();
+
+  try {
+    throw (() => {
+      let e = new Error();
+      e.name = "NotFoundError";
+      return e;
+    })();
+    // If the file exists in OPFS, read it
+    const fileHandle = await opfsRoot.getFileHandle(dbFileUrl, {
+      create: false,
+    });
+    const file = await fileHandle.getFile();
+    const buffer = await file.arrayBuffer();
+    return { buffer: new Uint8Array(buffer), source: "opfs" };
+  } catch (error) {
+    if (error instanceof Error && error.name === "NotFoundError") {
+      // If the file doesn't exist, fetch it from the server
+      const response = await fetch(dbFileUrl);
+
+      const reader = response.body!.getReader();
+      const contentLength = parseInt(response.headers!.get("Content-Length")!);
+
+      let receivedLength = 0;
+      let buffer = new Uint8Array(contentLength);
+
+      while (true) {
+        const { done, value } = await reader.read();
+
+        if (done) {
+          break;
+        }
+
+        buffer.set(value, receivedLength);
+        receivedLength += value.length;
+
+        yield (receivedLength / contentLength) * 100;
+      }
+
+      return {
+        buffer: buffer,
+        source: "fetch",
+      };
+    } else {
+      throw error;
+    }
+  }
+}
+
+const SqljsDbContext = createContext<SqljsDbContextType>({
+  state: "loading",
+  error: null,
+  sqljsDb: null,
+});
+
 const SqljsDbProvider = ({
   children,
   dbUrl,
   loading,
 }: PropsWithChildren<{
   dbUrl: string;
-  loading: ReactNode;
+  loading: (progress: number) => ReactNode;
 }>) => {
-  const loadingPromise = loadDatabase(dbUrl);
+  const [progress, setProgress] = useState(0);
 
-  loadingPromise.then(async ({ buffer, source }) => {
-    if (source == "fetch") {
-      console.log("Database loaded from fetch");
-      try {
-        await doWorkerTask(saveToOpfs, {
-          filename: "lotr_lcg.db",
-          array: buffer,
-        });
-        console.log("Database saved to OPFS");
-      } catch (error) {
-        console.error("Error saving to OPFS", error);
+  const dbBufferPromise = useMemo(() => {
+    const loadingPromise = new Promise<{
+      buffer: Uint8Array<ArrayBufferLike>;
+      source: "opfs" | "fetch";
+    }>(async (resolve, _) => {
+      const generator = loadDatabase(dbUrl);
+
+      do {
+        const { value, done } = await generator.next();
+        if (done) {
+          console.log("Loading complete");
+          console.log(value);
+          resolve(value);
+          return;
+        } else {
+          console.log("Loading progress", value);
+          setProgress(value);
+        }
+      } while (true);
+    });
+
+    loadingPromise.then(async ({ buffer, source }) => {
+      if (source == "fetch") {
+        console.log("Database loaded from fetch");
+        try {
+          await doWorkerTask(saveToOpfs, {
+            filename: "lotr_lcg.db",
+            array: buffer,
+          });
+          console.log("Database saved to OPFS");
+        } catch (error) {
+          console.error("Error saving to OPFS", error);
+        }
+      } else {
+        console.log("Database loaded from OPFS");
       }
-    } else {
-      console.log("Database loaded from OPFS");
-    }
-  });
+    });
 
-  const dbBufferPromise = loadingPromise.then(({ buffer }) => {
-    return buffer;
-  });
+    return loadingPromise.then(({ buffer }) => {
+      return buffer;
+    });
+  }, [dbUrl]);
 
   return (
-    <Suspense fallback={loading}>
+    <Suspense fallback={loading(progress)}>
       <InnerSqljsDbProvider dbBufferPromise={dbBufferPromise}>
         {children}
       </InnerSqljsDbProvider>

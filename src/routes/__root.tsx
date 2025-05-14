@@ -31,7 +31,9 @@ function RootComponent() {
       <NavBar />
       <SqljsDbProvider
         dbUrl={"lotr_lcg.db"}
-        loading={<Loading message="Loading database file..." />}
+        loading={(progress: number) => (
+          <Loading message="Loading database file..." progress={progress} />
+        )}
       >
         <Outlet />
       </SqljsDbProvider>
