@@ -5,11 +5,14 @@ import {
   useContext,
   createContext,
   PropsWithChildren,
+  ReactNode,
+  Suspense,
 } from "react";
 
 import type { Database, SqlJsStatic } from "sql.js";
 import initSqlJs from "sql.js";
 import sqliteUrl from "@/sqljs/sql-wasm.wasm?url";
+import { doWorkerTask, saveToOpfs } from "@/sqljs/opfsWriteWorker";
 
 interface SqljsContextType {
   state: "loading" | "ready" | "error";
@@ -64,28 +67,6 @@ const loadDatabase = async (
         buffer: new Uint8Array(await response.arrayBuffer()),
         source: "fetch",
       };
-
-      // try {
-      //   // And save it to OPFS
-      //   const startSaveFile = performance.now();
-      //   const fileHandle = await opfsRoot.getFileHandle(dbFileUrl, {
-      //     create: true,
-      //   });
-      //   const writable = await fileHandle.createWritable();
-      //   await writable.write(buffer);
-      //   await writable.close();
-      //   toaster.create({
-      //     title: `File saved to OPFS in ${(
-      //       performance.now() - startSaveFile
-      //     ).toFixed(2)} ms`,
-      //     type: "info",
-      //     duration: 10000,
-      //   });
-      //   console.log("File saved to OPFS");
-      // } catch (error) {
-      //   await opfsRoot.removeEntry(dbFileUrl);
-      //   console.error("Error saving file to OPFS", error);
-      // }
     } else {
       throw error;
     }
@@ -98,6 +79,7 @@ const SqljsContext = createContext<SqljsContextType>({
   error: null,
   sqljsPromise: new Promise(() => {}) as Promise<SqlJsStatic>,
 });
+
 const SqljsDbContext = createContext<SqljsDbContextType>({
   state: "loading",
   error: null,
@@ -168,6 +150,46 @@ const SqljsProvider = ({ children }: PropsWithChildren<unknown>) => {
 };
 
 const SqljsDbProvider = ({
+  children,
+  dbUrl,
+  loading,
+}: PropsWithChildren<{
+  dbUrl: string;
+  loading: ReactNode;
+}>) => {
+  const loadingPromise = loadDatabase(dbUrl);
+
+  loadingPromise.then(async ({ buffer, source }) => {
+    if (source == "fetch") {
+      console.log("Database loaded from fetch");
+      try {
+        await doWorkerTask(saveToOpfs, {
+          filename: "lotr_lcg.db",
+          array: buffer,
+        });
+        console.log("Database saved to OPFS");
+      } catch (error) {
+        console.error("Error saving to OPFS", error);
+      }
+    } else {
+      console.log("Database loaded from OPFS");
+    }
+  });
+
+  const dbBufferPromise = loadingPromise.then(({ buffer }) => {
+    return buffer;
+  });
+
+  return (
+    <Suspense fallback={loading}>
+      <InnerSqljsDbProvider dbBufferPromise={dbBufferPromise}>
+        {children}
+      </InnerSqljsDbProvider>
+    </Suspense>
+  );
+};
+
+const InnerSqljsDbProvider = ({
   children,
   dbBuffer,
   dbBufferPromise,

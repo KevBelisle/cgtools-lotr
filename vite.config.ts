@@ -14,7 +14,7 @@ export default defineConfig({
     react(),
     tsconfigPaths(),
     VitePWA({
-      registerType: "prompt",
+      registerType: "autoUpdate",
       workbox: {
         maximumFileSizeToCacheInBytes: 7.5 * 1024 * 1024, // 7.5MB
         globPatterns: ["**/*.{js,css,html,db,sqlite3}"],

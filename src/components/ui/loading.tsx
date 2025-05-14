@@ -1,6 +1,6 @@
 import { Center, Spinner, Text, VStack } from "@chakra-ui/react";
 
-export const Loading = () => {
+export const Loading = ({ message }: { message: string }) => {
   return (
     <Center mt={16}>
       <VStack>
@@ -11,7 +11,7 @@ export const Loading = () => {
           size="xl"
         />
         <Text fontSize="md" mt={4} color="gray.400">
-          Loading database...
+          {message}
         </Text>
       </VStack>
     </Center>
