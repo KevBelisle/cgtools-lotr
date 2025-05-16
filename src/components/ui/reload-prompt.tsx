@@ -1,6 +1,9 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useRegisterSW } from "virtual:pwa-register/react";
+
+import { IconButton } from "@chakra-ui/react";
 import { toaster } from "@/components/ui/toaster";
+import { LuCloudDownload } from "react-icons/lu";
 
 function ReloadPrompt() {
   const {
@@ -23,12 +26,23 @@ function ReloadPrompt() {
     },
     onRegisterError(error) {
       console.log("SW registration error", error);
+      toaster.create({
+        title: "Error registering service worker",
+        description: "App will not be available offline.",
+        type: "warning",
+        duration: 5000,
+      });
     },
     onOfflineReady() {
       console.log("App is ready to work offline");
       setOfflineReady(true);
     },
   });
+
+  const updateApp = useCallback(
+    () => updateServiceWorker(true),
+    [updateServiceWorker]
+  );
 
   useEffect(() => {
     console.log({ offlineReady, needRefresh });
@@ -55,33 +69,23 @@ function ReloadPrompt() {
   //   setNeedRefresh(false);
   // };
 
+  if (!needRefresh) {
+    return <></>;
+  }
+
   return (
-    <div className="ReloadPrompt-container">
-      {(offlineReady || needRefresh) && (
-        <div className="ReloadPrompt-toast">
-          <div className="ReloadPrompt-message">
-            {offlineReady ? (
-              <span>App ready to work offline</span>
-            ) : (
-              <span>
-                New content available, click on reload button to update.
-              </span>
-            )}
-          </div>
-          {needRefresh && (
-            <button
-              className="ReloadPrompt-toast-button"
-              onClick={() => updateServiceWorker(true)}
-            >
-              Reload
-            </button>
-          )}
-          <button className="ReloadPrompt-toast-button" onClick={() => close()}>
-            Close
-          </button>
-        </div>
-      )}
-    </div>
+    needRefresh && (
+      <IconButton
+        onClick={updateApp}
+        variant="ghost"
+        bgColor="transparent"
+        color="white"
+        aria-label="Update app"
+        size="sm"
+      >
+        <LuCloudDownload />
+      </IconButton>
+    )
   );
 }
 
