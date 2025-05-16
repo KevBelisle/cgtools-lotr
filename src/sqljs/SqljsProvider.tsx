@@ -13,8 +13,7 @@ import {
 import type { Database, SqlJsStatic } from "sql.js";
 import initSqlJs from "sql.js";
 import sqliteUrl from "@/sqljs/sql-wasm.wasm?url";
-import { saveToOpfs } from "@/sqljs/saveToOpfs";
-import loadFile from "@/sqljs/fileLoader";
+import fetchFile from "@/sqljs/fetchFile";
 
 interface SqljsContextType {
   state: "loading" | "ready" | "error";
@@ -112,40 +111,22 @@ const SqljsDbProvider = ({
   const [progress, setProgress] = useState(0);
 
   const dbBufferPromise = useMemo(() => {
-    const loadingPromise = new Promise<{
-      buffer: Uint8Array<ArrayBufferLike>;
-      source: "opfs" | "fetch";
-    }>(async (resolve, _) => {
-      const generator = loadFile(dbUrl, true);
+    const loadingPromise = new Promise<Uint8Array<ArrayBufferLike>>(
+      async (resolve, _) => {
+        const generator = fetchFile(dbUrl);
 
-      do {
-        const { value, done } = await generator.next();
-        if (done) {
-          resolve(value);
-          return;
-        } else {
-          setProgress(value);
-        }
-      } while (true);
-    });
-
-    loadingPromise.then(async ({ buffer, source }) => {
-      if (source == "fetch") {
-        console.log("Database loaded from fetch");
-        await saveToOpfs("lotr_lcg.db", buffer).then(
-          () => {
-            console.log("Database saved to OPFS");
-          },
-          (error) => {
-            console.error("Error saving to OPFS", error);
+        do {
+          const { value, done } = await generator.next();
+          if (done) {
+            resolve(value);
+            return;
+          } else {
+            setProgress(value);
           }
-        );
-      } else {
-        console.log("Database loaded from OPFS");
+        } while (true);
       }
-    });
-
-    return loadingPromise.then(({ buffer }) => {
+    );
+    return loadingPromise.then((buffer) => {
       return buffer;
     });
   }, [dbUrl]);
@@ -161,11 +142,9 @@ const SqljsDbProvider = ({
 
 const InnerSqljsDbProvider = ({
   children,
-  dbBuffer,
   dbBufferPromise,
 }: PropsWithChildren<{
-  dbBuffer?: Uint8Array;
-  dbBufferPromise: Promise<Uint8Array>;
+  dbBufferPromise: Promise<Uint8Array<ArrayBufferLike>>;
 }>) => {
   const sqljsContext = useContext(SqljsContext);
 
@@ -180,12 +159,16 @@ const InnerSqljsDbProvider = ({
   });
 
   const sqljs = use(sqljsContext.sqljsPromise as Promise<SqlJsStatic>);
-  dbBuffer = (dbBuffer as Uint8Array) ?? use(dbBufferPromise);
+  const dbBuffer = use(dbBufferPromise);
 
   useMemo(() => {
     try {
       const db = new sqljs.Database(dbBuffer);
-      setSqljsDbContext({ state: "ready", error: null, sqljsDb: db });
+      setSqljsDbContext({
+        state: "ready",
+        error: null,
+        sqljsDb: db,
+      });
     } catch (error) {
       let errorMessage = "An unknown error occurred loading the database";
       if (error instanceof Error) {
