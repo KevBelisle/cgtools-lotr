@@ -1,12 +1,11 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useRegisterSW } from "virtual:pwa-register/react";
 import { toaster } from "@/components/ui/toaster";
-import { SqljsDbContext } from "@/sqljs/SqljsProvider";
 
 function ReloadPrompt() {
   const {
     offlineReady: [offlineReady, setOfflineReady],
-    needRefresh: [needRefresh, setNeedRefresh],
+    needRefresh: [needRefresh, _], //setNeedRefresh],
     updateServiceWorker,
   } = useRegisterSW({
     onRegistered(r) {
@@ -30,24 +29,6 @@ function ReloadPrompt() {
       setOfflineReady(true);
     },
   });
-
-  // const sqljsContext = useContext(SqljsDbContext);
-
-  if (!SqljsDbContext) {
-    throw new Error("useSqljsQuery must be used within a SqljsProvider");
-  }
-
-  // useEffect(() => {
-  //   console.log({ offlineReady, savedToOpfs: sqljsContext.savedToOpfs });
-  //   if (offlineReady && sqljsContext.savedToOpfs) {
-  //     toaster.create({
-  //       title: "App ready to work offline",
-  //       description: "You can now use the app without internet connection.",
-  //       type: "success",
-  //       duration: 5000,
-  //     });
-  //   }
-  // }, [offlineReady, sqljsContext.savedToOpfs]);
 
   useEffect(() => {
     console.log({ offlineReady, needRefresh });
