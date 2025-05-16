@@ -2,6 +2,8 @@ import { Box, HStack, Heading, Flex } from "@chakra-ui/react";
 import { ColorModeButton } from "@/components/ui/color-mode";
 //import { CustomButtonLink } from "./customButtonLink";
 
+import ReloadPrompt from "@/components/ui/reload-prompt";
+
 export default function NavBar() {
   return (
     <Box as="header" w="100vw" background="teal.800" color="white">
@@ -18,6 +20,7 @@ export default function NavBar() {
           >
             Find Cards
           </CustomButtonLink> */}
+          <ReloadPrompt />
           <ColorModeButton />
         </HStack>
       </Flex>

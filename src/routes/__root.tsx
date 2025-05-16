@@ -6,7 +6,6 @@ import { CustomButtonLink } from "@/components/ui/customButtonLink";
 import { SqljsDbProvider } from "@/sqljs/SqljsProvider";
 import Loading from "@/components/ui/loading";
 import { Toaster } from "@/components/ui/toaster";
-import ReloadPrompt from "@/components/ui/reload-prompt";
 
 import NavBar from "@/components/ui/navBar";
 
@@ -39,7 +38,6 @@ function RootComponent() {
   return (
     <>
       <NavBar />
-      <ReloadPrompt />
       <SqljsDbProvider dbUrl={dbUrl} loading={loading}>
         <Outlet />
       </SqljsDbProvider>
