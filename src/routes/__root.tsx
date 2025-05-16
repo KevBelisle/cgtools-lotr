@@ -2,12 +2,12 @@ import { useCallback } from "react";
 import { Outlet, createRootRoute } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Flex, Container, Text } from "@chakra-ui/react";
-import { CustomButtonLink } from "@/components/ui/customButtonLink";
-import { SqljsDbProvider } from "@/sqljs/SqljsProvider";
+import { CustomButtonLink } from "@/components/ui/custom-button-link";
+import { SqljsDbProvider } from "@/sqljs/sqljs-provder";
 import Loading from "@/components/ui/loading";
 import { Toaster } from "@/components/ui/toaster";
 
-import NavBar from "@/components/ui/navBar";
+import NavBar from "@/components/ui/nav-bar";
 
 export const Route = createRootRoute({
   component: RootComponent,

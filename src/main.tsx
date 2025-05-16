@@ -8,7 +8,7 @@ import {
 import { routeTree } from "./routeTree.gen";
 
 import { ChakraProvider } from "@/components/ui/chakra-provider";
-import { SqljsProvider } from "@/sqljs/SqljsProvider";
+import { SqljsProvider } from "@/sqljs/sqljs-provder";
 import "./styles.css";
 
 const hashHistory = createHashHistory();

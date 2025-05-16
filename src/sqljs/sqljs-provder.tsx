@@ -13,7 +13,7 @@ import {
 import type { Database, SqlJsStatic } from "sql.js";
 import initSqlJs from "sql.js";
 import sqliteUrl from "@/sqljs/sql-wasm.wasm?url";
-import fetchFile from "@/sqljs/fetchFile";
+import fetchFile from "@/sqljs/fetch-file";
 
 interface SqljsContextType {
   state: "loading" | "ready" | "error";
