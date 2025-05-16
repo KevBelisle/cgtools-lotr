@@ -1,4 +1,4 @@
-export const saveToOpfs = async ({
+const saveToOpfsWorker = async ({
   filename,
   array,
 }: {
@@ -22,10 +22,7 @@ export const saveToOpfs = async ({
   }
 };
 
-export async function doWorkerTask<T, K>(
-  workerFunction: (input: K) => T,
-  input: K
-) {
+async function doWorkerTask<T, K>(workerFunction: (input: K) => T, input: K) {
   const workFn = workerFunction.toString().replace('"use strict";', "");
   const workerString = `
       self.onmessage = async (e) => self.postMessage(await (${workFn})(e.data));`;
@@ -46,3 +43,7 @@ export async function doWorkerTask<T, K>(
     worker.postMessage(input);
   })) as T;
 }
+
+export const saveToOpfs = async (filename: string, array: Uint8Array) => {
+  return doWorkerTask(saveToOpfsWorker, { filename, array });
+};

@@ -13,7 +13,8 @@ import {
 import type { Database, SqlJsStatic } from "sql.js";
 import initSqlJs from "sql.js";
 import sqliteUrl from "@/sqljs/sql-wasm.wasm?url";
-import { doWorkerTask, saveToOpfs } from "@/sqljs/opfsWriteWorker";
+import { saveToOpfs } from "@/sqljs/saveToOpfs";
+import loadFile from "@/sqljs/fileLoader";
 
 interface SqljsContextType {
   state: "loading" | "ready" | "error";
@@ -84,7 +85,7 @@ const SqljsProvider = ({ children }: PropsWithChildren<unknown>) => {
   }, []);
 
   if (sqljsContext.state === "error") {
-    return <div>ERROR: {sqljsContext.error}</div>;
+    return <div>Sql.js error: {sqljsContext.error}</div>;
   }
 
   return (
@@ -93,78 +94,6 @@ const SqljsProvider = ({ children }: PropsWithChildren<unknown>) => {
     </SqljsContext.Provider>
   );
 };
-
-// function onLoadedFromOpfs(ms: number) {
-//   toaster.create({
-//     title: `File loaded from OPFS in ${ms.toFixed(2)} ms`,
-//     type: "info",
-//     duration: 10000,
-//   });
-// }
-// function onLoadedFromServer(ms: number) {
-//   toaster.create({
-//     title: `File loaded from server in ${ms.toFixed(2)} ms`,
-//     type: "info",
-//     duration: 10000,
-//   });
-// }
-
-// Helper function to load the database
-async function* loadDatabase(
-  dbFileUrl: string
-): AsyncGenerator<
-  number,
-  { buffer: Uint8Array; source: "opfs" | "fetch" },
-  void
-> {
-  const opfsRoot = await navigator.storage.getDirectory();
-
-  try {
-    // throw (() => {
-    //   let e = new Error();
-    //   e.name = "NotFoundError";
-    //   return e;
-    // })();
-    // If the file exists in OPFS, read it
-    const fileHandle = await opfsRoot.getFileHandle(dbFileUrl, {
-      create: false,
-    });
-    const file = await fileHandle.getFile();
-    const buffer = await file.arrayBuffer();
-    return { buffer: new Uint8Array(buffer), source: "opfs" };
-  } catch (error) {
-    if (error instanceof Error && error.name === "NotFoundError") {
-      // If the file doesn't exist, fetch it from the server
-      const response = await fetch(dbFileUrl);
-
-      const reader = response.body!.getReader();
-      const contentLength = parseInt(response.headers!.get("Content-Length")!);
-
-      let receivedLength = 0;
-      let buffer = new Uint8Array(contentLength);
-
-      while (true) {
-        const { done, value } = await reader.read();
-
-        if (done) {
-          break;
-        }
-
-        buffer.set(value, receivedLength);
-        receivedLength += value.length;
-
-        yield (receivedLength / contentLength) * 100;
-      }
-
-      return {
-        buffer: buffer,
-        source: "fetch",
-      };
-    } else {
-      throw error;
-    }
-  }
-}
 
 const SqljsDbContext = createContext<SqljsDbContextType>({
   state: "loading",
@@ -187,16 +116,14 @@ const SqljsDbProvider = ({
       buffer: Uint8Array<ArrayBufferLike>;
       source: "opfs" | "fetch";
     }>(async (resolve, _) => {
-      const generator = loadDatabase(dbUrl);
+      const generator = loadFile(dbUrl, true);
 
       do {
         const { value, done } = await generator.next();
         if (done) {
-          console.log("loadDatabase complete", value.source);
           resolve(value);
           return;
         } else {
-          console.log("loadDatabase progress", value);
           setProgress(value);
         }
       } while (true);
@@ -205,10 +132,7 @@ const SqljsDbProvider = ({
     loadingPromise.then(async ({ buffer, source }) => {
       if (source == "fetch") {
         console.log("Database loaded from fetch");
-        await doWorkerTask(saveToOpfs, {
-          filename: "lotr_lcg.db",
-          array: buffer,
-        }).then(
+        await saveToOpfs("lotr_lcg.db", buffer).then(
           () => {
             console.log("Database saved to OPFS");
           },
@@ -298,11 +222,5 @@ const InnerSqljsDbProvider = ({
   );
 };
 
-export {
-  loadDatabase,
-  SqljsContext,
-  SqljsProvider,
-  SqljsDbContext,
-  SqljsDbProvider,
-};
+export { SqljsContext, SqljsProvider, SqljsDbContext, SqljsDbProvider };
 export type { SqljsContextType, SqljsDbContextType };
