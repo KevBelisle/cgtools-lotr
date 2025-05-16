@@ -69,6 +69,7 @@ export const CardSearch = ({
   if (results.length > 0) {
     cardResults = results[0].values.map((row) => {
       const [
+        Slug,
         FrontImageUrl,
         FrontTitle,
         FrontText,
@@ -79,6 +80,7 @@ export const CardSearch = ({
 
       return (
         <LotrCard
+          key={Slug as string}
           title={FrontTitle as string}
           imageUrl={FrontImageUrl as string}
           text={FrontText as string}

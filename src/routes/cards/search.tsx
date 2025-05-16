@@ -23,8 +23,15 @@ function CardSearchRouteComponent() {
   const sqlQuery = useMemo(
     () =>
       query == ""
-        ? ""
-        : `SELECT pc.FrontImageUrl AS FrontImageUrl, f.Title AS FrontTitle, f.Text AS FrontText, f.FlavorText AS FrontFlavorText, f.Sphere AS FrontSphere, f.Type AS FrontType
+        ? `SELECT c.Slug AS Slug, pc.FrontImageUrl AS FrontImageUrl, f.Title AS FrontTitle, f.Text AS FrontText, f.FlavorText AS FrontFlavorText, f.Sphere AS FrontSphere, f.Type AS FrontType
+        FROM cards c
+        LEFT JOIN cardSides f ON c.FrontSlug = f.Slug
+        LEFT JOIN cardSides b ON c.Backslug = b.Slug
+        LEFT JOIN productCards pc ON pc.CardSlug = c.Slug
+        GROUP BY pc.FrontImageUrl, f.Title, f.Text, f.FlavorText, f.Sphere, f.Type
+        ORDER BY RANDOM()
+        LIMIT 10`
+        : `SELECT c.Slug AS Slug, pc.FrontImageUrl AS FrontImageUrl, f.Title AS FrontTitle, f.Text AS FrontText, f.FlavorText AS FrontFlavorText, f.Sphere AS FrontSphere, f.Type AS FrontType
         FROM cards c
         LEFT JOIN cardSides f ON c.FrontSlug = f.Slug
         LEFT JOIN cardSides b ON c.Backslug = b.Slug
