@@ -68,25 +68,16 @@ export const CardSearch = ({
 
   if (results.length > 0) {
     cardResults = results[0].values.map((row) => {
-      const [
-        Slug,
-        FrontImageUrl,
-        FrontTitle,
-        FrontText,
-        FrontFlavorText,
-        FrontSphere,
-        FrontType,
-      ] = row;
-
+      const [Slug, Title, Text, FlavorText, FrontImageUrl] = row;
       return (
         <LotrCard
           key={Slug as string}
-          title={FrontTitle as string}
+          title={Title as string}
           imageUrl={FrontImageUrl as string}
-          text={FrontText as string}
-          flavorText={FrontFlavorText as string}
-          sphere={FrontSphere as string}
-          type={FrontType as string}
+          text={Text as string}
+          flavorText={FlavorText as string}
+          sphere={"FrontSphere" as string}
+          type={"FrontType" as string}
         />
       );
     });
@@ -106,7 +97,7 @@ export const CardSearch = ({
           width={"70%"}
         />
       </Center>
-      {error.length > 0 && <div className=" text-red-600">{error}</div>}
+      {error?.length > 0 && <div className=" text-red-600">{error}</div>}
       <SimpleGrid minChildWidth="lg" gap="40px">
         {...cardResults}
       </SimpleGrid>

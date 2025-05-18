@@ -1,7 +1,25 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo } from "react";
-import useSqljsQuery from "@/sqljs/use-sqljs-query";
+import useKyselyQuery from "@/sqljs/use-kysely-query";
 import { CardSearch } from "@/components/pages/card-search";
+
+import { Database } from "@/database";
+import {
+  Kysely,
+  DummyDriver,
+  SqliteAdapter,
+  SqliteIntrospector,
+  SqliteQueryCompiler,
+} from "kysely";
+
+const db = new Kysely<Database>({
+  dialect: {
+    createAdapter: () => new SqliteAdapter(),
+    createDriver: () => new DummyDriver(),
+    createIntrospector: (db) => new SqliteIntrospector(db),
+    createQueryCompiler: () => new SqliteQueryCompiler(),
+  },
+});
 
 type SearchFilters = {
   query: string;
@@ -20,27 +38,29 @@ function CardSearchRouteComponent() {
   const { query } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
 
-  const sqlQuery = useMemo(
+  const compiledQuery = useMemo(
     () =>
-      query == ""
-        ? `SELECT c.Slug AS Slug, pc.FrontImageUrl AS FrontImageUrl, f.Title AS FrontTitle, f.Text AS FrontText, f.FlavorText AS FrontFlavorText, f.Sphere AS FrontSphere, f.Type AS FrontType
-        FROM cards c
-        LEFT JOIN cardSides f ON c.FrontSlug = f.Slug
-        LEFT JOIN cardSides b ON c.Backslug = b.Slug
-        LEFT JOIN productCards pc ON pc.CardSlug = c.Slug
-        GROUP BY pc.FrontImageUrl, f.Title, f.Text, f.FlavorText, f.Sphere, f.Type
-        ORDER BY RANDOM()
-        LIMIT 10`
-        : `SELECT c.Slug AS Slug, pc.FrontImageUrl AS FrontImageUrl, f.Title AS FrontTitle, f.Text AS FrontText, f.FlavorText AS FrontFlavorText, f.Sphere AS FrontSphere, f.Type AS FrontType
-        FROM cards c
-        LEFT JOIN cardSides f ON c.FrontSlug = f.Slug
-        LEFT JOIN cardSides b ON c.Backslug = b.Slug
-        LEFT JOIN productCards pc ON pc.CardSlug = c.Slug
-        WHERE
-          f.Search_Title LIKE '%${query}%' OR
-          b.Search_Title LIKE '%${query}%'
-        GROUP BY pc.FrontImageUrl, f.Title, f.Text, f.FlavorText, f.Sphere, f.Type
-        LIMIT 50`,
+      db
+        .selectFrom("cards as c")
+        .leftJoin("cardSides as f", "f.Slug", "c.FrontSlug")
+        .leftJoin("cardSides as b", "b.Slug", "c.BackSlug")
+        .leftJoin("productCards as pc", "pc.CardSlug", "c.Slug")
+        .select([
+          "c.Slug",
+          "f.Title",
+          "f.Text",
+          "f.FlavorText",
+          "pc.FrontImageUrl",
+        ])
+        .where((eb) =>
+          eb.or([
+            eb("f.Search_Title", "like", `%${query}%`),
+            eb("b.Search_Title", "like", `%${query}%`),
+          ])
+        )
+        .groupBy(["c.Slug"])
+        .limit(10)
+        .compile(),
     [query]
   );
 
@@ -52,7 +72,7 @@ function CardSearchRouteComponent() {
     });
   };
 
-  const { error, results } = useSqljsQuery(sqlQuery);
+  const { error, results } = useKyselyQuery(compiledQuery);
 
   return (
     <CardSearch

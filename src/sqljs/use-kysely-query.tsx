@@ -2,8 +2,9 @@
 import { useContext, useState, useMemo } from "react";
 import { QueryExecResult } from "sql.js";
 import { SqljsDbContext } from "@/sqljs/sqljs-provder";
+import type { CompiledQuery } from "kysely";
 
-const useSqljsQuery = (query: string) => {
+function useKyselyQuery(query: CompiledQuery) {
   const sqljsDbContext = useContext(SqljsDbContext);
 
   if (!SqljsDbContext) {
@@ -20,9 +21,15 @@ const useSqljsQuery = (query: string) => {
 
     try {
       // const startTime = performance.now();
-      setResults(sqljsDbContext.sqljsDb.exec(query));
+      const results = sqljsDbContext.sqljsDb.exec(query.sql, query.parameters);
+
+      console.log("Query results:", results);
+
+      setResults(results);
       setError("");
     } catch (error) {
+      console.log("Error executing query:", error);
+      console.log(error);
       if (error instanceof Error) {
         setError(`An error occurred: ${error.message}`);
       } else if (typeof error === "string") {
@@ -35,6 +42,6 @@ const useSqljsQuery = (query: string) => {
   }, [sqljsDbContext.sqljsDb, query]);
 
   return { error, results };
-};
+}
 
-export default useSqljsQuery;
+export default useKyselyQuery;
