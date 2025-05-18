@@ -1,5 +1,6 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useDebounce } from "@uidotdev/usehooks";
 import useKyselyQuery from "@/sqljs/use-kysely-query";
 import { CardSearch } from "@/components/pages/card-search";
 
@@ -38,6 +39,8 @@ function CardSearchRouteComponent() {
   const { query } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
 
+  const debouncedQuery = useDebounce(query, 300);
+
   const compiledQuery = useMemo(
     () =>
       db
@@ -54,14 +57,14 @@ function CardSearchRouteComponent() {
         ])
         .where((eb) =>
           eb.or([
-            eb("f.Search_Title", "like", `%${query}%`),
-            eb("b.Search_Title", "like", `%${query}%`),
+            eb("f.Search_Title", "like", `%${debouncedQuery}%`),
+            eb("b.Search_Title", "like", `%${debouncedQuery}%`),
           ])
         )
         .groupBy(["c.Slug"])
         .limit(10)
         .compile(),
-    [query]
+    [debouncedQuery]
   );
 
   const setQuery = (query: string) => {
