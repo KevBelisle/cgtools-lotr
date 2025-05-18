@@ -1,10 +1,10 @@
 //import { toaster } from "@/components/ui/toaster";
 import { useContext, useState, useMemo } from "react";
-import { QueryExecResult } from "sql.js";
+import { BindParams, QueryExecResult, SqlValue } from "sql.js";
 import { SqljsDbContext } from "@/sqljs/sqljs-provder";
 import type { CompiledQuery } from "kysely";
 
-function useKyselyQuery(query: CompiledQuery) {
+function useKyselyQuery(compiledQuery: CompiledQuery) {
   const sqljsDbContext = useContext(SqljsDbContext);
 
   if (!SqljsDbContext) {
@@ -14,22 +14,20 @@ function useKyselyQuery(query: CompiledQuery) {
   const [error, setError] = useState<string>("");
   const [results, setResults] = useState<QueryExecResult[]>([]);
 
+  const sqlQuery = compiledQuery.sql;
+  const sqlParameters: BindParams = compiledQuery.parameters as SqlValue[];
+
   useMemo(() => {
     if (!sqljsDbContext.sqljsDb) {
       return;
     }
 
     try {
-      // const startTime = performance.now();
-      const results = sqljsDbContext.sqljsDb.exec(query.sql, query.parameters);
-
-      console.log("Query results:", results);
-
+      const results = sqljsDbContext.sqljsDb.exec(sqlQuery, sqlParameters);
       setResults(results);
       setError("");
     } catch (error) {
-      console.log("Error executing query:", error);
-      console.log(error);
+      console.error("Error executing query:", error);
       if (error instanceof Error) {
         setError(`An error occurred: ${error.message}`);
       } else if (typeof error === "string") {
@@ -39,7 +37,7 @@ function useKyselyQuery(query: CompiledQuery) {
       }
       setResults([]);
     }
-  }, [sqljsDbContext.sqljsDb, query]);
+  }, [sqljsDbContext.sqljsDb, compiledQuery]);
 
   return { error, results };
 }
