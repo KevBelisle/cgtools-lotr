@@ -1,7 +1,7 @@
+import { useCallback } from "react";
 import type { QueryExecResult } from "sql.js";
 
 import {
-  Input,
   Center,
   Container,
   Card,
@@ -13,6 +13,7 @@ import {
   Em,
   SimpleGrid,
 } from "@chakra-ui/react";
+import ControlledInput from "@/components/ui/controlled-input";
 import { ReactNode } from "@tanstack/react-router";
 
 const LotrCard = ({
@@ -83,14 +84,16 @@ export const CardSearch = ({
     });
   }
 
+  const onChange = useCallback((e: any) => setQuery(e.target.value), []);
+
   return (
     <Container mb="16">
       <Center>
-        <Input
+        <ControlledInput
           name="sqlQuery"
           placeholder="Find by title..."
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={onChange}
           size="lg"
           colorPalette={"teal"}
           my={16}
