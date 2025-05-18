@@ -69,6 +69,7 @@ function CardSearchRouteComponent() {
       search: (prev) => {
         return { ...prev, query: query };
       },
+      replace: true,
     });
   };
 
