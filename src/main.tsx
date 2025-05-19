@@ -23,8 +23,9 @@ const router = createRouter({
   routeTree,
   history: hashHistory,
   defaultPreload: "intent",
-  defaultStaleTime: Infinity,
-  defaultPreloadStaleTime: Infinity,
+  defaultStaleTime: 5 * 60 * 1000, // 5 minutes
+  defaultPreloadStaleTime: 5 * 60 * 1000, // 5 minutes
+  defaultGcTime: 5 * 60 * 1000, // 5 minutes
   scrollRestoration: true,
   context: {
     sqljsDbContext: undefined!,
