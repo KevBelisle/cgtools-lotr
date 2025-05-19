@@ -10,6 +10,10 @@ function execCompiledQuery<T>(
     compiledQuery.parameters as SqlValue[]
   );
 
+  if (res.length === 0) {
+    return [] as T[];
+  }
+
   const cols = res[0].columns;
   const ret = res[0].values.map((row) => {
     const obj: Record<string, unknown> = {};
