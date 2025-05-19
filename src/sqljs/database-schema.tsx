@@ -1,4 +1,11 @@
-import { Selectable } from "kysely";
+import {
+  Kysely,
+  Selectable,
+  DummyDriver,
+  SqliteAdapter,
+  SqliteIntrospector,
+  SqliteQueryCompiler,
+} from "kysely";
 
 export interface Database {
   cards: CardTable;
@@ -32,3 +39,12 @@ export interface ProductCardTable {
 export type Card = Selectable<CardTable>;
 export type CardSide = Selectable<CardSideTable>;
 export type ProductCard = Selectable<ProductCardTable>;
+
+export const kysely = new Kysely<Database>({
+  dialect: {
+    createAdapter: () => new SqliteAdapter(),
+    createDriver: () => new DummyDriver(),
+    createIntrospector: (db) => new SqliteIntrospector(db),
+    createQueryCompiler: () => new SqliteQueryCompiler(),
+  },
+});

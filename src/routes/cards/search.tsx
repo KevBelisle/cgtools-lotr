@@ -1,26 +1,10 @@
 import { useMemo } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useDebounce } from "@uidotdev/usehooks";
+
 import useKyselyQuery from "@/sqljs/use-kysely-query";
 import { CardSearch } from "@/components/pages/card-search";
-
-import { Database } from "@/database";
-import {
-  Kysely,
-  DummyDriver,
-  SqliteAdapter,
-  SqliteIntrospector,
-  SqliteQueryCompiler,
-} from "kysely";
-
-const db = new Kysely<Database>({
-  dialect: {
-    createAdapter: () => new SqliteAdapter(),
-    createDriver: () => new DummyDriver(),
-    createIntrospector: (db) => new SqliteIntrospector(db),
-    createQueryCompiler: () => new SqliteQueryCompiler(),
-  },
-});
+import { kysely } from "@/sqljs/database-schema";
 
 type SearchFilters = {
   query: string;
@@ -43,7 +27,7 @@ function CardSearchRouteComponent() {
 
   const compiledQuery = useMemo(
     () =>
-      db
+      kysely
         .selectFrom("cards as c")
         .leftJoin("cardSides as f", "f.Slug", "c.FrontSlug")
         .leftJoin("cardSides as b", "b.Slug", "c.BackSlug")
