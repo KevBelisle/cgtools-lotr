@@ -1,7 +1,7 @@
 //import { toaster } from "@/components/ui/toaster";
 import { useContext, useState, useMemo } from "react";
 import { BindParams, QueryExecResult, SqlValue } from "sql.js";
-import { SqljsDbContext } from "@/sqljs/sqljs-provder";
+import { SqljsDbContext } from "@/sqljs/sqljs-provider";
 import type { CompiledQuery } from "kysely";
 
 function useKyselyQuery(compiledQuery: CompiledQuery) {

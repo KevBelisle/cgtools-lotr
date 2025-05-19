@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as DebugImport } from './routes/debug'
 import { Route as IndexImport } from './routes/index'
 import { Route as CardsSearchImport } from './routes/cards/search'
+import { Route as CardsCardSlugImport } from './routes/cards/$cardSlug'
 
 // Create/Update Routes
 
@@ -35,6 +36,12 @@ const CardsSearchRoute = CardsSearchImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const CardsCardSlugRoute = CardsCardSlugImport.update({
+  id: '/cards/$cardSlug',
+  path: '/cards/$cardSlug',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -53,6 +60,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DebugImport
       parentRoute: typeof rootRoute
     }
+    '/cards/$cardSlug': {
+      id: '/cards/$cardSlug'
+      path: '/cards/$cardSlug'
+      fullPath: '/cards/$cardSlug'
+      preLoaderRoute: typeof CardsCardSlugImport
+      parentRoute: typeof rootRoute
+    }
     '/cards/search': {
       id: '/cards/search'
       path: '/cards/search'
@@ -68,12 +82,14 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/debug': typeof DebugRoute
+  '/cards/$cardSlug': typeof CardsCardSlugRoute
   '/cards/search': typeof CardsSearchRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/debug': typeof DebugRoute
+  '/cards/$cardSlug': typeof CardsCardSlugRoute
   '/cards/search': typeof CardsSearchRoute
 }
 
@@ -81,27 +97,30 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/debug': typeof DebugRoute
+  '/cards/$cardSlug': typeof CardsCardSlugRoute
   '/cards/search': typeof CardsSearchRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/debug' | '/cards/search'
+  fullPaths: '/' | '/debug' | '/cards/$cardSlug' | '/cards/search'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/debug' | '/cards/search'
-  id: '__root__' | '/' | '/debug' | '/cards/search'
+  to: '/' | '/debug' | '/cards/$cardSlug' | '/cards/search'
+  id: '__root__' | '/' | '/debug' | '/cards/$cardSlug' | '/cards/search'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DebugRoute: typeof DebugRoute
+  CardsCardSlugRoute: typeof CardsCardSlugRoute
   CardsSearchRoute: typeof CardsSearchRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DebugRoute: DebugRoute,
+  CardsCardSlugRoute: CardsCardSlugRoute,
   CardsSearchRoute: CardsSearchRoute,
 }
 
@@ -117,6 +136,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/debug",
+        "/cards/$cardSlug",
         "/cards/search"
       ]
     },
@@ -125,6 +145,9 @@ export const routeTree = rootRoute
     },
     "/debug": {
       "filePath": "debug.tsx"
+    },
+    "/cards/$cardSlug": {
+      "filePath": "cards/$cardSlug.tsx"
     },
     "/cards/search": {
       "filePath": "cards/search.tsx"

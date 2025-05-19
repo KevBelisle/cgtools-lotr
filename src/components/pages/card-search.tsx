@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import type { QueryExecResult } from "sql.js";
-
+import { ReactNode } from "@tanstack/react-router";
 import {
   Center,
   Container,
@@ -13,10 +13,12 @@ import {
   Em,
   SimpleGrid,
 } from "@chakra-ui/react";
+
+import { CustomLink } from "@/components/ui/custom-link";
 import ControlledInput from "@/components/ui/controlled-input";
-import { ReactNode } from "@tanstack/react-router";
 
 const LotrCard = ({
+  slug,
   title,
   imageUrl,
   text,
@@ -24,6 +26,7 @@ const LotrCard = ({
   sphere,
   type,
 }: {
+  slug: string;
   title: string;
   imageUrl: string;
   text: string;
@@ -39,7 +42,11 @@ const LotrCard = ({
     />
     <Box>
       <Card.Body>
-        <Card.Title>{title}</Card.Title>
+        <Card.Title>
+          <CustomLink to="/cards/$cardSlug" params={{ cardSlug: slug }}>
+            {title}
+          </CustomLink>
+        </Card.Title>
         <HStack>
           <Badge>{sphere}</Badge>
           <Badge>{type}</Badge>
@@ -73,6 +80,7 @@ export const CardSearch = ({
       return (
         <LotrCard
           key={Slug as string}
+          slug={Slug as string}
           title={Title as string}
           imageUrl={FrontImageUrl as string}
           text={Text as string}

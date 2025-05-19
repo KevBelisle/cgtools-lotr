@@ -194,8 +194,12 @@ const InnerSqljsDbProvider = ({
     };
   }, [dbBuffer]);
 
-  if (sqljsContext.state === "error") {
+  if (sqljsDbContext.state === "error") {
     return <div>ERROR: {sqljsContext.error}</div>;
+  }
+
+  if (sqljsDbContext.state === "loading") {
+    return <div>LOADING</div>;
   }
 
   return (

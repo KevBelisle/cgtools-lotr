@@ -1,15 +1,16 @@
-import { useCallback } from "react";
-import { Outlet, createRootRoute } from "@tanstack/react-router";
+import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Flex, Container, Text } from "@chakra-ui/react";
 import { CustomButtonLink } from "@/components/ui/custom-button-link";
-import { SqljsDbProvider } from "@/sqljs/sqljs-provder";
-import Loading from "@/components/ui/loading";
 import { Toaster } from "@/components/ui/toaster";
 
 import NavBar from "@/components/ui/nav-bar";
 
-export const Route = createRootRoute({
+interface RouterContext {
+  test: any;
+}
+
+export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
   notFoundComponent: () => {
     return (
@@ -25,22 +26,11 @@ export const Route = createRootRoute({
   },
 });
 
-const dbUrl = "lotr_lcg.db";
-
 function RootComponent() {
-  const loading = useCallback(
-    (progress: number) => (
-      <Loading message="Loading database file..." progress={progress} />
-    ),
-    []
-  );
-
   return (
     <>
       <NavBar />
-      <SqljsDbProvider dbUrl={dbUrl} loading={loading}>
-        <Outlet />
-      </SqljsDbProvider>
+      <Outlet />
 
       <Toaster />
       <TanStackRouterDevtools />
