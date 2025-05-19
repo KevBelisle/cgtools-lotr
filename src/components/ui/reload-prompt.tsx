@@ -45,7 +45,6 @@ function ReloadPrompt() {
   );
 
   useEffect(() => {
-    console.log({ offlineReady, needRefresh });
     if (offlineReady) {
       toaster.create({
         title: "App ready to work offline",
