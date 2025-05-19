@@ -6,7 +6,7 @@ export const Route = createFileRoute("/cards/$cardSlug")({
   //   preloadStaleTime: 30 * 60 * 1000, // 30 minutes
   loader: async ({ params, context }) => {
     console.log({ params, context });
-    return context.test.sqljsDb.exec("SELECT * FROM cards LIMIT 1");
+    return context.sqljsDbContext.sqljsDb.exec("SELECT * FROM cards LIMIT 1");
   },
 });
 

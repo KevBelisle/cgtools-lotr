@@ -5,8 +5,8 @@ import {
   createHashHistory,
   createRouter,
 } from "@tanstack/react-router";
-import { routeTree } from "./routeTree.gen";
 
+import { routeTree } from "./routeTree.gen";
 import { ChakraProvider } from "@/components/ui/chakra-provider";
 import {
   SqljsDbContext,
@@ -27,7 +27,7 @@ const router = createRouter({
   defaultPreloadStaleTime: Infinity,
   scrollRestoration: true,
   context: {
-    test: undefined!,
+    sqljsDbContext: undefined!,
   },
 });
 
@@ -44,7 +44,7 @@ const RouterProvider = () => {
     <TanstackRouterProvider
       router={router}
       context={{
-        test: sqljsDbContext,
+        sqljsDbContext: sqljsDbContext,
       }}
     />
   );
