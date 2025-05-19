@@ -20,17 +20,17 @@ import ControlledInput from "@/components/ui/controlled-input";
 const LotrCard = ({
   slug,
   title,
-  imageUrl,
+  frontImageUrl,
   text,
   flavorText,
   sphere,
   type,
 }: {
   slug: string;
-  title: string;
-  imageUrl: string;
-  text: string;
-  flavorText: string;
+  title: string | null;
+  text: string | null;
+  flavorText: string | null;
+  frontImageUrl: string | null;
   sphere: string;
   type: string;
 }) => (
@@ -38,7 +38,7 @@ const LotrCard = ({
     <Image
       objectFit="cover"
       maxW="200px"
-      src={`https://images.cardgame.tools/lotr/sm/${imageUrl}`}
+      src={`https://images.cardgame.tools/lotr/sm/${frontImageUrl}`}
     />
     <Box>
       <Card.Body>
@@ -64,32 +64,37 @@ const LotrCard = ({
 export const CardSearch = ({
   query,
   setQuery,
-  error,
-  results,
+  cards,
 }: {
   query: string;
   setQuery: (query: string) => void;
-  error: string;
-  results: QueryExecResult[];
+  cards: {
+    Slug: string;
+    Title: string | null;
+    Text: string | null;
+    FlavorText: string | null;
+    FrontImageUrl: string | null;
+  }[];
 }) => {
   let cardResults: ReactNode[] = [];
 
-  if (results.length > 0) {
-    cardResults = results[0].values.map((row) => {
-      const [Slug, Title, Text, FlavorText, FrontImageUrl] = row;
-      return (
-        <LotrCard
-          key={Slug as string}
-          slug={Slug as string}
-          title={Title as string}
-          imageUrl={FrontImageUrl as string}
-          text={Text as string}
-          flavorText={FlavorText as string}
-          sphere={"FrontSphere" as string}
-          type={"FrontType" as string}
-        />
-      );
-    });
+  if (cards.length > 0) {
+    cardResults = cards.map(
+      ({ Slug, Title, Text, FlavorText, FrontImageUrl }) => {
+        return (
+          <LotrCard
+            key={Slug}
+            slug={Slug}
+            title={Title}
+            frontImageUrl={FrontImageUrl}
+            text={Text}
+            flavorText={FlavorText}
+            sphere={"FrontSphere" as string}
+            type={"FrontType" as string}
+          />
+        );
+      }
+    );
   }
 
   const onChange = useCallback((e: any) => setQuery(e.target.value), []);
@@ -108,7 +113,6 @@ export const CardSearch = ({
           width={"70%"}
         />
       </Center>
-      {error?.length > 0 && <div className=" text-red-600">{error}</div>}
       <SimpleGrid minChildWidth="lg" gap="40px">
         {...cardResults}
       </SimpleGrid>
