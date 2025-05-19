@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-import type { QueryExecResult } from "sql.js";
 import { ReactNode } from "@tanstack/react-router";
 import {
   Center,
