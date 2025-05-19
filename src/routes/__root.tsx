@@ -1,5 +1,4 @@
 import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Toaster } from "@/components/ui/toaster";
 
 import NavBar from "@/components/ui/nav-bar";
@@ -21,7 +20,6 @@ function RootComponent() {
       <Outlet />
 
       <Toaster />
-      <TanStackRouterDevtools />
     </>
   );
 }
