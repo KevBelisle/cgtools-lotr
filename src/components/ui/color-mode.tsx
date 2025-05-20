@@ -38,62 +38,62 @@ export function useColorModeValue<T>(light: T, dark: T) {
   return colorMode === "dark" ? dark : light;
 }
 
-export function ColorModeIcon() {
-  const { colorMode } = useColorMode();
-  return colorMode === "dark" ? <LuMoon /> : <LuSun />;
-}
+// export function ColorModeIcon() {
+//   const { colorMode } = useColorMode();
+//   return colorMode === "dark" ? <LuMoon /> : <LuSun />;
+// }
 
-interface ColorModeButtonProps extends Omit<IconButtonProps, "aria-label"> {}
+// interface ColorModeButtonProps extends Omit<IconButtonProps, "aria-label"> {}
 
-export const ColorModeButton = React.forwardRef<
-  HTMLButtonElement,
-  ColorModeButtonProps
->(function ColorModeButton(props, ref) {
-  const { toggleColorMode } = useColorMode();
-  return (
-    <IconButton
-      onClick={toggleColorMode}
-      variant="ghost"
-      bgColor="transparent"
-      color="white"
-      aria-label="Toggle color mode"
-      size="sm"
-      ref={ref}
-      {...props}
-    >
-      <ColorModeIcon />
-    </IconButton>
-  );
-});
+// export const ColorModeButton = React.forwardRef<
+//   HTMLButtonElement,
+//   ColorModeButtonProps
+// >(function ColorModeButton(props, ref) {
+//   const { toggleColorMode } = useColorMode();
+//   return (
+//     <IconButton
+//       onClick={toggleColorMode}
+//       variant="ghost"
+//       bgColor="transparent"
+//       color="white"
+//       aria-label="Toggle color mode"
+//       size="sm"
+//       ref={ref}
+//       {...props}
+//     >
+//       <ColorModeIcon />
+//     </IconButton>
+//   );
+// });
 
-export const LightMode = React.forwardRef<HTMLSpanElement, SpanProps>(
-  function LightMode(props, ref) {
-    return (
-      <Span
-        color="fg"
-        display="contents"
-        className="chakra-theme light"
-        colorPalette="gray"
-        colorScheme="light"
-        ref={ref}
-        {...props}
-      />
-    );
-  }
-);
+// export const LightMode = React.forwardRef<HTMLSpanElement, SpanProps>(
+//   function LightMode(props, ref) {
+//     return (
+//       <Span
+//         color="fg"
+//         display="contents"
+//         className="chakra-theme light"
+//         colorPalette="gray"
+//         colorScheme="light"
+//         ref={ref}
+//         {...props}
+//       />
+//     );
+//   }
+// );
 
-export const DarkMode = React.forwardRef<HTMLSpanElement, SpanProps>(
-  function DarkMode(props, ref) {
-    return (
-      <Span
-        color="fg"
-        display="contents"
-        className="chakra-theme dark"
-        colorPalette="gray"
-        colorScheme="dark"
-        ref={ref}
-        {...props}
-      />
-    );
-  }
-);
+// export const DarkMode = React.forwardRef<HTMLSpanElement, SpanProps>(
+//   function DarkMode(props, ref) {
+//     return (
+//       <Span
+//         color="fg"
+//         display="contents"
+//         className="chakra-theme dark"
+//         colorPalette="gray"
+//         colorScheme="dark"
+//         ref={ref}
+//         {...props}
+//       />
+//     );
+//   }
+// );

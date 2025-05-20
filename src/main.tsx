@@ -7,7 +7,6 @@ import {
 } from "@tanstack/react-router";
 
 import { routeTree } from "./routeTree.gen";
-import { ChakraProvider } from "@/components/ui/chakra-provider";
 import {
   SqljsDbContext,
   SqljsDbProvider,
@@ -15,6 +14,7 @@ import {
 } from "@/sqljs/sqljs-provider";
 import "./styles.css";
 import Loading from "@/components/ui/loading";
+import { ChakraProvider } from "@/components/ui/chakra-provider";
 
 const hashHistory = createHashHistory();
 

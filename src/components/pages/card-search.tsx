@@ -107,9 +107,9 @@ export const CardSearch = ({
           value={query}
           onChange={onChange}
           size="lg"
-          colorPalette={"teal"}
           my={16}
-          width={"70%"}
+          variant="subtle"
+          borderColor="sand.800"
         />
       </Center>
       <SimpleGrid minChildWidth="lg" gap="40px">
