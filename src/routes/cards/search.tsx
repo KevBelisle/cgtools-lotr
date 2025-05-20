@@ -1,9 +1,10 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { CardSearch } from "@/components/pages/card-search";
-import { kysely } from "@/sqljs/database-schema";
+import { cardBaseQuery, CardBaseQueryResult } from "@/sqljs/database-schema";
 import execCompiledQuery from "@/sqljs/exec-compiled-query";
 import { useState } from "react";
+import { lotrCardFromCardBaseQuery } from "@/lotr-schema";
 
 type SearchFilters = {
   query: string;
@@ -20,18 +21,7 @@ export const Route = createFileRoute("/cards/search")({
   loaderDeps: ({ search: { query } }) => ({ query }),
 
   loader: async ({ context, deps: { query } }) => {
-    const compiledQuery = kysely
-      .selectFrom("cards as c")
-      .leftJoin("cardSides as f", "f.Slug", "c.FrontSlug")
-      .leftJoin("cardSides as b", "b.Slug", "c.BackSlug")
-      .leftJoin("productCards as pc", "pc.CardSlug", "c.Slug")
-      .select([
-        "c.Slug",
-        "f.Title",
-        "f.Text",
-        "f.FlavorText",
-        "pc.FrontImageUrl",
-      ])
+    const compiledQuery = cardBaseQuery
       .where((eb) =>
         eb.or([
           eb("f.Search_Title", "like", `%${query}%`),
@@ -42,7 +32,13 @@ export const Route = createFileRoute("/cards/search")({
       .limit(10)
       .compile();
 
-    return execCompiledQuery(compiledQuery, context.sqljsDbContext.sqljsDb);
+    const queryResults = execCompiledQuery(
+      compiledQuery,
+      context.sqljsDbContext.sqljsDb
+    );
+    return (queryResults as CardBaseQueryResult[]).map(
+      lotrCardFromCardBaseQuery
+    );
   },
 });
 

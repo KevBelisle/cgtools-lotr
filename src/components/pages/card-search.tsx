@@ -3,7 +3,7 @@ import { ReactNode } from "@tanstack/react-router";
 import {
   Center,
   Container,
-  Card,
+  Card as ChakraCard,
   Box,
   Image,
   HStack,
@@ -13,51 +13,44 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 
+import type { Card as Card } from "@/lotr-schema";
 import { CustomLink } from "@/components/ui/custom-link";
 import ControlledInput from "@/components/ui/controlled-input";
 
-const LotrCard = ({
-  slug,
-  title,
-  frontImageUrl,
-  text,
-  flavorText,
-  sphere,
-  type,
-}: {
-  slug: string;
-  title: string | null;
-  text: string | null;
-  flavorText: string | null;
-  frontImageUrl: string | null;
-  sphere: string;
-  type: string;
-}) => (
-  <Card.Root flexDirection="row" overflow="hidden">
+const LotrCard = ({ card }: { card: Card }) => (
+  <ChakraCard.Root flexDirection="row" overflow="hidden">
     <Image
       objectFit="cover"
       maxW="200px"
-      src={`https://images.cardgame.tools/lotr/sm/${frontImageUrl}`}
+      src={`https://images.cardgame.tools/lotr/sm/${card.ProductCard?.FrontImageUrl}`}
     />
     <Box>
-      <Card.Body>
-        <Card.Title>
-          <CustomLink to="/cards/$cardSlug" params={{ cardSlug: slug }}>
-            {title}
+      <ChakraCard.Body>
+        <ChakraCard.Title>
+          <CustomLink to="/cards/$cardSlug" params={{ cardSlug: card.Slug }}>
+            {card.Front.Title}
           </CustomLink>
-        </Card.Title>
+        </ChakraCard.Title>
         <HStack>
-          <Badge>{sphere}</Badge>
-          <Badge>{type}</Badge>
+          <Badge>{card.Front.Sphere}</Badge>
+          <Badge>{card.Front.Type}</Badge>
         </HStack>
-        <Card.Description>
-          {text}
+        <ChakraCard.Description>
+          <Box>
+            {card.Front.Text?.replaceAll('\"', '"')
+              .split("\\r\\n")
+              .map((str) => <p>{str}</p>)}
+          </Box>
           <Separator />
-          <Em fontFamily={"serif"}>{flavorText}</Em>
-        </Card.Description>
-      </Card.Body>
+          <Em fontFamily={"serif"}>
+            {card.Front.FlavorText?.replaceAll('\\"', '"')
+              .split("\\r\\n")
+              .map((str) => <p>{str}</p>)}
+          </Em>
+        </ChakraCard.Description>
+      </ChakraCard.Body>
     </Box>
-  </Card.Root>
+  </ChakraCard.Root>
 );
 
 export const CardSearch = ({
@@ -67,33 +60,15 @@ export const CardSearch = ({
 }: {
   query: string;
   setQuery: (query: string) => void;
-  cards: {
-    Slug: string;
-    Title: string | null;
-    Text: string | null;
-    FlavorText: string | null;
-    FrontImageUrl: string | null;
-  }[];
+  cards: Card[];
 }) => {
   let cardResults: ReactNode[] = [];
 
   if (cards.length > 0) {
-    cardResults = cards.map(
-      ({ Slug, Title, Text, FlavorText, FrontImageUrl }) => {
-        return (
-          <LotrCard
-            key={Slug}
-            slug={Slug}
-            title={Title}
-            frontImageUrl={FrontImageUrl}
-            text={Text}
-            flavorText={FlavorText}
-            sphere={"FrontSphere" as string}
-            type={"FrontType" as string}
-          />
-        );
-      }
-    );
+    cardResults = cards.map((card) => {
+      console.log("flavor", card.Front.FlavorText);
+      return <LotrCard key={card.Slug} card={card} />;
+    });
   }
 
   const onChange = useCallback((e: any) => setQuery(e.target.value), []);
