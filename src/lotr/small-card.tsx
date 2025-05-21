@@ -93,7 +93,7 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
     >
       <Link to="/cards/$cardSlug" params={{ cardSlug: card.Slug }}>
         <VStack p={4} gap={2} alignItems="stretch">
-          <HStack justifyContent="space-between">
+          <HStack justifyContent="space-between" flexWrap={"wrap"}>
             <Card.Title fontFamily={"vafthrudnir"}>
               {card.Front.IsUnique ? (
                 <Unique
@@ -108,7 +108,7 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
               )}{" "}
               {card.Front.Title}
             </Card.Title>
-            <HStack>
+            <HStack flexGrow={1} justifyContent="flex-end">
               <Tag>
                 {card.Front.Type}
                 {card.Front.Subtype && ` - ${card.Front.Subtype}`}
@@ -144,13 +144,13 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
             </HStack>
           </HStack>
 
-          <HStack justifyContent="space-between">
+          <HStack justifyContent="space-between" flexWrap={"wrap"}>
             <Em fontSize="sm" fontFamily={"serif"}>
               {card.Front.Keywords.split(",").join(" ")}
               {card.Front.Keywords && card.Front.Traits && " - "}
               {card.Front.Traits.split(",").join(" ")}
             </Em>
-            <HStack>
+            <HStack flexGrow={1} justifyContent="flex-end">
               {card.Front.ThreatStrength != null && (
                 <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
                   <HStack gap="1">
