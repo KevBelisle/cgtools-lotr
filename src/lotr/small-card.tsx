@@ -93,7 +93,11 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
     >
       <Link to="/cards/$cardSlug" params={{ cardSlug: card.Slug }}>
         <VStack p={4} gap={2} alignItems="stretch">
-          <Card.Title fontFamily={"vafthrudnir"}>
+          <Card.Title
+            fontFamily={"vafthrudnir"}
+            fontVariant={"small-caps"}
+            fontSize="2xl"
+          >
             <HStack justifyContent="space-between">
               <span>
                 {card.Front.IsUnique ? (
