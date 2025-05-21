@@ -22,6 +22,7 @@ export const Route = createFileRoute("/cards/search")({
   loaderDeps: ({ search: { query } }) => ({ query }),
 
   loader: async ({ context, deps: { query: searchQuery } }) => {
+    searchQuery = searchQuery.replace(/[^\w\d\s]/g, "");
     const compiledQuery = searchQuery
       ? cardBaseQuery
           .where((eb) =>
