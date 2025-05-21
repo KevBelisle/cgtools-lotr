@@ -68,7 +68,7 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
         >
           <span
             style={{
-              transform: "translate(6px, -10px)",
+              transform: "translate(6px, 10px)",
               display: "inline-block",
             }}
           >
@@ -93,22 +93,32 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
     >
       <Link to="/cards/$cardSlug" params={{ cardSlug: card.Slug }}>
         <VStack p={4} gap={2} alignItems="stretch">
+          <Card.Title fontFamily={"vafthrudnir"}>
+            <HStack justifyContent="space-between">
+              <span>
+                {card.Front.IsUnique ? (
+                  <Unique
+                    style={{
+                      display: "inline",
+                      height: "1.4rem",
+                      width: "1.4rem",
+                    }}
+                  />
+                ) : (
+                  ""
+                )}{" "}
+                {card.Front.Title}
+              </span>
+              {card.Front.Sphere && (
+                <Text color={borderColor} mt={"-1"}>
+                  {sphereIcon}
+                </Text>
+              )}
+            </HStack>
+          </Card.Title>
+
           <HStack justifyContent="space-between" flexWrap={"wrap"}>
-            <Card.Title fontFamily={"vafthrudnir"}>
-              {card.Front.IsUnique ? (
-                <Unique
-                  style={{
-                    display: "inline",
-                    height: "1.4rem",
-                    width: "1.4rem",
-                  }}
-                />
-              ) : (
-                ""
-              )}{" "}
-              {card.Front.Title}
-            </Card.Title>
-            <HStack flexGrow={1} justifyContent="flex-end">
+            <HStack justifyContent="flex-end">
               <Tag>
                 {card.Front.Type}
                 {card.Front.Subtype && ` - ${card.Front.Subtype}`}
@@ -138,18 +148,7 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
                   {card.Front.ThreatCost}
                 </Tag>
               )}
-              {card.Front.Sphere && (
-                <Text color={borderColor}>{sphereIcon}</Text>
-              )}
             </HStack>
-          </HStack>
-
-          <HStack justifyContent="space-between" flexWrap={"wrap"}>
-            <Em fontSize="sm" fontFamily={"serif"}>
-              {card.Front.Keywords.split(",").join(" ")}
-              {card.Front.Keywords && card.Front.Traits && " - "}
-              {card.Front.Traits.split(",").join(" ")}
-            </Em>
             <HStack flexGrow={1} justifyContent="flex-end">
               {card.Front.ThreatStrength != null && (
                 <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
@@ -228,6 +227,11 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
               )}
             </HStack>
           </HStack>
+          <Em fontSize="sm" fontFamily={"serif"}>
+            {card.Front.Keywords.split(",").join(" ")}
+            {card.Front.Keywords && card.Front.Traits && " - "}
+            {card.Front.Traits.split(",").join(" ")}
+          </Em>
           {card.Front.Text && (
             <Text fontSize="sm" fontFamily={"serif"} lineClamp="2">
               {card.Front.Text.replaceAll('\\"', '"')
