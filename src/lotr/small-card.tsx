@@ -233,7 +233,7 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
             {card.Front.Traits.split(",").join(" ")}
           </Em>
           {card.Front.Text && (
-            <Text fontSize="sm" fontFamily={"serif"} lineClamp="2">
+            <Text fontSize="sm" fontFamily={"serif"}>
               {card.Front.Text.replaceAll('\\"', '"')
                 .split("\\r\\n")
                 .flatMap((str) => [str, <br />])}
