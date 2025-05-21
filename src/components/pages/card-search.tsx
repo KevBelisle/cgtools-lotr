@@ -42,7 +42,7 @@ export const CardSearch = ({
           color="night.900"
         />
       </Center>
-      <SimpleGrid minChildWidth="md" gap="40px">
+      <SimpleGrid columns={[1, null, null, 2, null, 3]} gap="40px">
         {...cardResults}
       </SimpleGrid>
     </Container>
