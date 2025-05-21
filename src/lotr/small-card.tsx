@@ -96,6 +96,7 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
           <Card.Title
             fontFamily={"vafthrudnir"}
             fontVariant={"small-caps"}
+            fontWeight={"normal"}
             fontSize="2xl"
           >
             <HStack justifyContent="space-between">
@@ -231,13 +232,13 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
               )}
             </HStack>
           </HStack>
-          <Em fontSize="sm" fontFamily={"serif"}>
+          <Em fontSize="sm" fontFamily={"times, serif"}>
             {card.Front.Keywords.split(",").join(" ")}
             {card.Front.Keywords && card.Front.Traits && " - "}
             {card.Front.Traits.split(",").join(" ")}
           </Em>
           {card.Front.Text && (
-            <Text fontSize="sm" fontFamily={"serif"}>
+            <Text fontSize="sm" fontFamily={"times, serif"}>
               {card.Front.Text.replaceAll('\\"', '"')
                 .split("\\r\\n")
                 .flatMap((str) => [str, <br />])}
@@ -248,13 +249,5 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
     </Card.Root>
   );
 };
-
-{
-  /* <Em fontFamily={"serif"}>
-{card.Front.FlavorText?.replaceAll('\\"', '"')
-  .split("\\r\\n")
-  .map((str) => <p>{str}</p>)}
-</Em> */
-}
 
 export default SmallCard;
