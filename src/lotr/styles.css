@@ -1,13 +1,4 @@
 @font-face {
-  font-family: "booterfz";
-  src:
-    url("./fonts/booterfz-webfont.woff2") format("woff2"),
-    url("./fonts/booterfz-webfont.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
   font-family: "times";
   src:
     url("./fonts/times_new_roman_bold_italic-webfont.woff2") format("woff2"),
