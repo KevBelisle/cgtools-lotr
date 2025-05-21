@@ -33,7 +33,15 @@ const config = defineConfig({
       },
     },
     semanticTokens: {
-      colors: {},
+      colors: {
+        leadership: { fg: { value: "#44337A" }, bg: { value: "#000" } },
+        tactics: { fg: { value: "#822727" }, fb: { value: "#000" } },
+        spirit: { fg: { value: "#0A6E83" }, bg: { value: "#000" } },
+        lore: { fg: { value: "#21543D" }, bg: { value: "#000" } },
+        fellowship: { fg: { value: "#7B341E" }, bg: { value: "#000" } },
+        baggins: { fg: { value: "#744110" }, bg: { value: "#000" } },
+        neutral: { fg: { value: "#363638" }, bg: { value: "#000" } },
+      },
     },
   },
 });

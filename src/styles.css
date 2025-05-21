@@ -1,3 +1,5 @@
+@import url("./lotr/styles.css");
+
 html {
   scrollbar-gutter: stable;
   background: rgb(23 24 29);

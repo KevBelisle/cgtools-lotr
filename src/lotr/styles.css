@@ -1,0 +1,60 @@
+@font-face {
+  font-family: "booterfz";
+  src:
+    url("./fonts/booterfz-webfont.woff2") format("woff2"),
+    url("./fonts/booterfz-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "times";
+  src:
+    url("./fonts/times_new_roman_bold_italic-webfont.woff2") format("woff2"),
+    url("./fonts/times_new_roman_bold_italic-webfont.woff") format("woff");
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "times";
+  src:
+    url("./fonts/times_new_roman_bold-webfont.woff2") format("woff2"),
+    url("./fonts/times_new_roman_bold-webfont.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "times";
+  src:
+    url("./fonts/times_new_roman_italic-webfont.woff2") format("woff2"),
+    url("./fonts/times_new_roman_italic-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "times";
+  src:
+    url("./fonts/times_new_roman-webfont.woff2") format("woff2"),
+    url("./fonts/times_new_roman-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "vafthrudnir";
+  src: url("./fonts/Vafthrudnir-Ext-Regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "ringbearer";
+  src:
+    url("./fonts/ringbearer-webfont.woff2") format("woff2"),
+    url("./fonts/ringbearer-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}

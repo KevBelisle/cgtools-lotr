@@ -5,6 +5,7 @@ import { cardBaseQuery, CardBaseQueryResult } from "@/sqljs/database-schema";
 import execCompiledQuery from "@/sqljs/exec-compiled-query";
 import { useState } from "react";
 import { lotrCardFromCardBaseQuery } from "@/lotr-schema";
+import { sql } from "kysely";
 
 type SearchFilters = {
   query: string;
@@ -20,18 +21,24 @@ export const Route = createFileRoute("/cards/search")({
   },
   loaderDeps: ({ search: { query } }) => ({ query }),
 
-  loader: async ({ context, deps: { query } }) => {
-    const compiledQuery = cardBaseQuery
-      .where((eb) =>
-        eb.or([
-          eb("f.Search_Title", "like", `%${query}%`),
-          eb("b.Search_Title", "like", `%${query}%`),
-        ])
-      )
-      .groupBy(["c.Slug"])
-      .limit(10)
-      .compile();
-
+  loader: async ({ context, deps: { query: searchQuery } }) => {
+    const compiledQuery = searchQuery
+      ? cardBaseQuery
+          .where((eb) =>
+            eb.or([
+              eb("f.Search_Title", "like", `%${searchQuery}%`),
+              eb("b.Search_Title", "like", `%${searchQuery}%`),
+            ])
+          )
+          .groupBy(["c.Slug"])
+          .limit(30)
+          .compile()
+      : cardBaseQuery
+          .where("f.Sphere", "is not", null)
+          .groupBy(["c.Slug"])
+          .orderBy(sql`random()`)
+          .limit(30)
+          .compile();
     const queryResults = execCompiledQuery(
       compiledQuery,
       context.sqljsDbContext.sqljsDb

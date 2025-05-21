@@ -1,57 +1,10 @@
 import { useCallback } from "react";
 import { ReactNode } from "@tanstack/react-router";
-import {
-  Center,
-  Container,
-  Card as ChakraCard,
-  Box,
-  Image,
-  HStack,
-  Badge,
-  Separator,
-  Em,
-  SimpleGrid,
-} from "@chakra-ui/react";
+import { Center, Container, SimpleGrid } from "@chakra-ui/react";
 
-import type { Card as Card } from "@/lotr-schema";
-import { CustomLink } from "@/components/ui/custom-link";
+import type { Card as GameCard } from "@/lotr-schema";
 import ControlledInput from "@/components/ui/controlled-input";
-
-const LotrCard = ({ card }: { card: Card }) => (
-  <ChakraCard.Root flexDirection="row" overflow="hidden">
-    <Image
-      objectFit="cover"
-      maxW="200px"
-      src={`https://images.cardgame.tools/lotr/sm/${card.ProductCard?.FrontImageUrl}`}
-    />
-    <Box>
-      <ChakraCard.Body>
-        <ChakraCard.Title>
-          <CustomLink to="/cards/$cardSlug" params={{ cardSlug: card.Slug }}>
-            {card.Front.Title}
-          </CustomLink>
-        </ChakraCard.Title>
-        <HStack>
-          <Badge>{card.Front.Sphere}</Badge>
-          <Badge>{card.Front.Type}</Badge>
-        </HStack>
-        <ChakraCard.Description>
-          <Box>
-            {card.Front.Text?.replaceAll('\"', '"')
-              .split("\\r\\n")
-              .map((str) => <p>{str}</p>)}
-          </Box>
-          <Separator />
-          <Em fontFamily={"serif"}>
-            {card.Front.FlavorText?.replaceAll('\\"', '"')
-              .split("\\r\\n")
-              .map((str) => <p>{str}</p>)}
-          </Em>
-        </ChakraCard.Description>
-      </ChakraCard.Body>
-    </Box>
-  </ChakraCard.Root>
-);
+import SmallCard from "@/lotr/small-card";
 
 export const CardSearch = ({
   query,
@@ -60,14 +13,13 @@ export const CardSearch = ({
 }: {
   query: string;
   setQuery: (query: string) => void;
-  cards: Card[];
+  cards: GameCard[];
 }) => {
   let cardResults: ReactNode[] = [];
 
   if (cards.length > 0) {
     cardResults = cards.map((card) => {
-      console.log("flavor", card.Front.FlavorText);
-      return <LotrCard key={card.Slug} card={card} />;
+      return <SmallCard key={card.Slug} card={card} />;
     });
   }
 
@@ -84,10 +36,13 @@ export const CardSearch = ({
           size="lg"
           my={16}
           variant="subtle"
-          borderColor="sand.800"
+          borderColor="sand.500"
+          borderWidth={2}
+          background="sand.50"
+          color="night.900"
         />
       </Center>
-      <SimpleGrid minChildWidth="lg" gap="40px">
+      <SimpleGrid minChildWidth="md" gap="40px">
         {...cardResults}
       </SimpleGrid>
     </Container>

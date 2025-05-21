@@ -1,33 +1,39 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { kysely } from "@/sqljs/database-schema";
 import execCompiledQuery from "@/sqljs/exec-compiled-query";
+import { cardBaseQuery, CardBaseQueryResult } from "@/sqljs/database-schema";
+import { Card, lotrCardFromCardBaseQuery } from "@/lotr-schema";
+import SmallCard from "@/lotr/small-card";
+import { Container, Image } from "@chakra-ui/react";
 
 export const Route = createFileRoute("/cards/$cardSlug")({
   component: RouteComponent,
 
   loader: async ({ params, context }) => {
-    const compiledQuery = kysely
-      .selectFrom("cards as c")
-      .leftJoin("cardSides as f", "f.Slug", "c.FrontSlug")
-      .leftJoin("cardSides as b", "b.Slug", "c.BackSlug")
-      .leftJoin("productCards as pc", "pc.CardSlug", "c.Slug")
-      .select([
-        "c.Slug",
-        "f.Title",
-        "f.Text",
-        "f.FlavorText",
-        "pc.FrontImageUrl",
-      ])
+    const compiledQuery = cardBaseQuery
       .where("c.Slug", "=", params.cardSlug)
       .limit(1)
       .compile();
 
-    return execCompiledQuery(compiledQuery, context.sqljsDbContext.sqljsDb)[0];
+    const queryResult = execCompiledQuery(
+      compiledQuery,
+      context.sqljsDbContext.sqljsDb
+    )[0];
+    return lotrCardFromCardBaseQuery(
+      queryResult as CardBaseQueryResult
+    ) as Card;
   },
 });
 
 function RouteComponent() {
   const card = Route.useLoaderData();
-  return <div>{JSON.stringify(card, null, 2)}</div>;
+  return (
+    <Container py={8}>
+      <Image
+        src={`https://images.cardgame.tools/lotr/sm/${card.ProductCard?.FrontImageUrl}`}
+        alt={card.Front.Title}
+      />
+      <SmallCard key={card.Slug} card={card} />
+    </Container>
+  );
 }
