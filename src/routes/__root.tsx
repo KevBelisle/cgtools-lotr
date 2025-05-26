@@ -3,9 +3,12 @@ import { Toaster } from "@/components/ui/toaster";
 
 import NavBar from "@/components/ui/nav-bar";
 import { NotFound } from "@/components/pages/not-found";
+import { SqljsDbContextType } from "@/sqljs/sqljs-provider";
+import { SearchFilterContextType } from "@/components/ui/advanced-filters-provider";
 
 interface RouterContext {
-  sqljsDbContext: any;
+  sqljsDbContext: SqljsDbContextType;
+  searchFilterContext: SearchFilterContextType;
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({

@@ -1,5 +1,5 @@
-import { Card as GameCard } from "@/lotr-schema";
-import { Em, Text, Card, HStack, VStack } from "@chakra-ui/react";
+import { Card as GameCard } from "@/lotr/lotr-schema";
+import { Em, Text, Card, HStack, VStack, Box } from "@chakra-ui/react";
 import { Tag } from "@/components/ui/tag";
 import { Link } from "@tanstack/react-router";
 
@@ -56,7 +56,7 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
       break;
     case "Neutral":
       backgroundColor = "neutral.fg/10";
-      borderColor = "neutral.fg";
+      borderColor = "sand.700";
       sphereIcon = (
         <div
           style={{
@@ -91,7 +91,7 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
       backgroundColor={backgroundColor}
       borderColor={borderColor}
     >
-      <Link to="/cards/$cardSlug" params={{ cardSlug: card.Slug }}>
+      <Link to="/cards/$card-slug" params={{ "card-slug": card.Slug }}>
         <VStack p={4} gap={2} alignItems="stretch">
           <Card.Title
             fontFamily={"vafthrudnir"}
@@ -115,9 +115,9 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
                 {card.Front.Title}
               </span>
               {card.Front.Sphere && (
-                <Text color={borderColor} mt={"-1"}>
+                <Box color={borderColor} mt={"-1"}>
                   {sphereIcon}
-                </Text>
+                </Box>
               )}
             </HStack>
           </Card.Title>
@@ -238,10 +238,10 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
             {card.Front.Traits.split(",").join(" ")}
           </Em>
           {card.Front.Text && (
-            <Text fontSize="sm" fontFamily={"times, serif"}>
+            <Text fontSize="sm" fontFamily={"times, serif"} textWrap={"pretty"}>
               {card.Front.Text.replaceAll('\\"', '"')
                 .split("\\r\\n")
-                .flatMap((str) => [str, <br />])}
+                .flatMap((str, index) => [str, <br key={index} />])}
             </Text>
           )}
         </VStack>

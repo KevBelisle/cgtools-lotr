@@ -5,6 +5,7 @@ import {
   SqliteAdapter,
   SqliteIntrospector,
   SqliteQueryCompiler,
+  QueryResult,
 } from "kysely";
 
 export interface Database {
@@ -173,6 +174,21 @@ export const cardBaseQuery = kysely
     "p.ExpansionSymbol as p.ExpansionSymbol",
   ]);
 
+const compiledCardBaseQuery = cardBaseQuery.compile();
+type CompiledCardBaseQuery = typeof compiledCardBaseQuery;
+
+export function execCompiledQuery(
+  compiledQuery: CompiledCardBaseQuery,
+  db: Kysely<Database>
+) {
+  return db.executeQuery(compiledQuery);
+}
+type extractGeneric<Type> = Type extends QueryResult<infer X> ? X : never;
+export type CardBaseQueryResult = extractGeneric<
+  Awaited<ReturnType<typeof execCompiledQuery>>
+>;
+
+/*
 export type CardBaseQueryResult = {
   "c.Slug": string;
 
@@ -202,6 +218,10 @@ export type CardBaseQueryResult = {
   "f.Subtype": string | null;
   "f.Stage": string | null;
 
+  "f.Search_Title": string;
+  "f.Search_Text": string;
+  "f.Search_FlavorText": string | null;
+
   "b.Slug": string;
   "b.Title": string;
   "b.Text": string;
@@ -228,6 +248,10 @@ export type CardBaseQueryResult = {
   "b.Subtype": string | null;
   "b.Stage": string | null;
 
+  "b.Search_Title": string;
+  "b.Search_Text": string;
+  "b.Search_FlavorText": string | null;
+
   "pc.ProductCode": string;
   "pc.CardSlug": string;
   "pc.Quantity": number;
@@ -248,3 +272,4 @@ export type CardBaseQueryResult = {
   "p.IsRepackage": boolean;
   "p.ExpansionSymbol": string | null;
 };
+*/

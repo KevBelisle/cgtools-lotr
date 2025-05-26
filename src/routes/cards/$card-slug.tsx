@@ -2,22 +2,22 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import execCompiledQuery from "@/sqljs/exec-compiled-query";
 import { cardBaseQuery, CardBaseQueryResult } from "@/sqljs/database-schema";
-import { Card, lotrCardFromCardBaseQuery } from "@/lotr-schema";
+import { Card, lotrCardFromCardBaseQuery } from "@/lotr/lotr-schema";
 import SmallCard from "@/lotr/small-card";
 import { Container, Image } from "@chakra-ui/react";
 
-export const Route = createFileRoute("/cards/$cardSlug")({
+export const Route = createFileRoute("/cards/$card-slug")({
   component: RouteComponent,
 
   loader: async ({ params, context }) => {
     const compiledQuery = cardBaseQuery
-      .where("c.Slug", "=", params.cardSlug)
+      .where("c.Slug", "=", params["card-slug"])
       .limit(1)
       .compile();
 
     const queryResult = execCompiledQuery(
       compiledQuery,
-      context.sqljsDbContext.sqljsDb
+      context.sqljsDbContext.sqljsDb!
     )[0];
     return lotrCardFromCardBaseQuery(
       queryResult as CardBaseQueryResult
