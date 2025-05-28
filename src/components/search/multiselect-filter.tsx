@@ -1,20 +1,19 @@
-import { useCallback, useState } from "react";
+import { CardSideTable } from "@/sqljs/database-schema.tsx";
 import {
-  Portal,
-  Select,
-  createListCollection,
-  SelectValueChangeDetails,
-  Flex,
-  Field,
   CheckboxCard,
   CheckboxGroup,
-  Text,
+  createListCollection,
   Em,
+  Field,
+  Flex,
+  Portal,
+  Select,
+  SelectValueChangeDetails,
+  Text,
 } from "@chakra-ui/react";
+import { useCallback, useState } from "react";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
-
 import { MultiselectFilterType, SearchFilterType } from "./types.tsx";
-import { CardSideTable } from "@/sqljs/database-schema.tsx";
 
 function Dropdown({
   id,
@@ -34,17 +33,18 @@ function Dropdown({
 
   const handleChange = useCallback(
     ({ value }: SelectValueChangeDetails) => {
-      value = value || undefined;
+      // If value is empty, set it to undefined
+      const val = value && value.length > 0 ? value : undefined;
 
       onChange((prevFilters) => {
         return prevFilters.map((filterItem) =>
           filterItem.id === id
-            ? ({ ...filterItem, value } as MultiselectFilterType)
-            : filterItem
+            ? ({ ...filterItem, value: val } as MultiselectFilterType)
+            : filterItem,
         );
       });
     },
-    [onChange]
+    [onChange],
   );
 
   return (
@@ -104,11 +104,11 @@ function CheckboxList({
         return prevFilters.map((filterItem) =>
           filterItem.id === id
             ? ({ ...filterItem, value } as MultiselectFilterType)
-            : filterItem
+            : filterItem,
         );
       });
     },
-    [onChange]
+    [onChange],
   );
 
   filter = filter ?? [];

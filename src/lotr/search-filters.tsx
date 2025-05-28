@@ -89,4 +89,22 @@ export const defaultSearchFilters: SearchFilterType = [
     max: 10,
     special: [253, 254, 255],
   },
+  {
+    id: "ResourceCost",
+    type: "range",
+    label: "Filter by resource cost",
+    min: 0,
+    max: 6,
+    special: [254, 255],
+  },
+  {
+    id: "ThreatCost",
+    type: "range",
+    label: "Filter by threat cost",
+    min: 0,
+    max: 6,
+    special: [254, 255],
+  },
 ];
+
+export default defaultSearchFilters;

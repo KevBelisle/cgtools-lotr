@@ -1,25 +1,29 @@
-import { StrictMode, useCallback, useContext } from "react";
-import ReactDOM from "react-dom/client";
 import {
   RouterProvider as TanstackRouterProvider,
   createHashHistory,
   createRouter,
 } from "@tanstack/react-router";
+import { StrictMode, useCallback, useContext } from "react";
+import ReactDOM from "react-dom/client";
 
+import {
+  SearchFilterContext,
+  SearchFilterProvider,
+} from "@/components/ui/advanced-filters-provider";
 import { ChakraProvider } from "@/components/ui/chakra-provider";
 import {
   SqljsDbContext,
   SqljsDbProvider,
   SqljsProvider,
 } from "@/sqljs/sqljs-provider";
-import {
-  SearchFilterContext,
-  SearchFilterProvider,
-} from "@/components/ui/advanced-filters-provider";
 
-import "./styles.css";
 import Loading from "@/components/ui/loading";
+import {
+  SortOrderContext,
+  SortOrderProvider,
+} from "@/components/ui/sort-order-provider";
 import { routeTree } from "./routeTree.gen";
+import "./styles.css";
 
 const hashHistory = createHashHistory();
 
@@ -33,8 +37,9 @@ const router = createRouter({
   defaultGcTime: 5 * 60 * 1000, // 5 minutes
   scrollRestoration: true,
   context: {
-    searchFilterContext: [undefined!, () => {}],
     sqljsDbContext: undefined!,
+    searchFilterContext: [undefined!, () => {}],
+    sortOrderContext: ["Random", () => {}],
   },
 });
 
@@ -46,14 +51,16 @@ declare module "@tanstack/react-router" {
 }
 
 const RouterProvider = () => {
-  const searchFilterContext = useContext(SearchFilterContext);
   const sqljsDbContext = useContext(SqljsDbContext);
+  const searchFilterContext = useContext(SearchFilterContext);
+  const sortOrderContext = useContext(SortOrderContext);
   return (
     <TanstackRouterProvider
       router={router}
       context={{
         searchFilterContext: searchFilterContext,
         sqljsDbContext: sqljsDbContext,
+        sortOrderContext: sortOrderContext,
       }}
     />
   );
@@ -64,7 +71,7 @@ const App = () => {
     (progress: number) => (
       <Loading message="Loading database file..." progress={progress} />
     ),
-    []
+    [],
   );
 
   return (
@@ -73,7 +80,9 @@ const App = () => {
         <SqljsProvider>
           <SqljsDbProvider dbUrl={"lotr_lcg.db"} loading={loading}>
             <SearchFilterProvider>
-              <RouterProvider />
+              <SortOrderProvider>
+                <RouterProvider />
+              </SortOrderProvider>
             </SearchFilterProvider>
           </SqljsDbProvider>
         </SqljsProvider>

@@ -1,5 +1,6 @@
-import { useCallback, useContext } from "react";
-import { useNavigate, ReactNode } from "@tanstack/react-router";
+import ControlledInput from "@/components/ui/controlled-input";
+import type { Card as GameCard } from "@/lotr/lotr-schema";
+import SmallCard from "@/lotr/small-card";
 import {
   Badge,
   Container,
@@ -7,11 +8,10 @@ import {
   IconButton,
   SimpleGrid,
 } from "@chakra-ui/react";
+import { ReactNode, useNavigate } from "@tanstack/react-router";
+import { useCallback, useContext } from "react";
 import { LuFilter } from "react-icons/lu";
-
-import type { Card as GameCard } from "@/lotr/lotr-schema";
-import ControlledInput from "@/components/ui/controlled-input";
-import SmallCard from "@/lotr/small-card";
+import { OrderSelect } from "../search/sort-select";
 import { SearchFilterContext } from "../ui/advanced-filters-provider";
 
 export const CardSearch = ({
@@ -36,10 +36,8 @@ export const CardSearch = ({
 
   const [searchFilters, _] = useContext(SearchFilterContext);
   const activeFiltersCount = searchFilters.filter(
-    (filter) => filter.value !== undefined
+    (filter) => filter.value !== undefined,
   ).length;
-
-  console.log({ activeFiltersCount });
 
   return (
     <Container mb="16">
@@ -56,11 +54,12 @@ export const CardSearch = ({
           variant="subtle"
           color="night.900"
         />
+
         <IconButton
           size="lg"
           borderColor="sand.500"
           borderWidth={2}
-          borderLeftWidth={0}
+          borderLeftWidth={3}
           background="sand.100"
           variant="subtle"
           color="night.900"
@@ -86,6 +85,7 @@ export const CardSearch = ({
             </>
           )}
         </IconButton>
+        <OrderSelect />
       </Group>
       <SimpleGrid columns={[1, null, null, 2, null, 3]} gap="40px">
         {...cardResults}

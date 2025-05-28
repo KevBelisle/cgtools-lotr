@@ -1,11 +1,11 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { CardSearch } from "@/components/pages/card-search";
+import { lotrCardFromCardBaseQuery } from "@/lotr/lotr-schema";
 import { cardBaseQuery, CardBaseQueryResult } from "@/sqljs/database-schema";
 import execCompiledQuery from "@/sqljs/exec-compiled-query";
-import { useState } from "react";
-import { lotrCardFromCardBaseQuery } from "@/lotr/lotr-schema";
 import { sql } from "kysely";
+import { useState } from "react";
 
 type TitleSearch = {
   query: string;
@@ -24,7 +24,8 @@ export const Route = createFileRoute("/cards/search/")({
   preloadStaleTime: 0,
 
   loader: async ({ context, deps: { query: titleSearch } }) => {
-    const [searchFilters, _] = context.searchFilterContext;
+    const searchFilters = context.searchFilterContext[0];
+    const sortOrder = context.sortOrderContext[0];
 
     let filteredQuery = cardBaseQuery;
 
@@ -39,7 +40,7 @@ export const Route = createFileRoute("/cards/search/")({
               eb.or([
                 eb(frontColumn, "like", `%${filter.value}%`),
                 eb(backColumn, "like", `%${filter.value}%`),
-              ])
+              ]),
             );
           }
           break;
@@ -51,7 +52,7 @@ export const Route = createFileRoute("/cards/search/")({
                 filter.value!.flatMap((v) => [
                   eb(frontColumn, "=", v),
                   eb(backColumn, "=", v),
-                ])
+                ]),
               );
             });
           }
@@ -67,13 +68,13 @@ export const Route = createFileRoute("/cards/search/")({
                 eb.and([
                   eb(frontColumn, ">=", filter.value!.range[0]),
                   eb(frontColumn, "<=", filter.value!.range[1]),
-                ])
+                ]),
               );
               criteria.push(
                 eb.and([
                   eb(backColumn, ">=", filter.value!.range[0]),
                   eb(backColumn, "<=", filter.value!.range[1]),
-                ])
+                ]),
               );
 
               if (filter.value!.special) {
@@ -82,8 +83,8 @@ export const Route = createFileRoute("/cards/search/")({
                     filter.value!.special.flatMap((s) => [
                       eb(frontColumn, "=", s),
                       eb(backColumn, "=", s),
-                    ])
-                  )
+                    ]),
+                  ),
                 );
               }
 
@@ -94,14 +95,21 @@ export const Route = createFileRoute("/cards/search/")({
       }
     }
 
-    if (!titleSearch) {
-      filteredQuery = filteredQuery.orderBy(sql`random()`);
-    } else {
+    if (titleSearch) {
       filteredQuery = filteredQuery.where((eb) =>
         eb.or([
           eb("f.Search_Title", "like", `%${titleSearch}%`),
           eb("b.Search_Title", "like", `%${titleSearch}%`),
-        ])
+        ]),
+      );
+    }
+
+    if (sortOrder === "Random") {
+      filteredQuery = filteredQuery.orderBy(sql`random()`);
+    } else {
+      const sortColumn = `f.${sortOrder}` as keyof CardBaseQueryResult;
+      filteredQuery = filteredQuery.orderBy(sortColumn, (ob) =>
+        ob.asc().nullsLast(),
       );
     }
 
@@ -109,15 +117,17 @@ export const Route = createFileRoute("/cards/search/")({
 
     const compiledQuery = filteredQuery.compile();
 
-    console.log("Compiled Query:", compiledQuery.sql);
-    console.log("Compiled Query:", compiledQuery.parameters);
+    console.log(
+      "Compiled Query:",
+      compiledQuery.sql.slice(compiledQuery.sql.indexOf("order by")),
+    );
 
     const queryResults = execCompiledQuery(
       compiledQuery,
-      context.sqljsDbContext.sqljsDb!
+      context.sqljsDbContext.sqljsDb!,
     );
     return (queryResults as CardBaseQueryResult[]).map(
-      lotrCardFromCardBaseQuery
+      lotrCardFromCardBaseQuery,
     );
   },
 });

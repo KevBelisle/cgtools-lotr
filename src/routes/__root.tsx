@@ -1,14 +1,16 @@
-import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/toaster";
+import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 
-import NavBar from "@/components/ui/nav-bar";
 import { NotFound } from "@/components/pages/not-found";
-import { SqljsDbContextType } from "@/sqljs/sqljs-provider";
 import { SearchFilterContextType } from "@/components/ui/advanced-filters-provider";
+import NavBar from "@/components/ui/nav-bar";
+import { SortOrderContextType } from "@/components/ui/sort-order-provider";
+import { SqljsDbContextType } from "@/sqljs/sqljs-provider";
 
 interface RouterContext {
   sqljsDbContext: SqljsDbContextType;
   searchFilterContext: SearchFilterContextType;
+  sortOrderContext: SortOrderContextType;
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
