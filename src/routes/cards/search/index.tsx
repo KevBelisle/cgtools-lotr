@@ -107,7 +107,7 @@ export const Route = createFileRoute("/cards/search/")({
     if (sortOrder === "Random") {
       filteredQuery = filteredQuery.orderBy(sql`random()`);
     } else {
-      const sortColumn = `f.${sortOrder}` as keyof CardBaseQueryResult;
+      const sortColumn = `f.${String(sortOrder)}` as keyof CardBaseQueryResult;
       filteredQuery = filteredQuery.orderBy(sortColumn, (ob) =>
         ob.asc().nullsLast(),
       );
