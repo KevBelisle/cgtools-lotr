@@ -1,24 +1,24 @@
-import { useCallback, useState } from "react";
 import {
+  Button,
+  CheckboxCheckedChangeDetails,
+  Em,
   Field,
+  Flex,
   HStack,
   Slider,
   SliderValueChangeDetails,
-  CheckboxCheckedChangeDetails,
   Text,
-  Flex,
-  Em,
-  Button,
 } from "@chakra-ui/react";
+import { useCallback, useState } from "react";
 
+import { CardSideTable } from "@/sqljs/database-schema";
+import { LuChevronDown, LuChevronUp } from "react-icons/lu";
+import { Checkbox } from "../ui/checkbox";
 import {
   RangeFilterType,
   RangeFilterValueType,
   SearchFilterType,
 } from "./types";
-import { CardSideTable } from "@/sqljs/database-schema";
-import { Checkbox } from "../ui/checkbox";
-import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 
 export function RangeFilter({
   id,
@@ -40,7 +40,7 @@ export function RangeFilter({
                 special: filter.special ?? [],
               } as RangeFilterValueType,
             } as RangeFilterType)
-          : filterItem
+          : filterItem,
       );
     });
   }, [onChange, id]);
@@ -65,11 +65,11 @@ export function RangeFilter({
                   special: (filterItem as RangeFilterType).value!.special,
                 },
               } as RangeFilterType)
-            : filterItem
+            : filterItem,
         );
       });
     },
-    [onChange, id]
+    [onChange, id],
   );
 
   const handleSpecialChange = useCallback(
@@ -87,15 +87,15 @@ export function RangeFilter({
                         special,
                       ]
                     : (filterItem as RangeFilterType).value!.special.filter(
-                        (s) => s !== special
+                        (s) => s !== special,
                       ),
                 },
               } as RangeFilterType)
-            : filterItem
+            : filterItem,
         );
       });
     },
-    [onChange, id]
+    [onChange, id],
   );
 
   const handleClearFilter = useCallback(() => {
@@ -106,7 +106,7 @@ export function RangeFilter({
               ...filterItem,
               value: undefined,
             } as RangeFilterType)
-          : filterItem
+          : filterItem,
       );
     });
     setOpen(false);
@@ -171,7 +171,7 @@ export function RangeFilter({
                       value,
                       label: value.toString(),
                     };
-                  }
+                  },
                 )}
               />
             </Slider.Control>

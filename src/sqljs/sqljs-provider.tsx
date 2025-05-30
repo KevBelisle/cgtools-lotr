@@ -1,19 +1,19 @@
 import {
-  use,
-  useState,
-  useEffect,
-  useContext,
-  useMemo,
   createContext,
   PropsWithChildren,
   ReactNode,
   Suspense,
+  use,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
 } from "react";
 
+import fetchFile from "@/sqljs/fetch-file";
+import sqliteUrl from "@/sqljs/sql-wasm.wasm?url";
 import type { Database, SqlJsStatic } from "sql.js";
 import initSqlJs from "sql.js";
-import sqliteUrl from "@/sqljs/sql-wasm.wasm?url";
-import fetchFile from "@/sqljs/fetch-file";
 
 interface SqljsContextType {
   state: "loading" | "ready" | "error";
@@ -53,8 +53,8 @@ const SqljsProvider = ({ children }: PropsWithChildren<unknown>) => {
       .then(() => {
         console.log(
           `SqlJS initiated in ${(performance.now() - startInitSqlJs).toFixed(
-            2
-          )} ms`
+            2,
+          )} ms`,
         );
         setSqljsContext({
           state: "ready",
@@ -124,7 +124,7 @@ const SqljsDbProvider = ({
             setProgress(value);
           }
         } while (true);
-      }
+      },
     );
     return loadingPromise.then((buffer) => {
       return buffer;
@@ -209,5 +209,5 @@ const InnerSqljsDbProvider = ({
   );
 };
 
-export { SqljsContext, SqljsProvider, SqljsDbContext, SqljsDbProvider };
+export { SqljsContext, SqljsDbContext, SqljsDbProvider, SqljsProvider };
 export type { SqljsContextType, SqljsDbContextType };

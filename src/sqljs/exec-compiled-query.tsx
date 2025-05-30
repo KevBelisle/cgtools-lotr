@@ -1,13 +1,13 @@
-import { Database, SqlValue } from "sql.js";
 import { CompiledQuery } from "kysely";
+import { Database, SqlValue } from "sql.js";
 
 function execCompiledQuery<T>(
   compiledQuery: CompiledQuery<T>,
-  db: Database
+  db: Database,
 ): T[] {
   const res = db.exec(
     compiledQuery.sql,
-    compiledQuery.parameters as SqlValue[]
+    compiledQuery.parameters as SqlValue[],
   );
 
   if (res.length === 0) {

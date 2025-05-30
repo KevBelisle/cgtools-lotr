@@ -1,8 +1,8 @@
 import { useCallback, useEffect } from "react";
 import { useRegisterSW } from "virtual:pwa-register/react";
 
-import { IconButton } from "@chakra-ui/react";
 import { toaster } from "@/components/ui/toaster";
+import { IconButton } from "@chakra-ui/react";
 import { LuCloudDownload } from "react-icons/lu";
 
 function ReloadPrompt() {
@@ -20,7 +20,7 @@ function ReloadPrompt() {
           () => {
             r.update();
           },
-          60 * 60 * 1000 // 1 hour
+          60 * 60 * 1000, // 1 hour
         );
       }
     },
@@ -41,7 +41,7 @@ function ReloadPrompt() {
 
   const updateApp = useCallback(
     () => updateServiceWorker(true),
-    [updateServiceWorker]
+    [updateServiceWorker],
   );
 
   useEffect(() => {

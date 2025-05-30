@@ -1,11 +1,11 @@
 import {
-  Kysely,
-  Selectable,
   DummyDriver,
+  Kysely,
+  QueryResult,
+  Selectable,
   SqliteAdapter,
   SqliteIntrospector,
   SqliteQueryCompiler,
-  QueryResult,
 } from "kysely";
 
 export interface Database {
@@ -179,7 +179,7 @@ type CompiledCardBaseQuery = typeof compiledCardBaseQuery;
 
 export function execCompiledQuery(
   compiledQuery: CompiledCardBaseQuery,
-  db: Kysely<Database>
+  db: Kysely<Database>,
 ) {
   return db.executeQuery(compiledQuery);
 }

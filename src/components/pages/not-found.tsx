@@ -1,5 +1,5 @@
-import { Container, Flex, Text } from "@chakra-ui/react";
 import { CustomButtonLink } from "@/components/ui/custom-button-link";
+import { Container, Flex, Text } from "@chakra-ui/react";
 
 export function NotFound() {
   return (

@@ -1,6 +1,6 @@
-import { useContext } from "react";
 import { Button, Container, Separator } from "@chakra-ui/react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useContext } from "react";
 import { LuArrowLeft } from "react-icons/lu";
 
 import { SearchFilters } from "@/components/search/search";

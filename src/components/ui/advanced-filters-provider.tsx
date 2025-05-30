@@ -1,4 +1,4 @@
-import { createContext, useState, PropsWithChildren } from "react";
+import { createContext, PropsWithChildren, useState } from "react";
 
 import { SearchFilterType } from "@/components/search/types";
 import { defaultSearchFilters } from "@/lotr/search-filters";

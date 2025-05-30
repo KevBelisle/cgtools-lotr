@@ -35,5 +35,5 @@ export const Tag = React.forwardRef<HTMLSpanElement, TagProps>(
         )}
       </ChakraTag.Root>
     );
-  }
+  },
 );

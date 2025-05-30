@@ -1,6 +1,6 @@
-import * as React from "react";
-import { createLink, LinkComponent } from "@tanstack/react-router";
 import { Button } from "@chakra-ui/react";
+import { createLink, LinkComponent } from "@tanstack/react-router";
+import * as React from "react";
 
 interface ChakraLinkProps
   extends Omit<React.ComponentPropsWithoutRef<typeof Button>, "href"> {
@@ -17,7 +17,7 @@ const ChakraButtonComponent = React.forwardRef<
 const CreatedLinkComponent = createLink(ChakraButtonComponent);
 
 export const CustomButtonLink: LinkComponent<typeof ChakraButtonComponent> = (
-  props
+  props,
 ) => {
   return <CreatedLinkComponent preload={"intent"} {...props} />;
 };

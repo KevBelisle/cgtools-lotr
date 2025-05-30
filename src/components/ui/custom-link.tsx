@@ -1,6 +1,6 @@
-import * as React from "react";
-import { createLink, LinkComponent } from "@tanstack/react-router";
 import { Link } from "@chakra-ui/react";
+import { createLink, LinkComponent } from "@tanstack/react-router";
+import * as React from "react";
 
 interface ChakraLinkProps
   extends Omit<React.ComponentPropsWithoutRef<typeof Link>, "href"> {
@@ -17,7 +17,7 @@ const ChakraLinkComponent = React.forwardRef<
 const CreatedLinkComponent = createLink(ChakraLinkComponent);
 
 export const CustomLink: LinkComponent<typeof ChakraLinkComponent> = (
-  props
+  props,
 ) => {
   return (
     <CreatedLinkComponent

@@ -1,5 +1,5 @@
-import { Container, HStack, Heading, Flex, VStack } from "@chakra-ui/react";
 import { config } from "@/lotr/config";
+import { Container, Flex, HStack, Heading, VStack } from "@chakra-ui/react";
 //import { CustomButtonLink } from "./customButtonLink";
 
 import ReloadPrompt from "@/components/ui/reload-prompt";

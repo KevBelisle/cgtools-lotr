@@ -1,9 +1,9 @@
-import { useCallback, useState } from "react";
 import { Em, Field, Flex, Input, Text } from "@chakra-ui/react";
+import { useCallback, useState } from "react";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 
-import { InputFilterType, SearchFilterType } from "./types";
 import { CardSideTable } from "@/sqljs/database-schema";
+import { InputFilterType, SearchFilterType } from "./types";
 
 export function InputFilter({
   id,
@@ -26,11 +26,11 @@ export function InputFilter({
         return prevFilters.map((filterItem) =>
           filterItem.id === id
             ? ({ ...filterItem, value } as InputFilterType)
-            : filterItem
+            : filterItem,
         );
       });
     },
-    [onChange]
+    [onChange],
   );
 
   return (

@@ -1,7 +1,7 @@
 //import { toaster } from "@/components/ui/toaster";
-import { useContext, useState, useMemo } from "react";
-import { QueryExecResult } from "sql.js";
 import { SqljsDbContext } from "@/sqljs/sqljs-provider";
+import { useContext, useMemo, useState } from "react";
+import { QueryExecResult } from "sql.js";
 
 const useSqljsQuery = (query: string) => {
   const sqljsDbContext = useContext(SqljsDbContext);

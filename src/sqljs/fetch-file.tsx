@@ -1,5 +1,5 @@
 export default async function* loadFile(
-  dbFileUrl: string
+  dbFileUrl: string,
 ): AsyncGenerator<number, Uint8Array, void> {
   const response = await fetch(dbFileUrl);
   const reader = response.body!.getReader();

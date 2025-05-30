@@ -1,7 +1,7 @@
 import { Separator, VStack } from "@chakra-ui/react";
 import { InputFilter } from "./input-filter";
-import { RangeFilter } from "./range-filter";
 import { MultiselectFilter } from "./multiselect-filter";
+import { RangeFilter } from "./range-filter";
 import { SearchFilterType } from "./types";
 
 export function SearchFilters({
