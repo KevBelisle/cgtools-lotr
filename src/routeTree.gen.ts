@@ -10,120 +10,120 @@
 
 // Import Routes
 
-import { Route as rootRoute } from "./routes/__root";
-import { Route as CardsCardSlugImport } from "./routes/cards/$card-slug";
-import { Route as CardsSearchAdvancedImport } from "./routes/cards/search/advanced";
-import { Route as CardsSearchIndexImport } from "./routes/cards/search/index";
-import { Route as IndexImport } from "./routes/index";
+import { Route as rootRoute } from './routes/__root'
+import { Route as IndexImport } from './routes/index'
+import { Route as CardsCardSlugImport } from './routes/cards/$card-slug'
+import { Route as CardsSearchIndexImport } from './routes/cards/search/index'
+import { Route as CardsSearchAdvancedImport } from './routes/cards/search/advanced'
 
 // Create/Update Routes
 
 const IndexRoute = IndexImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const CardsCardSlugRoute = CardsCardSlugImport.update({
-  id: "/cards/$card-slug",
-  path: "/cards/$card-slug",
+  id: '/cards/$card-slug',
+  path: '/cards/$card-slug',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const CardsSearchIndexRoute = CardsSearchIndexImport.update({
-  id: "/cards/search/",
-  path: "/cards/search/",
+  id: '/cards/search/',
+  path: '/cards/search/',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const CardsSearchAdvancedRoute = CardsSearchAdvancedImport.update({
-  id: "/cards/search/advanced",
-  path: "/cards/search/advanced",
+  id: '/cards/search/advanced',
+  path: '/cards/search/advanced',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 // Populate the FileRoutesByPath interface
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/cards/$card-slug": {
-      id: "/cards/$card-slug";
-      path: "/cards/$card-slug";
-      fullPath: "/cards/$card-slug";
-      preLoaderRoute: typeof CardsCardSlugImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/cards/search/advanced": {
-      id: "/cards/search/advanced";
-      path: "/cards/search/advanced";
-      fullPath: "/cards/search/advanced";
-      preLoaderRoute: typeof CardsSearchAdvancedImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/cards/search/": {
-      id: "/cards/search/";
-      path: "/cards/search";
-      fullPath: "/cards/search";
-      preLoaderRoute: typeof CardsSearchIndexImport;
-      parentRoute: typeof rootRoute;
-    };
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/cards/$card-slug': {
+      id: '/cards/$card-slug'
+      path: '/cards/$card-slug'
+      fullPath: '/cards/$card-slug'
+      preLoaderRoute: typeof CardsCardSlugImport
+      parentRoute: typeof rootRoute
+    }
+    '/cards/search/advanced': {
+      id: '/cards/search/advanced'
+      path: '/cards/search/advanced'
+      fullPath: '/cards/search/advanced'
+      preLoaderRoute: typeof CardsSearchAdvancedImport
+      parentRoute: typeof rootRoute
+    }
+    '/cards/search/': {
+      id: '/cards/search/'
+      path: '/cards/search'
+      fullPath: '/cards/search'
+      preLoaderRoute: typeof CardsSearchIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
-  "/cards/$card-slug": typeof CardsCardSlugRoute;
-  "/cards/search/advanced": typeof CardsSearchAdvancedRoute;
-  "/cards/search": typeof CardsSearchIndexRoute;
+  '/': typeof IndexRoute
+  '/cards/$card-slug': typeof CardsCardSlugRoute
+  '/cards/search/advanced': typeof CardsSearchAdvancedRoute
+  '/cards/search': typeof CardsSearchIndexRoute
 }
 
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
-  "/cards/$card-slug": typeof CardsCardSlugRoute;
-  "/cards/search/advanced": typeof CardsSearchAdvancedRoute;
-  "/cards/search": typeof CardsSearchIndexRoute;
+  '/': typeof IndexRoute
+  '/cards/$card-slug': typeof CardsCardSlugRoute
+  '/cards/search/advanced': typeof CardsSearchAdvancedRoute
+  '/cards/search': typeof CardsSearchIndexRoute
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute;
-  "/": typeof IndexRoute;
-  "/cards/$card-slug": typeof CardsCardSlugRoute;
-  "/cards/search/advanced": typeof CardsSearchAdvancedRoute;
-  "/cards/search/": typeof CardsSearchIndexRoute;
+  __root__: typeof rootRoute
+  '/': typeof IndexRoute
+  '/cards/$card-slug': typeof CardsCardSlugRoute
+  '/cards/search/advanced': typeof CardsSearchAdvancedRoute
+  '/cards/search/': typeof CardsSearchIndexRoute
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | "/"
-    | "/cards/$card-slug"
-    | "/cards/search/advanced"
-    | "/cards/search";
-  fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/cards/$card-slug" | "/cards/search/advanced" | "/cards/search";
+    | '/'
+    | '/cards/$card-slug'
+    | '/cards/search/advanced'
+    | '/cards/search'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/' | '/cards/$card-slug' | '/cards/search/advanced' | '/cards/search'
   id:
-    | "__root__"
-    | "/"
-    | "/cards/$card-slug"
-    | "/cards/search/advanced"
-    | "/cards/search/";
-  fileRoutesById: FileRoutesById;
+    | '__root__'
+    | '/'
+    | '/cards/$card-slug'
+    | '/cards/search/advanced'
+    | '/cards/search/'
+  fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  CardsCardSlugRoute: typeof CardsCardSlugRoute;
-  CardsSearchAdvancedRoute: typeof CardsSearchAdvancedRoute;
-  CardsSearchIndexRoute: typeof CardsSearchIndexRoute;
+  IndexRoute: typeof IndexRoute
+  CardsCardSlugRoute: typeof CardsCardSlugRoute
+  CardsSearchAdvancedRoute: typeof CardsSearchAdvancedRoute
+  CardsSearchIndexRoute: typeof CardsSearchIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -131,11 +131,11 @@ const rootRouteChildren: RootRouteChildren = {
   CardsCardSlugRoute: CardsCardSlugRoute,
   CardsSearchAdvancedRoute: CardsSearchAdvancedRoute,
   CardsSearchIndexRoute: CardsSearchIndexRoute,
-};
+}
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
 /* ROUTE_MANIFEST_START
 {
