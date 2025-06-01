@@ -1,6 +1,6 @@
 import { cardBaseQuery, CardBaseQueryResult } from "@/lotr/database-schema";
+import FullCard from "@/lotr/display/full-card";
 import { Card, lotrCardFromCardBaseQuery } from "@/lotr/lotr-schema";
-import SmallCard from "@/lotr/small-card";
 import execCompiledQuery from "@/sqljs/exec-compiled-query";
 import { Container, Image } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
@@ -32,7 +32,7 @@ function RouteComponent() {
         src={`https://images.cardgame.tools/lotr/sm/${card.ProductCards[0]?.FrontImageUrl}`}
         alt={card.Front.Title}
       />
-      <SmallCard key={card.Slug} card={card} />
+      <FullCard key={card.Slug} card={card} />
     </Container>
   );
 }

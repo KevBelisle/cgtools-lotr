@@ -1,10 +1,11 @@
-import { FullCard } from "@/lotr/full-card";
+import { FullCard } from "@/lotr/display/full-card";
+import { SmallCard } from "@/lotr/display/small-card";
+import { TinyCard } from "@/lotr/display/tiny-card";
 import type { Card } from "@/lotr/lotr-schema";
-import { SmallCard } from "@/lotr/small-card";
 import type { JSX } from "react";
 import type { IconType } from "react-icons/lib";
 
-import { LuRectangleHorizontal, LuRows2 } from "react-icons/lu";
+import { LuMinus, LuRectangleHorizontal, LuRows2 } from "react-icons/lu";
 
 export type DisplayOptionType = {
   name: string;
@@ -19,6 +20,7 @@ export const displayOptions: DisplayOptionType[] = [
     icon: LuRectangleHorizontal,
   },
   { name: "Full card", component: FullCard, icon: LuRows2 },
+  { name: "Tiny card", component: TinyCard, icon: LuMinus },
 ];
 
 export type DisplayOptionsType = typeof displayOptions;

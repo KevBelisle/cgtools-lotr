@@ -5,20 +5,20 @@ import { Link } from "@tanstack/react-router";
 
 import { Tooltip } from "@/components/ui/tooltip";
 
-import Attack from "./icons/game icons/Attack.svg?react";
-import Defense from "./icons/game icons/Defense.svg?react";
-import HitPoints from "./icons/game icons/HitPoints.svg?react";
-import Threat from "./icons/game icons/Threat.svg?react";
-import Willpower from "./icons/game icons/Willpower.svg?react";
+import Attack from "@/lotr/icons/game icons/Attack.svg?react";
+import Defense from "@/lotr/icons/game icons/Defense.svg?react";
+import HitPoints from "@/lotr/icons/game icons/HitPoints.svg?react";
+import Threat from "@/lotr/icons/game icons/Threat.svg?react";
+import Willpower from "@/lotr/icons/game icons/Willpower.svg?react";
 
-import Baggins from "./icons/game icons/Baggins.svg?react";
-import Fellowship from "./icons/game icons/Fellowship.svg?react";
-import Leadership from "./icons/game icons/Leadership.svg?react";
-import Lore from "./icons/game icons/Lore.svg?react";
-import Spirit from "./icons/game icons/Spirit.svg?react";
-import Tactics from "./icons/game icons/Tactics.svg?react";
+import Baggins from "@/lotr/icons/game icons/Baggins.svg?react";
+import Fellowship from "@/lotr/icons/game icons/Fellowship.svg?react";
+import Leadership from "@/lotr/icons/game icons/Leadership.svg?react";
+import Lore from "@/lotr/icons/game icons/Lore.svg?react";
+import Spirit from "@/lotr/icons/game icons/Spirit.svg?react";
+import Tactics from "@/lotr/icons/game icons/Tactics.svg?react";
 
-import Unique from "./icons/game icons/Unique.svg?react";
+import Unique from "@/lotr/icons/game icons/Unique.svg?react";
 
 export const SmallCard = ({ card }: { card: GameCard }) => {
   var backgroundColor = "";
