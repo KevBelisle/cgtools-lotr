@@ -334,7 +334,7 @@ export const FullCard = ({ card }: { card: GameCard }) => {
           <Separator borderColor={borderColor} mx={-4} my={2} />
         </Bleed>
         <List.Root listStyleType={"none"} fontFamily={"sans-serif"}>
-          {card.ProductCards?.sort((a, b) =>
+          {card.ProductCards?.sort((a, _) =>
             a.Product.IsRepackage ? 1 : -1,
           ).map((pc) => (
             <List.Item key={`${pc.Product.Code}-${pc.Number}`}>

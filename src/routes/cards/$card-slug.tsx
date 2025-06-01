@@ -29,7 +29,7 @@ function RouteComponent() {
   return (
     <Container py={8}>
       <Image
-        src={`https://images.cardgame.tools/lotr/sm/${card.ProductCard?.FrontImageUrl}`}
+        src={`https://images.cardgame.tools/lotr/sm/${card.ProductCards[0]?.FrontImageUrl}`}
         alt={card.Front.Title}
       />
       <SmallCard key={card.Slug} card={card} />
