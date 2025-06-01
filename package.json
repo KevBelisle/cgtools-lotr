@@ -12,6 +12,7 @@
   "dependencies": {
     "@chakra-ui/react": "^3.16.1",
     "@emotion/react": "^11.14.0",
+    "@plq/use-persisted-state": "^1.2.0",
     "@tanstack/react-router": "^1.117.1",
     "@tanstack/react-router-devtools": "^1.117.1",
     "@tanstack/router-plugin": "^1.117.2",

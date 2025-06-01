@@ -1,4 +1,4 @@
-import { CardSideTable } from "@/sqljs/database-schema";
+import { CardSideTable } from "@/lotr/database-schema";
 
 export type InputFilterType = {
   id: keyof CardSideTable;

@@ -7,13 +7,14 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "@tanstack/react-router";
 import { useCallback, useContext, useMemo } from "react";
-import { LuArrowDownNarrowWide } from "react-icons/lu";
 
-import { sortOptions } from "@/lotr/sort-options";
-import { SortOrderContext, SortOrderType } from "../ui/sort-order-provider";
+import { displayOptions } from "@/lotr/display-options";
+import { DisplayContext } from "../ui/display-provider";
 
 function SelectTrigger() {
   const select = useSelectContext();
+  const Icon = displayOptions[parseInt(select.value[0])].icon;
+
   return (
     <IconButton
       size="lg"
@@ -23,47 +24,52 @@ function SelectTrigger() {
       variant="subtle"
       color="night.900"
       borderRadius={0}
+      borderRightRadius={4}
       {...select.getTriggerProps()}
     >
-      <LuArrowDownNarrowWide />
+      <Icon />
     </IconButton>
   );
 }
 
-export function OrderSelect() {
-  const [sortOrder, setSortOrder] = useContext(SortOrderContext);
+export function DisplaySelect() {
+  const [displayOption, setDisplayOption] = useContext(DisplayContext);
   const router = useRouter();
 
   const onValueChange = useCallback(
     (e: { value: string[] }) => {
-      setSortOrder(e.value[0] as SortOrderType);
-      router.invalidate();
+      console.log(
+        "DisplaySelect onValueChange",
+        displayOptions[parseInt(e.value[0])],
+      );
+      setDisplayOption(displayOptions[parseInt(e.value[0])]);
+      //router.invalidate();
     },
-    [setSortOrder, router],
+    [setDisplayOption, router],
   );
 
-  const sortOptionsCollection = useMemo(
+  const displayOptionsCollection = useMemo(
     () =>
       createListCollection({
-        items: [
-          { label: "Random", value: "Random" },
-          ...sortOptions.map((option) => ({
-            label: option,
-            value: option,
-          })),
-        ],
+        items: displayOptions.map((option, index) => ({
+          label: option.name,
+          value: index.toString(),
+        })),
       }),
-    [sortOptions],
+    [displayOptions],
+  );
+
+  const displayOptionIndex = displayOptions.findIndex(
+    (option) => option.name === displayOption.name,
   );
 
   return (
     <Select.Root
       positioning={{ sameWidth: false }}
-      collection={sortOptionsCollection}
+      collection={displayOptionsCollection}
       size="sm"
       width="auto"
-      marginInlineEnd={"-2px"}
-      value={[sortOrder as string]}
+      value={[displayOptionIndex.toString()]}
       onValueChange={onValueChange}
     >
       <Select.HiddenSelect />
@@ -72,8 +78,8 @@ export function OrderSelect() {
       </Select.Control>
       <Portal>
         <Select.Positioner>
-          <Select.Content minW="32">
-            {sortOptionsCollection.items.map((option) => (
+          <Select.Content minW="32" colorScheme={"red"}>
+            {displayOptionsCollection.items.map((option) => (
               <Select.Item item={option} key={option.value}>
                 {option.label}
                 <Select.ItemIndicator />

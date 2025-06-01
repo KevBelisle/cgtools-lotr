@@ -7,6 +7,7 @@ import {
   SqliteIntrospector,
   SqliteQueryCompiler,
 } from "kysely";
+import { jsonArrayFrom } from "kysely/helpers/sqlite";
 
 export interface Database {
   cards: CardTable;
@@ -96,9 +97,9 @@ export const cardBaseQuery = kysely
   .selectFrom("cards as c")
   .leftJoin("cardSides as f", "f.Slug", "c.FrontSlug")
   .leftJoin("cardSides as b", "b.Slug", "c.BackSlug")
-  .leftJoin("productCards as pc", "pc.CardSlug", "c.Slug")
-  .leftJoin("products as p", "p.Code", "pc.ProductCode")
-  .select([
+  // .leftJoin("productCards as pc", "pc.CardSlug", "c.Slug")
+  // .leftJoin("products as p", "p.Code", "pc.ProductCode")
+  .select((eb) => [
     "c.Slug as c.Slug",
 
     "f.Slug as f.Slug",
@@ -152,26 +153,34 @@ export const cardBaseQuery = kysely
     "b.Type as b.Type",
     "b.Direction as b.Direction",
     "b.Stage as b.Stage",
+    jsonArrayFrom(
+      eb
+        .selectFrom("productCards as pc")
+        .leftJoin("products as p", "p.Code", "pc.ProductCode")
+        .select([
+          "pc.ProductCode as pc.ProductCode",
+          "pc.CardSlug as pc.CardSlug",
+          "pc.Quantity as pc.Quantity",
+          "pc.Number as pc.Number",
+          "pc.FrontImageUrl as pc.FrontImageUrl",
+          "pc.BackNumber as pc.BackNumber",
+          "pc.BackImageUrl as pc.BackImageUrl",
+          "pc.OctgnId as pc.OctgnId",
+          "pc.RingsDbCode as pc.RingsDbCode",
 
-    "pc.ProductCode as pc.ProductCode",
-    "pc.CardSlug as pc.CardSlug",
-    "pc.Quantity as pc.Quantity",
-    "pc.Number as pc.Number",
-    "pc.FrontImageUrl as pc.FrontImageUrl",
-    "pc.BackNumber as pc.BackNumber",
-    "pc.BackImageUrl as pc.BackImageUrl",
-    "pc.OctgnId as pc.OctgnId",
-    "pc.RingsDbCode as pc.RingsDbCode",
-
-    "p.Code as p.Code",
-    "p.Name as p.Name",
-    "p.Type as p.Type",
-    "p.Abbreviation as p.Abbreviation",
-    "p.Category as p.Category",
-    "p.Cycle as p.Cycle",
-    "p.FirstReleased as p.FirstReleased",
-    "p.IsRepackage as p.IsRepackage",
-    "p.ExpansionSymbol as p.ExpansionSymbol",
+          "p.Code as p.Code",
+          "p.Name as p.Name",
+          "p.Type as p.Type",
+          "p.Abbreviation as p.Abbreviation",
+          "p.Category as p.Category",
+          "p.Cycle as p.Cycle",
+          "p.FirstReleased as p.FirstReleased",
+          "p.IsRepackage as p.IsRepackage",
+          "p.ExpansionSymbol as p.ExpansionSymbol",
+        ])
+        .whereRef("pc.CardSlug", "=", "c.Slug")
+        .orderBy("p.Code"),
+    ).as("ProductCards"),
   ]);
 
 const compiledCardBaseQuery = cardBaseQuery.compile();
@@ -187,89 +196,3 @@ type extractGeneric<Type> = Type extends QueryResult<infer X> ? X : never;
 export type CardBaseQueryResult = extractGeneric<
   Awaited<ReturnType<typeof execCompiledQuery>>
 >;
-
-/*
-export type CardBaseQueryResult = {
-  "c.Slug": string;
-
-  "f.Slug": string;
-  "f.Title": string;
-  "f.Text": string;
-  "f.FlavorText": string | null;
-  "f.Traits": string;
-  "f.Keywords": string;
-  "f.Attack": number | null;
-  "f.Defense": number | null;
-  "f.HitPoints": number | null;
-  "f.Willpower": number | null;
-  "f.IsUnique": boolean | null;
-  "f.ThreatCost": number | null;
-  "f.ResourceCost": number | null;
-  "f.VictoryPoints": number | null;
-  "f.QuestPoints": number | null;
-  "f.ThreatStrength": number | null;
-  "f.EngagementCost": number | null;
-  "f.ShadowEffect": string | null;
-  "f.MaxPerDeck": number | null;
-  "f.Orientation": string;
-  "f.Sphere": string | null;
-  "f.Type": string;
-  "f.Direction": string | null;
-  "f.Subtype": string | null;
-  "f.Stage": string | null;
-
-  "f.Search_Title": string;
-  "f.Search_Text": string;
-  "f.Search_FlavorText": string | null;
-
-  "b.Slug": string;
-  "b.Title": string;
-  "b.Text": string;
-  "b.FlavorText": string | null;
-  "b.Traits": string;
-  "b.Keywords": string;
-  "b.Attack": number | null;
-  "b.Defense": number | null;
-  "b.HitPoints": number | null;
-  "b.Willpower": number | null;
-  "b.IsUnique": boolean | null;
-  "b.ThreatCost": number | null;
-  "b.ResourceCost": number | null;
-  "b.VictoryPoints": number | null;
-  "b.QuestPoints": number | null;
-  "b.ThreatStrength": number | null;
-  "b.EngagementCost": number | null;
-  "b.ShadowEffect": string | null;
-  "b.MaxPerDeck": number | null;
-  "b.Orientation": string;
-  "b.Sphere": string | null;
-  "b.Type": string;
-  "b.Direction": string | null;
-  "b.Subtype": string | null;
-  "b.Stage": string | null;
-
-  "b.Search_Title": string;
-  "b.Search_Text": string;
-  "b.Search_FlavorText": string | null;
-
-  "pc.ProductCode": string;
-  "pc.CardSlug": string;
-  "pc.Quantity": number;
-  "pc.Number": string;
-  "pc.FrontImageUrl": string;
-  "pc.BackNumber": string | null;
-  "pc.BackImageUrl": string | null;
-  "pc.OctgnId": string | null;
-  "pc.RingsDbCode": string | null;
-
-  "p.Code": string;
-  "p.Name": string;
-  "p.Type": string;
-  "p.Abbreviation": string;
-  "p.Category": string;
-  "p.Cycle": string | null;
-  "p.FirstReleased": string | null;
-  "p.IsRepackage": boolean;
-  "p.ExpansionSymbol": string | null;
-};
-*/

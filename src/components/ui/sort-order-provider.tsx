@@ -1,4 +1,6 @@
-import { createContext, PropsWithChildren, useState } from "react";
+import { createContext, PropsWithChildren } from "react";
+
+import { usePersistedState } from "@/components/search/use-persisted-state";
 
 import { sortOptions } from "@/lotr/sort-options";
 
@@ -15,7 +17,10 @@ export const SortOrderContext = createContext<SortOrderContextType>([
 ]);
 
 export function SortOrderProvider({ children }: PropsWithChildren<unknown>) {
-  const [sortOrder, setSortOrder] = useState<SortOrderType>("Random");
+  const [sortOrder, setSortOrder] = usePersistedState<SortOrderType>(
+    "SortOrderContext",
+    "Random",
+  );
 
   return (
     <SortOrderContext.Provider value={[sortOrder, setSortOrder]}>

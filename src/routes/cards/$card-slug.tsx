@@ -1,6 +1,6 @@
+import { cardBaseQuery, CardBaseQueryResult } from "@/lotr/database-schema";
 import { Card, lotrCardFromCardBaseQuery } from "@/lotr/lotr-schema";
 import SmallCard from "@/lotr/small-card";
-import { cardBaseQuery, CardBaseQueryResult } from "@/sqljs/database-schema";
 import execCompiledQuery from "@/sqljs/exec-compiled-query";
 import { Container, Image } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";

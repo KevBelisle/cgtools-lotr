@@ -1,6 +1,7 @@
-import { createContext, PropsWithChildren, useState } from "react";
+import { createContext, PropsWithChildren } from "react";
 
 import { SearchFilterType } from "@/components/search/types";
+import { usePersistedState } from "@/components/search/use-persisted-state";
 import { defaultSearchFilters } from "@/lotr/search-filters";
 
 export type SearchFilterContextType = [
@@ -14,8 +15,10 @@ export const SearchFilterContext = createContext<SearchFilterContextType>([
 ]);
 
 export function SearchFilterProvider({ children }: PropsWithChildren<unknown>) {
-  const [searchFilters, setSearchFilters] =
-    useState<SearchFilterType>(defaultSearchFilters);
+  const [searchFilters, setSearchFilters] = usePersistedState<SearchFilterType>(
+    "SearchFilterContext",
+    defaultSearchFilters,
+  );
 
   return (
     <SearchFilterContext.Provider value={[searchFilters, setSearchFilters]}>

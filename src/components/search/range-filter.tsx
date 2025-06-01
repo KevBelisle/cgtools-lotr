@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { useCallback, useState } from "react";
 
-import { CardSideTable } from "@/sqljs/database-schema";
+import { CardSideTable } from "@/lotr/database-schema";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 import { Checkbox } from "../ui/checkbox";
 import {

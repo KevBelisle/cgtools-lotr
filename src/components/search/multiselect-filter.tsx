@@ -1,4 +1,4 @@
-import { CardSideTable } from "@/sqljs/database-schema.tsx";
+import { CardSideTable } from "@/lotr/database-schema.tsx";
 import {
   CheckboxCard,
   CheckboxGroup,

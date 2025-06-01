@@ -1,8 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { CardSearch } from "@/components/pages/card-search";
+import { cardBaseQuery, CardBaseQueryResult } from "@/lotr/database-schema";
 import { lotrCardFromCardBaseQuery } from "@/lotr/lotr-schema";
-import { cardBaseQuery, CardBaseQueryResult } from "@/sqljs/database-schema";
 import execCompiledQuery from "@/sqljs/exec-compiled-query";
 import { sql } from "kysely";
 import { useState } from "react";
@@ -30,8 +30,14 @@ export const Route = createFileRoute("/cards/search/")({
     let filteredQuery = cardBaseQuery;
 
     for (const filter of Object.values(searchFilters)) {
-      const frontColumn = `f.${filter.id}` as keyof CardBaseQueryResult;
-      const backColumn = `b.${filter.id}` as keyof CardBaseQueryResult;
+      const frontColumn = `f.${filter.id}` as keyof Omit<
+        CardBaseQueryResult,
+        "ProductCards"
+      >;
+      const backColumn = `b.${filter.id}` as keyof Omit<
+        CardBaseQueryResult,
+        "ProductCards"
+      >;
 
       switch (filter.type) {
         case "input":
@@ -113,19 +119,24 @@ export const Route = createFileRoute("/cards/search/")({
       );
     }
 
-    filteredQuery = filteredQuery.groupBy(["c.Slug"]).limit(30);
+    //filteredQuery = filteredQuery.groupBy(["c.Slug"]);
 
-    const compiledQuery = filteredQuery.compile();
+    const compiledQuery = filteredQuery.limit(30).compile();
 
-    console.log(
-      "Compiled Query:",
-      compiledQuery.sql.slice(compiledQuery.sql.indexOf("order by")),
-    );
+    //console.log("Compiled Query:", compiledQuery.sql);
+    const startTime = performance.now();
 
     const queryResults = execCompiledQuery(
       compiledQuery,
       context.sqljsDbContext.sqljsDb!,
     );
+
+    const endTime = performance.now();
+    console.log(
+      `Query executed in ${endTime - startTime} ms`,
+      `(${queryResults.length} results)`,
+    );
+
     return (queryResults as CardBaseQueryResult[]).map(
       lotrCardFromCardBaseQuery,
     );

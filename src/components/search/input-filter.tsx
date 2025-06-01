@@ -2,7 +2,7 @@ import { Em, Field, Flex, Input, Text } from "@chakra-ui/react";
 import { useCallback, useState } from "react";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 
-import { CardSideTable } from "@/sqljs/database-schema";
+import { CardSideTable } from "@/lotr/database-schema";
 import { InputFilterType, SearchFilterType } from "./types";
 
 export function InputFilter({

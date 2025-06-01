@@ -1,4 +1,4 @@
-import { CardBaseQueryResult } from "@/sqljs/database-schema";
+import { CardBaseQueryResult } from "@/lotr/database-schema";
 
 export type CardSide = {
   Slug: string;
@@ -57,7 +57,7 @@ export type Card = {
   Slug: string;
   Front: CardSide;
   Back: CardSide | null;
-  ProductCard: ProductCard | null;
+  ProductCards: ProductCard[];
 };
 
 export function lotrCardFromCardBaseQuery(card: CardBaseQueryResult): Card {
@@ -119,26 +119,29 @@ export function lotrCardFromCardBaseQuery(card: CardBaseQueryResult): Card {
       Subtype: card["b.Subtype"],
       Stage: card["b.Stage"],
     },
-    ProductCard: {
-      Product: {
-        Code: card["p.Code"]!,
-        Name: card["p.Name"]!,
-        Type: card["p.Type"]!,
-        Abbreviation: card["p.Abbreviation"]!,
-        Category: card["p.Category"]!,
-        Cycle: card["p.Cycle"],
-        FirstReleased: card["p.FirstReleased"],
-        IsRepackage: card["p.IsRepackage"]!,
-        ExpansionSymbol: card["p.ExpansionSymbol"],
-      },
-      CardSlug: card["pc.CardSlug"]!,
-      Quantity: card["pc.Quantity"]!,
-      Number: card["pc.Number"]!,
-      FrontImageUrl: card["pc.FrontImageUrl"]!,
-      BackNumber: card["pc.BackNumber"],
-      BackImageUrl: card["pc.BackImageUrl"],
-      OctgnId: card["pc.OctgnId"],
-      RingsDbCode: card["pc.RingsDbCode"],
-    },
+    ProductCards: JSON.parse(card["ProductCards"] as any).map(
+      (pc: any) =>
+        ({
+          Product: {
+            Code: pc["p.Code"],
+            Name: pc["p.Name"],
+            Type: pc["p.Type"],
+            Abbreviation: pc["p.Abbreviation"],
+            Category: pc["p.Category"],
+            Cycle: pc["p.Cycle"],
+            FirstReleased: pc["p.FirstReleased"],
+            IsRepackage: pc["p.IsRepackage"]!,
+            ExpansionSymbol: pc["p.ExpansionSymbol"],
+          } as Product,
+          CardSlug: pc["pc.CardSlug"],
+          Quantity: pc["pc.Quantity"],
+          Number: pc["pc.Number"],
+          FrontImageUrl: pc["pc.FrontImageUrl"],
+          BackNumber: pc["pc.BackNumber"],
+          BackImageUrl: pc["pc.BackImageUrl"],
+          OctgnId: pc["pc.OctgnId"],
+          RingsDbCode: pc["pc.RingsDbCode"],
+        }) as ProductCard,
+    ),
   };
 }
