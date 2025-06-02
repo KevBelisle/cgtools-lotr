@@ -9,12 +9,31 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import { ReactNode, useNavigate } from "@tanstack/react-router";
-import { useCallback, useContext } from "react";
+import { memo, useCallback, useContext } from "react";
 import { LuFilter } from "react-icons/lu";
 import { DisplaySelect } from "../search/display-select";
 import { OrderSelect } from "../search/sort-select";
 import { SearchFilterContext } from "../ui/advanced-filters-provider";
 import { DisplayContext } from "../ui/display-provider";
+
+function CardResults({ cards }: { cards: GameCard[] }): ReactNode[] {
+  const [displayOption] = useContext(DisplayContext);
+  const DisplayComponent = displayOption.component;
+
+  return cards.map((card) => {
+    return <DisplayComponent key={card.Slug} card={card} />;
+  });
+}
+
+const MemoizedCardResults = memo(CardResults, (prevProps, nextProps) => {
+  // Only re-render if the cards array has changed
+  return (
+    prevProps.cards.length == nextProps.cards.length &&
+    prevProps.cards.every(
+      (card, index) => card.Slug === nextProps.cards[index]?.Slug,
+    )
+  );
+});
 
 export const CardSearch = ({
   query,
@@ -25,15 +44,6 @@ export const CardSearch = ({
   setQuery: (query: string) => void;
   cards: GameCard[];
 }) => {
-  const [displayOption] = useContext(DisplayContext);
-  const DisplayComponent = displayOption.component;
-
-  let cardResults: ReactNode[] = [];
-
-  cardResults = cards.map((card) => {
-    return <DisplayComponent key={card.Slug} card={card} />;
-  });
-
   const onChange = useCallback((e: any) => setQuery(e.target.value), []);
   const navigate = useNavigate();
 
@@ -92,7 +102,7 @@ export const CardSearch = ({
         <DisplaySelect />
       </Group>
       <SimpleGrid columns={[1, null, null, 2, null, 3]} gap="6">
-        {...cardResults}
+        <MemoizedCardResults cards={cards} />
       </SimpleGrid>
     </Container>
   );
