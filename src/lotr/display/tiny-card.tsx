@@ -9,10 +9,8 @@ import Spirit from "@/lotr/icons/game icons/Spirit.svg?react";
 import Tactics from "@/lotr/icons/game icons/Tactics.svg?react";
 
 import Unique from "@/lotr/icons/game icons/Unique.svg?react";
-import React from "react";
-import { arePropsEqual } from "./util";
 
-export const TinyCard = React.memo(({ card }: { card: GameCard }) => {
+export const TinyCard = ({ card }: { card: GameCard }) => {
   var sphereIcon = null;
 
   switch (card.Front.Sphere) {
@@ -58,22 +56,22 @@ export const TinyCard = React.memo(({ card }: { card: GameCard }) => {
   }
 
   return (
-    <div 
+    <div
       style={{
         border: "2px solid #ccc",
         boxShadow: "0 0.5rem 2.5rem -2rem rgba(0, 0, 0, 0.5)",
         fontSize: "small",
-        fontFamily: "times, serif"
+        fontFamily: "times, serif",
       }}
     >
-      <div 
-        style={{ 
-          padding: "16px", 
-          paddingBottom: "8px", 
-          display: "flex", 
-          flexDirection: "column", 
-          gap: "8px", 
-          alignItems: "stretch" 
+      <div
+        style={{
+          padding: "16px",
+          paddingBottom: "8px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "8px",
+          alignItems: "stretch",
         }}
       >
         <div
@@ -81,7 +79,7 @@ export const TinyCard = React.memo(({ card }: { card: GameCard }) => {
             fontFamily: "vafthrudnir",
             fontVariant: "small-caps",
             fontWeight: "normal",
-            fontSize: "1.5rem"
+            fontSize: "1.5rem",
           }}
         >
           <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -118,4 +116,4 @@ export const TinyCard = React.memo(({ card }: { card: GameCard }) => {
       </div>
     </div>
   );
-}, arePropsEqual);
+};

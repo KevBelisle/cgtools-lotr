@@ -157,7 +157,7 @@ function CardSearchRouteComponent() {
   const cards = Route.useLoaderData();
   const navigate = useNavigate({ from: Route.fullPath });
 
-  const debouncedNavigate = debounce(navigate, 300);
+  const debouncedNavigate = debounce(navigate, 100);
 
   // Immediately setQuery in local state
   // and then navigate after a delay to avoid too many navigations and DB queries

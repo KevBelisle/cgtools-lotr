@@ -15,10 +15,8 @@ import Spirit from "@/lotr/icons/game icons/Spirit.svg?react";
 import Tactics from "@/lotr/icons/game icons/Tactics.svg?react";
 
 import Unique from "@/lotr/icons/game icons/Unique.svg?react";
-import React from "react";
-import { arePropsEqual } from "./util";
 
-export const FullCard = React.memo(({ card }: { card: GameCard }) => {
+export const FullCard = ({ card }: { card: GameCard }) => {
   var sphereIcon = null;
 
   switch (card.Front.Sphere) {
@@ -471,4 +469,4 @@ export const FullCard = React.memo(({ card }: { card: GameCard }) => {
       </div>
     </div>
   );
-}, arePropsEqual);
+};
