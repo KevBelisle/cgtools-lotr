@@ -1,19 +1,5 @@
-import { Tag } from "@/components/ui/tag";
 import { Card as GameCard } from "@/lotr/lotr-schema";
-import {
-  Bleed,
-  Box,
-  Card,
-  Em,
-  HStack,
-  List,
-  Separator,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
 import { Link } from "@tanstack/react-router";
-
-import { Tooltip } from "@/components/ui/tooltip";
 
 import Attack from "@/lotr/icons/game icons/Attack.svg?react";
 import Defense from "@/lotr/icons/game icons/Defense.svg?react";
@@ -33,45 +19,28 @@ import React from "react";
 import { arePropsEqual } from "./util";
 
 export const FullCard = React.memo(({ card }: { card: GameCard }) => {
-  var backgroundColor = "";
-  var borderColor = "";
   var sphereIcon = null;
-  console.log("wow");
 
   switch (card.Front.Sphere) {
     case "Baggins":
-      backgroundColor = "baggins.fg/10";
-      borderColor = "baggins.fg";
       sphereIcon = <Baggins style={{ width: "35px", height: "35px" }} />;
       break;
     case "Fellowship":
-      backgroundColor = "fellowship.fg/10";
-      borderColor = "fellowship.fg";
       sphereIcon = <Fellowship style={{ width: "35px", height: "35px" }} />;
       break;
     case "Leadership":
-      backgroundColor = "leadership.fg/10";
-      borderColor = "leadership.fg";
       sphereIcon = <Leadership style={{ width: "35px", height: "35px" }} />;
       break;
     case "Lore":
-      backgroundColor = "lore.fg/10";
-      borderColor = "lore.fg";
       sphereIcon = <Lore style={{ width: "35px", height: "35px" }} />;
       break;
     case "Spirit":
-      backgroundColor = "spirit.fg/10";
-      borderColor = "spirit.fg";
       sphereIcon = <Spirit style={{ width: "35px", height: "35px" }} />;
       break;
     case "Tactics":
-      backgroundColor = "tactics.fg/10";
-      borderColor = "tactics.fg";
       sphereIcon = <Tactics style={{ width: "35px", height: "35px" }} />;
       break;
     case "Neutral":
-      backgroundColor = "neutral.fg/10";
-      borderColor = "sand.700";
       sphereIcon = (
         <div
           style={{
@@ -92,30 +61,35 @@ export const FullCard = React.memo(({ card }: { card: GameCard }) => {
         </div>
       );
       break;
-    default:
-      backgroundColor = "night.800/10";
-      borderColor = "night.800";
-      break;
   }
 
   return (
-    <Card.Root
-      size={"sm"}
-      borderWidth={2}
-      boxShadow={"0 0.5rem 2.5rem -2rem var(--chakra-colors-night-950)"}
-      backgroundColor={backgroundColor}
-      borderColor={borderColor}
-      fontSize="sm"
-      fontFamily={"times, serif"}
+    <div
+      style={{
+        border: "2px solid #ccc",
+        boxShadow: "0 0.5rem 2.5rem -2rem rgba(0, 0, 0, 0.5)",
+        fontSize: "small",
+        fontFamily: "times, serif",
+      }}
     >
-      <VStack p={4} gap={2} alignItems="stretch">
-        <Card.Title
-          fontFamily={"vafthrudnir"}
-          fontVariant={"small-caps"}
-          fontWeight={"normal"}
-          fontSize="2xl"
+      <div
+        style={{
+          padding: "16px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "8px",
+          alignItems: "stretch",
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "vafthrudnir",
+            fontVariant: "small-caps",
+            fontWeight: "normal",
+            fontSize: "1.5rem",
+          }}
         >
-          <HStack justifyContent="space-between">
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
             <Link to="/cards/$card-slug" params={{ "card-slug": card.Slug }}>
               <span>
                 {card.Front.IsUnique ? (
@@ -130,9 +104,9 @@ export const FullCard = React.memo(({ card }: { card: GameCard }) => {
                   ""
                 )}
                 {card.Front.Stage ? (
-                  <Text as="span" fontSize="xl" color="sand.500">
+                  <span style={{ fontSize: "1.25rem", color: "#a89984" }}>
                     {card.Front.Stage}
-                  </Text>
+                  </span>
                 ) : (
                   ""
                 )}{" "}
@@ -140,242 +114,361 @@ export const FullCard = React.memo(({ card }: { card: GameCard }) => {
               </span>
             </Link>
             {card.Front.Sphere && (
-              <Tooltip content={card.Front.Sphere}>
-                <Box color={borderColor} mt={"-1"}>
-                  {sphereIcon}
-                </Box>
-              </Tooltip>
+              <div title={card.Front.Sphere} style={{ marginTop: "-4px" }}>
+                {sphereIcon}
+              </div>
             )}
-          </HStack>
-        </Card.Title>
+          </div>
+        </div>
 
-        <HStack justifyContent="space-between" flexWrap={"wrap"}>
-          <HStack justifyContent="flex-end">
-            <Tooltip content="Card type">
-              <Tag fontFamily={"sans-serif"}>
-                {card.Front.Type}
-                {card.Front.Subtype && ` - ${card.Front.Subtype}`}
-              </Tag>
-            </Tooltip>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <div
+              title="Card type"
+              style={{
+                display: "inline-block",
+                padding: "0.25rem 0.5rem",
+                border: "1px solid #ccc",
+                borderRadius: "0.25rem",
+                marginRight: "0.5rem",
+                fontFamily: "sans-serif",
+              }}
+            >
+              {card.Front.Type}
+              {card.Front.Subtype && ` - ${card.Front.Subtype}`}
+            </div>
             {card.Front.ResourceCost != null && (
-              <Tooltip content="Resource cost">
-                <Tag>
-                  <HStack>
-                    <Text>Cost:</Text>
-                    <Text
-                      fontFamily={"vafthrudnir"}
-                      style={{ transform: "translate(0, 3px)" }}
-                    >
-                      {card.Front.ResourceCost}
-                    </Text>
-                  </HStack>
-                </Tag>
-              </Tooltip>
+              <div
+                title="Resource cost"
+                style={{
+                  display: "inline-block",
+                  padding: "0.25rem 0.5rem",
+                  border: "1px solid #ccc",
+                  borderRadius: "0.25rem",
+                  marginRight: "0.5rem",
+                }}
+              >
+                <div style={{ display: "flex" }}>
+                  <span>Cost:</span>
+                  <span
+                    style={{
+                      fontFamily: "vafthrudnir",
+                      transform: "translate(0, 3px)",
+                    }}
+                  >
+                    {card.Front.ResourceCost}
+                  </span>
+                </div>
+              </div>
             )}
             {card.Front.ThreatCost != null && (
-              <Tooltip content="Threat cost">
-                <Tag size="lg">
-                  <Threat
-                    style={{
-                      display: "inline",
-                      height: "1rem",
-                      width: "1rem",
-                    }}
-                  />{" "}
-                  {card.Front.ThreatCost}
-                </Tag>
-              </Tooltip>
+              <div
+                title="Threat cost"
+                style={{
+                  display: "inline-block",
+                  padding: "0.25rem 0.5rem",
+                  border: "1px solid #ccc",
+                  borderRadius: "0.25rem",
+                  marginRight: "0.5rem",
+                }}
+              >
+                <Threat
+                  style={{
+                    display: "inline",
+                    height: "1rem",
+                    width: "1rem",
+                  }}
+                />{" "}
+                {card.Front.ThreatCost}
+              </div>
             )}
             {card.Front.QuestPoints != null && (
-              <Tooltip content="Quest points">
-                <Tag size="lg">
-                  <Threat
-                    style={{
-                      display: "inline",
-                      height: "1rem",
-                      width: "1rem",
-                    }}
-                  />{" "}
-                  {card.Front.QuestPoints}
-                </Tag>
-              </Tooltip>
+              <div
+                title="Quest points"
+                style={{
+                  display: "inline-block",
+                  padding: "0.25rem 0.5rem",
+                  border: "1px solid #ccc",
+                  borderRadius: "0.25rem",
+                  marginRight: "0.5rem",
+                }}
+              >
+                <Threat
+                  style={{
+                    display: "inline",
+                    height: "1rem",
+                    width: "1rem",
+                  }}
+                />{" "}
+                {card.Front.QuestPoints}
+              </div>
             )}
             {card.Front.EngagementCost != null && (
-              <Tooltip content="Engagement cost">
-                <Tag size="lg">
+              <div
+                title="Engagement cost"
+                style={{
+                  display: "inline-block",
+                  padding: "0.25rem 0.5rem",
+                  border: "1px solid #ccc",
+                  borderRadius: "0.25rem",
+                  marginRight: "0.5rem",
+                }}
+              >
+                <Threat
+                  style={{
+                    display: "inline",
+                    height: "1rem",
+                    width: "1rem",
+                  }}
+                />{" "}
+                {card.Front.EngagementCost}
+              </div>
+            )}
+          </div>
+          <div
+            style={{ flexGrow: 1, display: "flex", justifyContent: "flex-end" }}
+          >
+            {card.Front.ThreatStrength != null && (
+              <div
+                title="Threat strength"
+                style={{
+                  display: "inline-block",
+                  padding: "0.25rem 0.5rem",
+                  border: "1px solid #ccc",
+                  borderRadius: "0.25rem",
+                  marginRight: "0.5rem",
+                  fontFamily: "vafthrudnir",
+                }}
+              >
+                <div style={{ display: "flex", gap: "4px" }}>
+                  <span style={{ transform: "translate(0, 3px)" }}>
+                    {card.Front.ThreatStrength}
+                  </span>
                   <Threat
                     style={{
-                      display: "inline",
-                      height: "1rem",
-                      width: "1rem",
+                      width: "15px",
+                      height: "15px",
                     }}
-                  />{" "}
-                  {card.Front.EngagementCost}
-                </Tag>
-              </Tooltip>
-            )}
-          </HStack>
-          <HStack flexGrow={1} justifyContent="flex-end">
-            {card.Front.ThreatStrength != null && (
-              <Tooltip content="Threat strength">
-                <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
-                  <HStack gap="1">
-                    <span style={{ transform: "translate(0, 3px)" }}>
-                      {card.Front.ThreatStrength}
-                    </span>
-                    <Threat
-                      style={{
-                        width: "15px",
-                        height: "15px",
-                      }}
-                    />
-                  </HStack>
-                </Tag>
-              </Tooltip>
+                  />
+                </div>
+              </div>
             )}
 
             {card.Front.Willpower != null && (
-              <Tooltip content="Willpower">
-                <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
-                  <HStack gap="1">
-                    <span style={{ transform: "translate(0, 3px)" }}>
-                      {card.Front.Willpower}
-                    </span>
-                    <Willpower
-                      style={{
-                        width: "15px",
-                        height: "15px",
-                      }}
-                    />
-                  </HStack>
-                </Tag>
-              </Tooltip>
+              <div
+                title="Willpower"
+                style={{
+                  display: "inline-block",
+                  padding: "0.25rem 0.5rem",
+                  border: "1px solid #ccc",
+                  borderRadius: "0.25rem",
+                  marginRight: "0.5rem",
+                  fontFamily: "vafthrudnir",
+                }}
+              >
+                <div style={{ display: "flex", gap: "4px" }}>
+                  <span style={{ transform: "translate(0, 3px)" }}>
+                    {card.Front.Willpower}
+                  </span>
+                  <Willpower
+                    style={{
+                      width: "15px",
+                      height: "15px",
+                    }}
+                  />
+                </div>
+              </div>
             )}
             {card.Front.Attack != null && (
-              <Tooltip content="Attack">
-                <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
-                  <HStack gap="1">
-                    <span style={{ transform: "translate(0, 3px)" }}>
-                      {card.Front.Attack}
-                    </span>
-                    <Attack
-                      style={{
-                        width: "15px",
-                        height: "15px",
-                      }}
-                    />
-                  </HStack>
-                </Tag>
-              </Tooltip>
+              <div
+                title="Attack"
+                style={{
+                  display: "inline-block",
+                  padding: "0.25rem 0.5rem",
+                  border: "1px solid #ccc",
+                  borderRadius: "0.25rem",
+                  marginRight: "0.5rem",
+                  fontFamily: "vafthrudnir",
+                }}
+              >
+                <div style={{ display: "flex", gap: "4px" }}>
+                  <span style={{ transform: "translate(0, 3px)" }}>
+                    {card.Front.Attack}
+                  </span>
+                  <Attack
+                    style={{
+                      width: "15px",
+                      height: "15px",
+                    }}
+                  />
+                </div>
+              </div>
             )}
             {card.Front.Defense != null && (
-              <Tooltip content="Defense">
-                <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
-                  <HStack gap="1">
-                    <span style={{ transform: "translate(0, 3px)" }}>
-                      {card.Front.Defense}
-                    </span>
-                    <Defense
-                      style={{
-                        width: "15px",
-                        height: "15px",
-                      }}
-                    />
-                  </HStack>
-                </Tag>
-              </Tooltip>
+              <div
+                title="Defense"
+                style={{
+                  display: "inline-block",
+                  padding: "0.25rem 0.5rem",
+                  border: "1px solid #ccc",
+                  borderRadius: "0.25rem",
+                  marginRight: "0.5rem",
+                  fontFamily: "vafthrudnir",
+                }}
+              >
+                <div style={{ display: "flex", gap: "4px" }}>
+                  <span style={{ transform: "translate(0, 3px)" }}>
+                    {card.Front.Defense}
+                  </span>
+                  <Defense
+                    style={{
+                      width: "15px",
+                      height: "15px",
+                    }}
+                  />
+                </div>
+              </div>
             )}
             {card.Front.HitPoints != null && (
-              <Tooltip content="Hit points">
-                <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
-                  <HStack gap="1">
-                    <span style={{ transform: "translate(0, 3px)" }}>
-                      {card.Front.HitPoints}
-                    </span>
-                    <HitPoints
-                      style={{
-                        width: "15px",
-                        height: "15px",
-                      }}
-                    />
-                  </HStack>
-                </Tag>
-              </Tooltip>
+              <div
+                title="Hit points"
+                style={{
+                  display: "inline-block",
+                  padding: "0.25rem 0.5rem",
+                  border: "1px solid #ccc",
+                  borderRadius: "0.25rem",
+                  marginRight: "0.5rem",
+                  fontFamily: "vafthrudnir",
+                }}
+              >
+                <div style={{ display: "flex", gap: "4px" }}>
+                  <span style={{ transform: "translate(0, 3px)" }}>
+                    {card.Front.HitPoints}
+                  </span>
+                  <HitPoints
+                    style={{
+                      width: "15px",
+                      height: "15px",
+                    }}
+                  />
+                </div>
+              </div>
             )}
-          </HStack>
-        </HStack>
-        <Em>
+          </div>
+        </div>
+        <em style={{ fontStyle: "italic" }}>
           {card.Front.Keywords.split(",").join(" ")}
           {card.Front.Keywords && card.Front.Traits && " - "}
           {card.Front.Traits.split(",").join(" ")}
-        </Em>
+        </em>
         {card.Front.Text && (
-          <Text textWrap={"pretty"}>
+          <div style={{ textWrap: "pretty" }}>
             {card.Front.Text.replaceAll('\\"', '"')
               .split("\\r\\n")
               .flatMap((str, index) => [str, <br key={index} />])}
-          </Text>
+          </div>
         )}
         {card.Front.VictoryPoints && (
-          <Text textWrap={"pretty"} fontWeight={"bold"} alignSelf={"flex-end"}>
+          <div
+            style={{
+              textWrap: "pretty",
+              fontWeight: "bold",
+              alignSelf: "flex-end",
+            }}
+          >
             Victory {card.Front.VictoryPoints}.
-          </Text>
+          </div>
         )}
         {(card.Front.Text || card.Front.VictoryPoints) &&
         card.Front.FlavorText ? (
-          <Separator borderColor={borderColor} variant={"dotted"} />
+          <hr
+            style={{
+              border: "none",
+              borderTop: "1px dotted #ccc",
+              margin: "8px 0",
+            }}
+          />
         ) : null}
         {card.Front.FlavorText && (
-          <Text textWrap={"pretty"} fontStyle={"italic"}>
+          <div style={{ textWrap: "pretty", fontStyle: "italic" }}>
             {card.Front.FlavorText.replaceAll('\\"', '"')
               .split("\\r\\n")
               .flatMap((str, index) => [str, <br key={index} />])}
-          </Text>
+          </div>
         )}
 
-        <Bleed>
-          <Separator borderColor={borderColor} mx={-4} my={2} />
-        </Bleed>
-        <List.Root listStyleType={"none"} fontFamily={"sans-serif"}>
+        <div style={{ margin: "0 -16px" }}>
+          <hr
+            style={{
+              border: "none",
+              borderTop: "1px solid #ccc",
+              margin: "8px 0",
+            }}
+          />
+        </div>
+        <ul
+          style={{
+            listStyleType: "none",
+            fontFamily: "sans-serif",
+            padding: 0,
+            margin: 0,
+          }}
+        >
           {card.ProductCards?.sort((a, _) =>
             a.Product.IsRepackage ? 1 : -1,
           ).map((pc) => (
-            <List.Item key={`${pc.Product.Code}-${pc.Number}`}>
+            <li key={`${pc.Product.Code}-${pc.Number}`}>
               {pc.Product.IsRepackage ? (
-                <Tag
-                  colorPalette={"teal"}
-                  size="sm"
-                  width="2rem"
-                  top="2px"
-                  position="relative"
-                  variant="subtle"
-                  justifyContent={"center"}
+                <div
+                  style={{
+                    display: "inline-block",
+                    backgroundColor: "rgba(0, 128, 128, 0.1)",
+                    color: "#008080",
+                    padding: "0.25rem",
+                    width: "2rem",
+                    position: "relative",
+                    top: "2px",
+                    textAlign: "center",
+                    borderRadius: "0.25rem",
+                    fontSize: "smaller",
+                  }}
                 >
                   RC
-                </Tag>
+                </div>
               ) : (
-                <Tag
-                  colorPalette={"red"}
-                  size="sm"
-                  width="2rem"
-                  top="2px"
-                  position="relative"
-                  variant="subtle"
-                  justifyContent={"center"}
+                <div
+                  style={{
+                    display: "inline-block",
+                    backgroundColor: "rgba(255, 0, 0, 0.1)",
+                    color: "#ff0000",
+                    padding: "0.25rem",
+                    width: "2rem",
+                    position: "relative",
+                    top: "2px",
+                    textAlign: "center",
+                    borderRadius: "0.25rem",
+                    fontSize: "smaller",
+                  }}
                 >
                   OG
-                </Tag>
+                </div>
               )}{" "}
               {pc.Quantity}x in {pc.Product.Name}{" "}
               {pc.Product.Cycle && !pc.Product.IsRepackage && (
-                <Text as="span" color="sand.500">
+                <span style={{ color: "#a89984" }}>
                   ({pc.Product.Cycle} cycle)
-                </Text>
+                </span>
               )}
-            </List.Item>
+            </li>
           ))}
-        </List.Root>
-      </VStack>
-    </Card.Root>
+        </ul>
+      </div>
+    </div>
   );
 }, arePropsEqual);
