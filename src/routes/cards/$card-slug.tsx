@@ -1,5 +1,5 @@
 import { cardBaseQuery, CardBaseQueryResult } from "@/lotr/database-schema";
-import FullCard from "@/lotr/display/full-card";
+import { FullCard } from "@/lotr/display/full-card";
 import { Card, lotrCardFromCardBaseQuery } from "@/lotr/lotr-schema";
 import execCompiledQuery from "@/sqljs/exec-compiled-query";
 import { Container, Image } from "@chakra-ui/react";
