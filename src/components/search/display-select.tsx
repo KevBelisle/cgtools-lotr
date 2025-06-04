@@ -38,10 +38,6 @@ export function DisplaySelect() {
 
   const onValueChange = useCallback(
     (e: { value: string[] }) => {
-      console.log(
-        "DisplaySelect onValueChange",
-        displayOptions[parseInt(e.value[0])],
-      );
       setDisplayOption(displayOptions[parseInt(e.value[0])]);
       //router.invalidate();
     },
