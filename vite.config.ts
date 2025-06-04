@@ -49,24 +49,5 @@ export default defineConfig({
   ],
   build: {
     target: "ES2022", // Enables top-level await
-
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          const HugeLibraries = ["@zag-js", "kysely", "@chakra-ui"]; // modify as required based on libraries in use
-          if (
-            HugeLibraries.some((libName) =>
-              id.includes(`node_modules/${libName}`),
-            )
-          ) {
-            return id
-              .toString()
-              .split("node_modules/")[1]
-              .split("/")[0]
-              .toString();
-          }
-        },
-      },
-    },
   },
 });
