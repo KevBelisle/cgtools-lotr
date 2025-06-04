@@ -53,22 +53,21 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          const HugeLibraries = [
-            "@zag-js",
-            "kysely",
-            "@chakra-ui",
-            "react-dom",
-          ]; // modify as required based on libraries in use
-          if (
-            HugeLibraries.some((libName) =>
-              id.includes(`node_modules/${libName}`),
-            )
-          ) {
-            return id
-              .toString()
-              .split("node_modules/")[1]
-              .split("/")[0]
-              .toString();
+          if (id.includes("node_modules")) {
+            const modulePath = id.split("node_modules/")[1];
+            const topLevelFolder = modulePath?.split("/")[0];
+            if (topLevelFolder !== ".pnpm") {
+              return topLevelFolder;
+            }
+
+            // changed . to ?. for the two lines below:
+            const scopedPackageName = modulePath?.split("/")[1];
+            const chunkName =
+              scopedPackageName?.split("@")[
+                scopedPackageName.startsWith("@") ? 1 : 0
+              ];
+
+            return chunkName;
           }
         },
       },
