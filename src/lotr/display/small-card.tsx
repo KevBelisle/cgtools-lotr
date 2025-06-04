@@ -146,7 +146,7 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
             </Tooltip>
             {card.Front.ResourceCost != null && (
               <Tooltip content="Resource cost">
-                <Tag>
+                <Tag size="lg" variant={"subtle"}>
                   <HStack>
                     <Text>Cost:</Text>
                     <Text
@@ -161,7 +161,7 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
             )}
             {card.Front.ThreatCost != null && (
               <Tooltip content="Threat cost">
-                <Tag size="lg">
+                <Tag size="lg" fontFamily={"vafthrudnir"} variant={"subtle"}>
                   <Threat
                     style={{
                       display: "inline",
@@ -175,7 +175,7 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
             )}
             {card.Front.QuestPoints != null && (
               <Tooltip content="Quest points">
-                <Tag size="lg">
+                <Tag size="lg" fontFamily={"vafthrudnir"} variant={"subtle"}>
                   <Threat
                     style={{
                       display: "inline",
@@ -189,7 +189,7 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
             )}
             {card.Front.EngagementCost != null && (
               <Tooltip content="Engagement cost">
-                <Tag size="lg">
+                <Tag size="lg" fontFamily={"vafthrudnir"} variant={"subtle"}>
                   <Threat
                     style={{
                       display: "inline",
