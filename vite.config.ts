@@ -1,6 +1,7 @@
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import { visualizer } from "rollup-plugin-visualizer";
+import { defineConfig, type PluginOption } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import svgr from "vite-plugin-svgr";
 import tsconfigPaths from "vite-tsconfig-paths";
@@ -15,6 +16,7 @@ export default defineConfig({
     react(),
     tsconfigPaths(),
     svgr(),
+    visualizer() as PluginOption,
     VitePWA({
       registerType: "prompt", //"autoUpdate",
       workbox: {
@@ -47,5 +49,29 @@ export default defineConfig({
   ],
   build: {
     target: "ES2022", // Enables top-level await
+
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          const HugeLibraries = [
+            "@zag-js",
+            "kysely",
+            "@chakra-ui",
+            "react-dom",
+          ]; // modify as required based on libraries in use
+          if (
+            HugeLibraries.some((libName) =>
+              id.includes(`node_modules/${libName}`),
+            )
+          ) {
+            return id
+              .toString()
+              .split("node_modules/")[1]
+              .split("/")[0]
+              .toString();
+          }
+        },
+      },
+    },
   },
 });
