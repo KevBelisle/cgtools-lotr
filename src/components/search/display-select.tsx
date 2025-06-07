@@ -3,6 +3,7 @@ import {
   IconButton,
   Portal,
   Select,
+  Text,
   useSelectContext,
 } from "@chakra-ui/react";
 import { useRouter } from "@tanstack/react-router";
@@ -50,6 +51,7 @@ export function DisplaySelect() {
         items: displayOptions.map((option, index) => ({
           label: option.name,
           value: index.toString(),
+          icon: option.icon,
         })),
       }),
     [displayOptions],
@@ -77,7 +79,10 @@ export function DisplaySelect() {
           <Select.Content minW="32" colorScheme={"red"}>
             {displayOptionsCollection.items.map((option) => (
               <Select.Item item={option} key={option.value}>
-                {option.label}
+                <option.icon />
+                <Text as="span" textAlign="left" flexGrow={1}>
+                  {option.label}
+                </Text>
                 <Select.ItemIndicator />
               </Select.Item>
             ))}

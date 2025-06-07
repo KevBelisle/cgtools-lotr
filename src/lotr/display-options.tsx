@@ -4,6 +4,8 @@ import { SmallCard } from "@/lotr/display/small-card";
 import type { Card } from "@/lotr/lotr-schema";
 import type { ComponentType } from "react";
 import type { IconType } from "react-icons/lib";
+import { FullCardWithArt } from "./display/full-card-with-art";
+import { SmallCardWithArt } from "./display/small-card-with-art";
 
 import {
   LuFile,
@@ -11,7 +13,6 @@ import {
   LuRectangleHorizontal,
   LuRows2,
 } from "react-icons/lu";
-import { SmallCardWithArt } from "./display/small-card-with-art";
 
 export type DisplayOptionType = {
   name: string;
@@ -31,6 +32,12 @@ export const displayOptions: DisplayOptionType[] = [
   {
     name: "Small card + art",
     component: SmallCardWithArt,
+    icon: LuFileSpreadsheet,
+    minWidth: "400px",
+  },
+  {
+    name: "Full card + art",
+    component: FullCardWithArt,
     icon: LuFileSpreadsheet,
     minWidth: "400px",
   },
