@@ -44,6 +44,8 @@ export const CardSearch = ({
   setQuery: (query: string) => void;
   cards: GameCard[];
 }) => {
+  const [displayOption] = useContext(DisplayContext);
+
   const onChange = useCallback((e: any) => setQuery(e.target.value), []);
   const navigate = useNavigate();
 
@@ -101,7 +103,7 @@ export const CardSearch = ({
         <OrderSelect />
         <DisplaySelect />
       </Group>
-      <SimpleGrid columns={[1, null, null, 2, null, 3]} gap="6">
+      <SimpleGrid gap="6" minChildWidth={displayOption.minWidth ?? "450px"}>
         <MemoizedCardResults cards={cards} />
       </SimpleGrid>
     </Container>

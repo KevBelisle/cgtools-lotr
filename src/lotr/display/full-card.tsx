@@ -12,6 +12,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { Link } from "@tanstack/react-router";
+import { memo } from "react";
 
 import { Tooltip } from "@/components/ui/tooltip";
 
@@ -30,7 +31,7 @@ import Tactics from "@/lotr/icons/game icons/Tactics.svg?react";
 
 import Unique from "@/lotr/icons/game icons/Unique.svg?react";
 
-export const FullCard = ({ card }: { card: GameCard }) => {
+export const FullCard = memo(({ card }: { card: GameCard }) => {
   var backgroundColor = "";
   var borderColor = "";
   var sphereIcon = null;
@@ -375,6 +376,6 @@ export const FullCard = ({ card }: { card: GameCard }) => {
       </VStack>
     </Card.Root>
   );
-};
+});
 
 export default FullCard;
