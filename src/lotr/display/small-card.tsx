@@ -1,7 +1,17 @@
 import { Tag } from "@/components/ui/tag";
 import { Card as GameCard } from "@/lotr/lotr-schema";
-import { Box, Card, Em, HStack, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Card,
+  Em,
+  HStack,
+  IconButton,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { LuUndo } from "react-icons/lu";
 
 import { Tooltip } from "@/components/ui/tooltip";
 
@@ -21,11 +31,18 @@ import Tactics from "@/lotr/icons/game icons/Tactics.svg?react";
 import Unique from "@/lotr/icons/game icons/Unique.svg?react";
 
 export const SmallCard = ({ card }: { card: GameCard }) => {
+  const [side, setSide] = useState("front" as "front" | "back");
+  const flipCard = () => {
+    setSide((prevSide) => (prevSide === "front" ? "back" : "front"));
+  };
+  const hasBack = !!card.Back?.Title;
+  const cardSide = side === "front" ? card.Front : card.Back!;
+
   var backgroundColor = "";
   var borderColor = "";
   var sphereIcon = null;
 
-  switch (card.Front.Sphere) {
+  switch (cardSide.Sphere) {
     case "Baggins":
       backgroundColor = "baggins.fg/10";
       borderColor = "baggins.fg";
@@ -95,226 +112,241 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
       fontSize="sm"
       fontFamily={"times, serif"}
     >
-      <VStack p={4} gap={2} alignItems="stretch">
-        <Card.Title
-          fontFamily={"vafthrudnir"}
-          fontVariant={"small-caps"}
-          fontWeight={"normal"}
-          fontSize="2xl"
-        >
-          <HStack justifyContent="space-between">
-            <Link to="/cards/$card-slug" params={{ "card-slug": card.Slug }}>
-              <span>
-                {card.Front.IsUnique ? (
-                  <Unique
-                    style={{
-                      display: "inline",
-                      height: "1.4rem",
-                      width: "1.4rem",
-                    }}
-                  />
-                ) : (
-                  ""
-                )}{" "}
-                {card.Front.Stage ? (
-                  <Text as="span" fontSize="xl" color="sand.500">
-                    {card.Front.Stage}
-                  </Text>
-                ) : (
-                  ""
-                )}{" "}
-                {card.Front.Title}
-              </span>
-            </Link>
-            {card.Front.Sphere && (
-              <Tooltip content={card.Front.Sphere}>
-                <Box color={borderColor} mt={"-1"}>
-                  {sphereIcon}
-                </Box>
-              </Tooltip>
-            )}
-          </HStack>
-        </Card.Title>
-
-        <HStack justifyContent="space-between" flexWrap={"wrap"}>
-          <HStack justifyContent="flex-end">
-            <Tooltip content="Card type">
-              <Tag fontFamily={"sans-serif"}>
-                {card.Front.Type}
-                {card.Front.Subtype && ` - ${card.Front.Subtype}`}
-              </Tag>
+      <Card.Header
+        fontFamily={"vafthrudnir"}
+        fontVariant={"small-caps"}
+        fontWeight={"normal"}
+        fontSize="2xl"
+      >
+        <HStack justifyContent="space-between">
+          <Link to="/cards/$card-slug" params={{ "card-slug": card.Slug }}>
+            <span>
+              {cardSide.IsUnique ? (
+                <Unique
+                  style={{
+                    display: "inline",
+                    height: "1.4rem",
+                    width: "1.4rem",
+                  }}
+                />
+              ) : (
+                ""
+              )}{" "}
+              {cardSide.Stage ? (
+                <Text as="span" fontSize="xl" color="sand.500">
+                  {cardSide.Stage}
+                </Text>
+              ) : (
+                ""
+              )}{" "}
+              {cardSide.Title}
+            </span>
+          </Link>
+          {cardSide.Sphere && (
+            <Tooltip content={cardSide.Sphere}>
+              <Box color={borderColor} mt={"-1"}>
+                {sphereIcon}
+              </Box>
             </Tooltip>
-            {card.Front.ResourceCost != null && (
-              <Tooltip content="Resource cost">
-                <Tag size="lg" variant={"subtle"}>
-                  <HStack>
-                    <Text>Cost:</Text>
-                    <Text
-                      fontFamily={"vafthrudnir"}
-                      style={{ transform: "translate(0, 3px)" }}
-                    >
-                      {card.Front.ResourceCost}
-                    </Text>
-                  </HStack>
+          )}
+        </HStack>
+      </Card.Header>
+
+      <Card.Body position="relative" pt={1}>
+        <VStack gap={2} alignItems="stretch">
+          <HStack justifyContent="space-between" flexWrap={"wrap"}>
+            <HStack justifyContent="flex-end">
+              <Tooltip content="Card type">
+                <Tag fontFamily={"sans-serif"}>
+                  {cardSide.Type}
+                  {cardSide.Subtype && ` - ${cardSide.Subtype}`}
                 </Tag>
               </Tooltip>
-            )}
-            {card.Front.ThreatCost != null && (
-              <Tooltip content="Threat cost">
-                <Tag size="lg" fontFamily={"vafthrudnir"} variant={"subtle"}>
-                  <Threat
-                    style={{
-                      display: "inline",
-                      height: "1rem",
-                      width: "1rem",
-                    }}
-                  />{" "}
-                  {card.Front.ThreatCost}
-                </Tag>
-              </Tooltip>
-            )}
-            {card.Front.QuestPoints != null && (
-              <Tooltip content="Quest points">
-                <Tag size="lg" fontFamily={"vafthrudnir"} variant={"subtle"}>
-                  <Threat
-                    style={{
-                      display: "inline",
-                      height: "1rem",
-                      width: "1rem",
-                    }}
-                  />{" "}
-                  {card.Front.QuestPoints}
-                </Tag>
-              </Tooltip>
-            )}
-            {card.Front.EngagementCost != null && (
-              <Tooltip content="Engagement cost">
-                <Tag size="lg" fontFamily={"vafthrudnir"} variant={"subtle"}>
-                  <Threat
-                    style={{
-                      display: "inline",
-                      height: "1rem",
-                      width: "1rem",
-                    }}
-                  />{" "}
-                  {card.Front.EngagementCost}
-                </Tag>
-              </Tooltip>
-            )}
-          </HStack>
-          <HStack flexGrow={1} justifyContent="flex-end">
-            {card.Front.ThreatStrength != null && (
-              <Tooltip content="Threat strength">
-                <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
-                  <HStack gap="1">
-                    <span style={{ transform: "translate(0, 3px)" }}>
-                      {card.Front.ThreatStrength}
-                    </span>
+              {cardSide.ResourceCost != null && (
+                <Tooltip content="Resource cost">
+                  <Tag size="lg" variant={"subtle"}>
+                    <HStack>
+                      <Text>Cost:</Text>
+                      <Text
+                        fontFamily={"vafthrudnir"}
+                        style={{ transform: "translate(0, 3px)" }}
+                      >
+                        {cardSide.ResourceCost}
+                      </Text>
+                    </HStack>
+                  </Tag>
+                </Tooltip>
+              )}
+              {cardSide.ThreatCost != null && (
+                <Tooltip content="Threat cost">
+                  <Tag size="lg" fontFamily={"vafthrudnir"} variant={"subtle"}>
                     <Threat
                       style={{
-                        width: "15px",
-                        height: "15px",
+                        display: "inline",
+                        height: "1rem",
+                        width: "1rem",
                       }}
-                    />
-                  </HStack>
-                </Tag>
-              </Tooltip>
-            )}
+                    />{" "}
+                    {cardSide.ThreatCost}
+                  </Tag>
+                </Tooltip>
+              )}
+              {cardSide.QuestPoints != null && (
+                <Tooltip content="Quest points">
+                  <Tag size="lg" fontFamily={"vafthrudnir"} variant={"subtle"}>
+                    <Threat
+                      style={{
+                        display: "inline",
+                        height: "1rem",
+                        width: "1rem",
+                      }}
+                    />{" "}
+                    {cardSide.QuestPoints}
+                  </Tag>
+                </Tooltip>
+              )}
+              {cardSide.EngagementCost != null && (
+                <Tooltip content="Engagement cost">
+                  <Tag size="lg" fontFamily={"vafthrudnir"} variant={"subtle"}>
+                    <Threat
+                      style={{
+                        display: "inline",
+                        height: "1rem",
+                        width: "1rem",
+                      }}
+                    />{" "}
+                    {cardSide.EngagementCost}
+                  </Tag>
+                </Tooltip>
+              )}
+            </HStack>
+            <HStack flexGrow={1} justifyContent="flex-end">
+              {cardSide.ThreatStrength != null && (
+                <Tooltip content="Threat strength">
+                  <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
+                    <HStack gap="1">
+                      <span style={{ transform: "translate(0, 3px)" }}>
+                        {cardSide.ThreatStrength}
+                      </span>
+                      <Threat
+                        style={{
+                          width: "15px",
+                          height: "15px",
+                        }}
+                      />
+                    </HStack>
+                  </Tag>
+                </Tooltip>
+              )}
 
-            {card.Front.Willpower != null && (
-              <Tooltip content="Willpower">
-                <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
-                  <HStack gap="1">
-                    <span style={{ transform: "translate(0, 3px)" }}>
-                      {card.Front.Willpower}
-                    </span>
-                    <Willpower
-                      style={{
-                        width: "15px",
-                        height: "15px",
-                      }}
-                    />
-                  </HStack>
-                </Tag>
-              </Tooltip>
-            )}
-            {card.Front.Attack != null && (
-              <Tooltip content="Attack">
-                <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
-                  <HStack gap="1">
-                    <span style={{ transform: "translate(0, 3px)" }}>
-                      {card.Front.Attack}
-                    </span>
-                    <Attack
-                      style={{
-                        width: "15px",
-                        height: "15px",
-                      }}
-                    />
-                  </HStack>
-                </Tag>
-              </Tooltip>
-            )}
-            {card.Front.Defense != null && (
-              <Tooltip content="Defense">
-                <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
-                  <HStack gap="1">
-                    <span style={{ transform: "translate(0, 3px)" }}>
-                      {card.Front.Defense}
-                    </span>
-                    <Defense
-                      style={{
-                        width: "15px",
-                        height: "15px",
-                      }}
-                    />
-                  </HStack>
-                </Tag>
-              </Tooltip>
-            )}
-            {card.Front.HitPoints != null && (
-              <Tooltip content="Hit points">
-                <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
-                  <HStack gap="1">
-                    <span style={{ transform: "translate(0, 3px)" }}>
-                      {card.Front.HitPoints}
-                    </span>
-                    <HitPoints
-                      style={{
-                        width: "15px",
-                        height: "15px",
-                      }}
-                    />
-                  </HStack>
-                </Tag>
-              </Tooltip>
-            )}
+              {cardSide.Willpower != null && (
+                <Tooltip content="Willpower">
+                  <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
+                    <HStack gap="1">
+                      <span style={{ transform: "translate(0, 3px)" }}>
+                        {cardSide.Willpower}
+                      </span>
+                      <Willpower
+                        style={{
+                          width: "15px",
+                          height: "15px",
+                        }}
+                      />
+                    </HStack>
+                  </Tag>
+                </Tooltip>
+              )}
+              {cardSide.Attack != null && (
+                <Tooltip content="Attack">
+                  <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
+                    <HStack gap="1">
+                      <span style={{ transform: "translate(0, 3px)" }}>
+                        {cardSide.Attack}
+                      </span>
+                      <Attack
+                        style={{
+                          width: "15px",
+                          height: "15px",
+                        }}
+                      />
+                    </HStack>
+                  </Tag>
+                </Tooltip>
+              )}
+              {cardSide.Defense != null && (
+                <Tooltip content="Defense">
+                  <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
+                    <HStack gap="1">
+                      <span style={{ transform: "translate(0, 3px)" }}>
+                        {cardSide.Defense}
+                      </span>
+                      <Defense
+                        style={{
+                          width: "15px",
+                          height: "15px",
+                        }}
+                      />
+                    </HStack>
+                  </Tag>
+                </Tooltip>
+              )}
+              {cardSide.HitPoints != null && (
+                <Tooltip content="Hit points">
+                  <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
+                    <HStack gap="1">
+                      <span style={{ transform: "translate(0, 3px)" }}>
+                        {cardSide.HitPoints}
+                      </span>
+                      <HitPoints
+                        style={{
+                          width: "15px",
+                          height: "15px",
+                        }}
+                      />
+                    </HStack>
+                  </Tag>
+                </Tooltip>
+              )}
+            </HStack>
           </HStack>
-        </HStack>
-        <Em fontSize="sm" fontFamily={"times, serif"}>
-          {card.Front.Keywords.split(",").join(" ")}
-          {card.Front.Keywords && card.Front.Traits && " - "}
-          {card.Front.Traits.split(",").join(" ")}
-        </Em>
-        {card.Front.Text && (
-          <Text fontSize="sm" fontFamily={"times, serif"} textWrap={"pretty"}>
-            {card.Front.Text.replaceAll('\\"', '"')
-              .split("\\r\\n")
-              .flatMap((str, index) => [str, <br key={index} />])}
-          </Text>
-        )}
-        {card.Front.VictoryPoints && (
-          <Text
-            fontSize="sm"
-            fontFamily={"times, serif"}
-            textWrap={"pretty"}
-            fontWeight={"bold"}
-            alignSelf={"flex-end"}
-          >
-            Victory {card.Front.VictoryPoints}.
-          </Text>
-        )}
-      </VStack>
+          <Em fontSize="sm" fontFamily={"times, serif"}>
+            {cardSide.Keywords.split(",").join(" ")}
+            {cardSide.Keywords && cardSide.Traits && " - "}
+            {cardSide.Traits.split(",").join(" ")}
+          </Em>
+          {cardSide.Text && (
+            <Text fontSize="sm" fontFamily={"times, serif"} textWrap={"pretty"}>
+              {cardSide.Text.replaceAll('\\"', '"')
+                .split("\\r\\n")
+                .flatMap((str, index) => [str, <br key={index} />])}
+            </Text>
+          )}
+          {cardSide.VictoryPoints && (
+            <Text
+              fontSize="sm"
+              fontFamily={"times, serif"}
+              textWrap={"pretty"}
+              fontWeight={"bold"}
+              alignSelf={"flex-end"}
+            >
+              Victory {cardSide.VictoryPoints}.
+            </Text>
+          )}
+
+          {hasBack && (
+            <IconButton
+              variant="ghost"
+              onClick={flipCard}
+              size="sm"
+              position="absolute"
+              bottom={0}
+              right={0}
+            >
+              <LuUndo />
+            </IconButton>
+          )}
+        </VStack>
+      </Card.Body>
     </Card.Root>
   );
 };
