@@ -21,7 +21,13 @@ function CardResults({ cards }: { cards: GameCard[] }): ReactNode[] {
   const DisplayComponent = displayOption.component;
 
   return cards.map((card) => {
-    return <DisplayComponent key={card.Slug} card={card} />;
+    return (
+      <DisplayComponent
+        key={card.Slug}
+        card={card}
+        maxWidth="calc(100vw - 2 * var(--chakra-spacing-4))"
+      />
+    );
   });
 }
 

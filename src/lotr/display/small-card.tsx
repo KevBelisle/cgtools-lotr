@@ -5,6 +5,7 @@ import {
   Card,
   Em,
   HStack,
+  type HTMLChakraProps,
   IconButton,
   Text,
   VStack,
@@ -30,7 +31,12 @@ import Tactics from "@/lotr/icons/game icons/Tactics.svg?react";
 
 import Unique from "@/lotr/icons/game icons/Unique.svg?react";
 
-export const SmallCard = ({ card }: { card: GameCard }) => {
+export const SmallCard = ({
+  card,
+  ...rootProps
+}: {
+  card: GameCard;
+} & HTMLChakraProps<"div">) => {
   const [side, setSide] = useState("front" as "front" | "back");
   const flipCard = () => {
     setSide((prevSide) => (prevSide === "front" ? "back" : "front"));
@@ -111,6 +117,7 @@ export const SmallCard = ({ card }: { card: GameCard }) => {
       borderColor={borderColor}
       fontSize="sm"
       fontFamily={"times, serif"}
+      {...rootProps}
     >
       <Card.Header
         fontFamily={"vafthrudnir"}

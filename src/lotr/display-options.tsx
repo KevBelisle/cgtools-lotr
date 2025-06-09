@@ -7,6 +7,7 @@ import type { IconType } from "react-icons/lib";
 import { FullCardWithArt } from "./display/full-card-with-art";
 import { SmallCardWithArt } from "./display/small-card-with-art";
 
+import { HTMLChakraProps } from "@chakra-ui/react";
 import {
   LuFile,
   LuFileSpreadsheet,
@@ -16,7 +17,7 @@ import {
 
 export type DisplayOptionType = {
   name: string;
-  component: ComponentType<{ card: Card }>;
+  component: ComponentType<{ card: Card } & HTMLChakraProps<"div">>;
   icon: IconType;
   minWidth?: string;
 };

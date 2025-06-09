@@ -1,5 +1,5 @@
 import { Card as GameCard } from "@/lotr/lotr-schema";
-import { Box, Image } from "@chakra-ui/react";
+import { Box, Image, type HTMLChakraProps } from "@chakra-ui/react";
 import { useNavigate } from "@tanstack/react-router";
 import { memo, useCallback } from "react";
 
@@ -95,20 +95,28 @@ export const CardImages = memo(({ card }: { card: GameCard }) => {
   );
 });
 
-export const ArtOnly = memo(({ card }: { card: GameCard }) => {
-  return (
-    <Box
-      width={"100%"}
-      height={"100%"}
-      position={"relative"}
-      display={"flex"}
-      justifyContent={"center"}
-      alignItems={"center"}
-      aspectRatio={1}
-    >
-      <CardImages card={card} />
-    </Box>
-  );
-});
+export const ArtOnly = memo(
+  ({
+    card,
+    ...rootProps
+  }: {
+    card: GameCard;
+  } & HTMLChakraProps<"div">) => {
+    return (
+      <Box
+        width={"100%"}
+        height={"100%"}
+        position={"relative"}
+        display={"flex"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        aspectRatio={1}
+        {...rootProps}
+      >
+        <CardImages card={card} />
+      </Box>
+    );
+  },
+);
 
 export default ArtOnly;

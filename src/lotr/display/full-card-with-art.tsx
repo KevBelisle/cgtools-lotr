@@ -1,12 +1,17 @@
 import { Card as GameCard } from "@/lotr/lotr-schema";
-import { Box } from "@chakra-ui/react";
+import { Box, type HTMLChakraProps } from "@chakra-ui/react";
 
 import { CardImages } from "@/lotr/display/art-only";
 import { FullCard } from "@/lotr/display/full-card";
 
-export const FullCardWithArt = ({ card }: { card: GameCard }) => {
+export const FullCardWithArt = ({
+  card,
+  ...rootProps
+}: {
+  card: GameCard;
+} & HTMLChakraProps<"div">) => {
   return (
-    <Box>
+    <Box {...rootProps}>
       <Box
         height="270px"
         overflow="hidden"
