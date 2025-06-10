@@ -416,12 +416,12 @@ export const FullCard = memo(
                   </Tag>
                 )}{" "}
                 {pc.Quantity}x in{" "}
-                <Link
+                {/* <Link
                   to="/products/$product-code"
                   params={{ "product-code": pc.Product.Code }}
-                >
-                  {pc.Product.Name}
-                </Link>{" "}
+                > */}
+                {pc.Product.Name}
+                {/* </Link>{" "} */}
                 {pc.Product.Cycle && !pc.Product.IsRepackage && (
                   <Text as="span" color="sand.500">
                     ({pc.Product.Cycle} cycle)

@@ -42,12 +42,12 @@ export const CardImages = memo(({ card }: { card: GameCard }) => {
     ? `https://images.cardgame.tools/lotr/sm/${card.ProductCards[0].BackImageUrl}`
     : isEncounterCard
       ? {
-          Horizontal: "/images/HorizontalEncounterBack.jpg",
-          Vertical: "/images/VerticalEncounterBack.jpg",
+          Horizontal: "./images/HorizontalEncounterBack.jpg",
+          Vertical: "./images/VerticalEncounterBack.jpg",
         }[card.Front.Orientation]
       : {
-          Horizontal: "/images/HorizontalPlayerBack.jpg",
-          Vertical: "/images/VerticalPlayerBack.jpg",
+          Horizontal: "./images/HorizontalPlayerBack.jpg",
+          Vertical: "./images/VerticalPlayerBack.jpg",
         }[card.Front.Orientation];
 
   const highlighBackImageOnHover = !!card.ProductCards[0].BackImageUrl;
