@@ -24,14 +24,8 @@ import HitPoints from "@/lotr/icons/game icons/HitPoints.svg?react";
 import Threat from "@/lotr/icons/game icons/Threat.svg?react";
 import Willpower from "@/lotr/icons/game icons/Willpower.svg?react";
 
-import Baggins from "@/lotr/icons/game icons/Baggins.svg?react";
-import Fellowship from "@/lotr/icons/game icons/Fellowship.svg?react";
-import Leadership from "@/lotr/icons/game icons/Leadership.svg?react";
-import Lore from "@/lotr/icons/game icons/Lore.svg?react";
-import Spirit from "@/lotr/icons/game icons/Spirit.svg?react";
-import Tactics from "@/lotr/icons/game icons/Tactics.svg?react";
-
 import Unique from "@/lotr/icons/game icons/Unique.svg?react";
+import sphereData from "./sphere-data";
 
 export const FullCard = memo(
   ({
@@ -47,69 +41,9 @@ export const FullCard = memo(
     const hasBack = !!card.Back?.Title;
     const cardSide = side === "front" ? card.Front : card.Back!;
 
-    var backgroundColor = "";
-    var borderColor = "";
-    var sphereIcon = null;
-
-    switch (cardSide.Sphere) {
-      case "Baggins":
-        backgroundColor = "baggins.fg/10";
-        borderColor = "baggins.fg";
-        sphereIcon = <Baggins style={{ width: "35px", height: "35px" }} />;
-        break;
-      case "Fellowship":
-        backgroundColor = "fellowship.fg/10";
-        borderColor = "fellowship.fg";
-        sphereIcon = <Fellowship style={{ width: "35px", height: "35px" }} />;
-        break;
-      case "Leadership":
-        backgroundColor = "leadership.fg/10";
-        borderColor = "leadership.fg";
-        sphereIcon = <Leadership style={{ width: "35px", height: "35px" }} />;
-        break;
-      case "Lore":
-        backgroundColor = "lore.fg/10";
-        borderColor = "lore.fg";
-        sphereIcon = <Lore style={{ width: "35px", height: "35px" }} />;
-        break;
-      case "Spirit":
-        backgroundColor = "spirit.fg/10";
-        borderColor = "spirit.fg";
-        sphereIcon = <Spirit style={{ width: "35px", height: "35px" }} />;
-        break;
-      case "Tactics":
-        backgroundColor = "tactics.fg/10";
-        borderColor = "tactics.fg";
-        sphereIcon = <Tactics style={{ width: "35px", height: "35px" }} />;
-        break;
-      case "Neutral":
-        backgroundColor = "neutral.fg/10";
-        borderColor = "sand.700";
-        sphereIcon = (
-          <div
-            style={{
-              fontSize: "35px",
-              fontWeight: "bold",
-              width: "35px",
-              height: "35px",
-            }}
-          >
-            <span
-              style={{
-                transform: "translate(6px, 10px)",
-                display: "inline-block",
-              }}
-            >
-              N
-            </span>
-          </div>
-        );
-        break;
-      default:
-        backgroundColor = "night.800/10";
-        borderColor = "night.800";
-        break;
-    }
+    const { backgroundColor, borderColor, SphereIcon } = sphereData(
+      cardSide.Sphere,
+    );
 
     return (
       <Card.Root
@@ -152,13 +86,19 @@ export const FullCard = memo(
                 {cardSide.Title}
               </span>
             </Link>
-            {cardSide.Sphere && (
+            {SphereIcon ? (
               <Tooltip content={cardSide.Sphere}>
                 <Box color={borderColor} mt={"-1"}>
-                  {sphereIcon}
+                  <SphereIcon
+                    style={{
+                      display: "inline-block",
+                      width: "2.2rem",
+                      height: "2.2rem",
+                    }}
+                  />
                 </Box>
               </Tooltip>
-            )}
+            ) : null}
           </HStack>
         </Card.Header>
 
@@ -415,15 +355,20 @@ export const FullCard = memo(
                     OG
                   </Tag>
                 )}{" "}
-                {pc.Quantity}x in{" "}
-                {/* <Link
+                <Text as="span" color="sand.500">
+                  {pc.Quantity}x in{" "}
+                </Text>
+                <Link
                   to="/products/$product-code"
                   params={{ "product-code": pc.Product.Code }}
-                > */}
-                {pc.Product.Name}
-                {/* </Link>{" "} */}
+                >
+                  {pc.Product.Name}
+                </Link>{" "}
                 {pc.Product.Cycle && !pc.Product.IsRepackage && (
                   <Text as="span" color="sand.500">
+                    {pc.Product.Type == "Nightmare_Expansion"
+                      ? " Nightmare Deck "
+                      : null}
                     ({pc.Product.Cycle} cycle)
                   </Text>
                 )}

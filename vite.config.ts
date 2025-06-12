@@ -15,7 +15,7 @@ export default defineConfig({
     }),
     react(),
     tsconfigPaths(),
-    svgr(),
+    svgr({ include: "**/*.svg?react" }),
     visualizer() as PluginOption,
     VitePWA({
       registerType: "prompt", //"autoUpdate",

@@ -49,12 +49,12 @@ function RouteComponent() {
     ? `https://images.cardgame.tools/lotr/sm/${card.ProductCards[0].BackImageUrl}`
     : isEncounterCard
       ? {
-          Horizontal: "/images/HorizontalEncounterBack.jpg",
-          Vertical: "/images/VerticalEncounterBack.jpg",
+          Horizontal: "./images/HorizontalEncounterBack.jpg",
+          Vertical: "./images/VerticalEncounterBack.jpg",
         }[card.Front.Orientation]
       : {
-          Horizontal: "/images/HorizontalPlayerBack.jpg",
-          Vertical: "/images/VerticalPlayerBack.jpg",
+          Horizontal: "./images/HorizontalPlayerBack.jpg",
+          Vertical: "./images/VerticalPlayerBack.jpg",
         }[card.Front.Orientation];
 
   let aspectRatio = 2.5 / 3.5; // Default for vertical cards

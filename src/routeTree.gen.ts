@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
+import { Route as ProductsProductCodeImport } from './routes/products/$product-code'
 import { Route as CardsCardSlugImport } from './routes/cards/$card-slug'
 import { Route as CardsSearchIndexImport } from './routes/cards/search/index'
 import { Route as CardsSearchAdvancedImport } from './routes/cards/search/advanced'
@@ -21,6 +22,12 @@ import { Route as CardsSearchAdvancedImport } from './routes/cards/search/advanc
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProductsProductCodeRoute = ProductsProductCodeImport.update({
+  id: '/products/$product-code',
+  path: '/products/$product-code',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -60,6 +67,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CardsCardSlugImport
       parentRoute: typeof rootRoute
     }
+    '/products/$product-code': {
+      id: '/products/$product-code'
+      path: '/products/$product-code'
+      fullPath: '/products/$product-code'
+      preLoaderRoute: typeof ProductsProductCodeImport
+      parentRoute: typeof rootRoute
+    }
     '/cards/search/advanced': {
       id: '/cards/search/advanced'
       path: '/cards/search/advanced'
@@ -82,6 +96,7 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cards/$card-slug': typeof CardsCardSlugRoute
+  '/products/$product-code': typeof ProductsProductCodeRoute
   '/cards/search/advanced': typeof CardsSearchAdvancedRoute
   '/cards/search': typeof CardsSearchIndexRoute
 }
@@ -89,6 +104,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cards/$card-slug': typeof CardsCardSlugRoute
+  '/products/$product-code': typeof ProductsProductCodeRoute
   '/cards/search/advanced': typeof CardsSearchAdvancedRoute
   '/cards/search': typeof CardsSearchIndexRoute
 }
@@ -97,6 +113,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/cards/$card-slug': typeof CardsCardSlugRoute
+  '/products/$product-code': typeof ProductsProductCodeRoute
   '/cards/search/advanced': typeof CardsSearchAdvancedRoute
   '/cards/search/': typeof CardsSearchIndexRoute
 }
@@ -106,14 +123,21 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/cards/$card-slug'
+    | '/products/$product-code'
     | '/cards/search/advanced'
     | '/cards/search'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cards/$card-slug' | '/cards/search/advanced' | '/cards/search'
+  to:
+    | '/'
+    | '/cards/$card-slug'
+    | '/products/$product-code'
+    | '/cards/search/advanced'
+    | '/cards/search'
   id:
     | '__root__'
     | '/'
     | '/cards/$card-slug'
+    | '/products/$product-code'
     | '/cards/search/advanced'
     | '/cards/search/'
   fileRoutesById: FileRoutesById
@@ -122,6 +146,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CardsCardSlugRoute: typeof CardsCardSlugRoute
+  ProductsProductCodeRoute: typeof ProductsProductCodeRoute
   CardsSearchAdvancedRoute: typeof CardsSearchAdvancedRoute
   CardsSearchIndexRoute: typeof CardsSearchIndexRoute
 }
@@ -129,6 +154,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CardsCardSlugRoute: CardsCardSlugRoute,
+  ProductsProductCodeRoute: ProductsProductCodeRoute,
   CardsSearchAdvancedRoute: CardsSearchAdvancedRoute,
   CardsSearchIndexRoute: CardsSearchIndexRoute,
 }
@@ -145,6 +171,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/cards/$card-slug",
+        "/products/$product-code",
         "/cards/search/advanced",
         "/cards/search/"
       ]
@@ -154,6 +181,9 @@ export const routeTree = rootRoute
     },
     "/cards/$card-slug": {
       "filePath": "cards/$card-slug.tsx"
+    },
+    "/products/$product-code": {
+      "filePath": "products/$product-code.tsx"
     },
     "/cards/search/advanced": {
       "filePath": "cards/search/advanced.tsx"
