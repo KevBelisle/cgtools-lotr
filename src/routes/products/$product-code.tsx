@@ -147,7 +147,7 @@ function generateCardRows(card: Card, product: Product) {
             width="1.2em"
             height="1.2em"
             style={{ display: "inline-block" }}
-          />
+          />{" "}
           {card.ProductCards[0].Number}
         </Text>
       </GridItem>
@@ -191,7 +191,7 @@ function generateCardRows(card: Card, product: Product) {
                   width="1em"
                   height="1em"
                   style={{ display: "inline-block" }}
-                />
+                />{" "}
                 {card.ProductCards[0].BackNumber}
               </>
             ) : null}
