@@ -142,12 +142,21 @@ function generateCardRows(card: Card, product: Product) {
     >
       <GridItem color="gray.500" pr={2} textAlign="right">
         <Text fontSize="xs" textAlign="left">
-          <SvgIcon
-            src={`/src/assets/expansion%20symbols/${product.ExpansionSymbol}?react`}
-            width="1.2em"
-            height="1.2em"
-            style={{ display: "inline-block" }}
-          />{" "}
+          {product.ExpansionSymbol ? (
+            <>
+              <SvgIcon
+                src={`/src/assets/expansion%20symbols/${product.ExpansionSymbol}?react`}
+                width="1.2em"
+                height="1.2em"
+                style={{
+                  display: "inline-block",
+                  verticalAlign: "text-bottom",
+                }}
+              />{" "}
+            </>
+          ) : (
+            "# "
+          )}
           {card.ProductCards[0].Number}
         </Text>
       </GridItem>
@@ -186,12 +195,21 @@ function generateCardRows(card: Card, product: Product) {
           <Text fontSize="xs" textAlign="left">
             {card.ProductCards[0].BackNumber != card.ProductCards[0].Number ? (
               <>
-                <SvgIcon
-                  src={`/src/assets/expansion%20symbols/${product.ExpansionSymbol}?react`}
-                  width="1em"
-                  height="1em"
-                  style={{ display: "inline-block" }}
-                />{" "}
+                {product.ExpansionSymbol ? (
+                  <>
+                    <SvgIcon
+                      src={`/src/assets/expansion%20symbols/${product.ExpansionSymbol}?react`}
+                      width="1.2em"
+                      height="1.2em"
+                      style={{
+                        display: "inline-block",
+                        verticalAlign: "text-bottom",
+                      }}
+                    />{" "}
+                  </>
+                ) : (
+                  "# "
+                )}
                 {card.ProductCards[0].BackNumber}
               </>
             ) : null}
