@@ -25,9 +25,6 @@ export default function NavBar() {
           </Link>
         </VStack>
         <HStack gap={8}>
-          <Link to="/cards/search" search={{ query: "" }}>
-            Search
-          </Link>
           <ReloadPrompt />
         </HStack>
       </Flex>
