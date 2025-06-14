@@ -29,12 +29,16 @@ export default async function* loadFile(
       break;
     }
 
-    if (receivedLength + value.length > buffer.byteLength) {
-      console.warn(`Received data exceeds buffer size. Doublig buffer size...`);
-      buffer = resizeUint8Array(buffer, buffer.byteLength * 2);
+    const newReceivedLength = receivedLength + value.length;
+
+    if (newReceivedLength > buffer.byteLength) {
+      console.warn(
+        `Received data exceeds buffer size. Increasing buffer size...`,
+      );
+      buffer = resizeUint8Array(buffer, newReceivedLength * 2);
     }
     buffer.set(value, receivedLength);
-    receivedLength += value.length;
+    receivedLength = newReceivedLength;
 
     console.log(`Received ${receivedLength} bytes.`);
 
