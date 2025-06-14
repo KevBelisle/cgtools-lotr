@@ -66,7 +66,6 @@ export const Route = createFileRoute("/cards/search/")({
 
         case "range":
           if (filter.value) {
-            console.log(filter.value);
             filteredQuery = filteredQuery.where((eb) => {
               let criteria = [];
 
@@ -119,22 +118,11 @@ export const Route = createFileRoute("/cards/search/")({
       );
     }
 
-    //filteredQuery = filteredQuery.groupBy(["c.Slug"]);
-
     const compiledQuery = filteredQuery.limit(30).compile();
-
-    //console.log("Compiled Query:", compiledQuery.sql);
-    const startTime = performance.now();
 
     const queryResults = execCompiledQuery(
       compiledQuery,
       context.sqljsDbContext.sqljsDb!,
-    );
-
-    const endTime = performance.now();
-    console.log(
-      `Query executed in ${endTime - startTime} ms`,
-      `(${queryResults.length} results)`,
     );
 
     return (queryResults as CardBaseQueryResult[]).map(

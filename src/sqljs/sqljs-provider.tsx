@@ -51,11 +51,6 @@ const SqljsProvider = ({ children }: PropsWithChildren<unknown>) => {
 
     sqljsPromise
       .then(() => {
-        console.log(
-          `SqlJS initiated in ${(performance.now() - startInitSqlJs).toFixed(
-            2,
-          )} ms`,
-        );
         setSqljsContext({
           state: "ready",
           error: null,
