@@ -145,7 +145,7 @@ function generateCardRows(card: Card, product: Product) {
       gridColumnStart="span 3"
       alignItems="baseline"
     >
-      <GridItem color="gray.500" pr={2} textAlign="right">
+      <GridItem color="gray.500" textAlign="right">
         <Text fontSize="xs" textAlign="left">
           {ProductIcon ? (
             <>
@@ -351,7 +351,7 @@ function RouteComponent() {
           gridTemplateRows: `repeat(${columnBreak}, auto)`,
           gridAutoFlow: "column",
         }}
-        gapX={4}
+        gapX={2}
         gapY={2}
         alignItems="baseline"
       >
