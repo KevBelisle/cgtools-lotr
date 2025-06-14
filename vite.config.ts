@@ -18,7 +18,7 @@ export default defineConfig({
     svgr({ include: "**/*.svg?react" }),
     visualizer() as PluginOption,
     VitePWA({
-      registerType: "prompt", //"autoUpdate",
+      registerType: "prompt",
       workbox: {
         maximumFileSizeToCacheInBytes: 7.5 * 1024 * 1024, // 7.5MB
         globPatterns: ["**/*.{js,css,html,db,sqlite3}"],
@@ -29,10 +29,15 @@ export default defineConfig({
       includeAssets: ["favicon.ico", "apple-touch-icon.png", "mask-icon.svg"],
       manifest: {
         name: "LotR LCG - CardGame.tools",
-        short_name: "MyApp",
-        description: "My Awesome App description",
-        theme_color: "#ffffff",
+        short_name: "LotR LCG",
+        description: "The Lord of the Rings LCG by CardGame.Tools",
+        theme_color: "#17181D",
         icons: [
+          {
+            src: "pwa-64x64.png",
+            sizes: "64x64",
+            type: "image/png",
+          },
           {
             src: "pwa-192x192.png",
             sizes: "192x192",
@@ -42,6 +47,13 @@ export default defineConfig({
             src: "pwa-512x512.png",
             sizes: "512x512",
             type: "image/png",
+            purpose: "any",
+          },
+          {
+            src: "maskable-icon-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "maskable",
           },
         ],
       },
