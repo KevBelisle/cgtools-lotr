@@ -40,7 +40,6 @@ const SqljsProvider = ({ children }: PropsWithChildren<unknown>) => {
   });
 
   useEffect(() => {
-    const startInitSqlJs = performance.now();
     const sqljsPromise = initSqlJs({ locateFile: () => sqliteUrl });
 
     setSqljsContext({
