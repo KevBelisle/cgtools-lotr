@@ -34,7 +34,6 @@ export type Product = {
   Name: string;
   Type: string;
   Abbreviation: string;
-  Category: string;
   Cycle: string | null;
   FirstReleased: string | null;
   IsRepackage: boolean;
@@ -126,7 +125,6 @@ export function lotrCardFromCardBaseQuery(card: CardBaseQueryResult): Card {
             Name: pc["p.Name"],
             Type: pc["p.Type"],
             Abbreviation: pc["p.Abbreviation"],
-            Category: pc["p.Category"],
             Cycle: pc["p.Cycle"],
             FirstReleased: pc["p.FirstReleased"],
             IsRepackage: pc["p.IsRepackage"]!,

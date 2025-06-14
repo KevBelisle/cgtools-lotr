@@ -71,7 +71,6 @@ export interface ProductTable {
   Name: string;
   Type: string;
   Abbreviation: string;
-  Category: string;
   Cycle: string | null;
   FirstReleased: string | null;
   IsRepackage: boolean;
@@ -170,7 +169,6 @@ export const cardBaseQuery = kysely
           "p.Name as p.Name",
           "p.Type as p.Type",
           "p.Abbreviation as p.Abbreviation",
-          "p.Category as p.Category",
           "p.Cycle as p.Cycle",
           "p.FirstReleased as p.FirstReleased",
           "p.IsRepackage as p.IsRepackage",

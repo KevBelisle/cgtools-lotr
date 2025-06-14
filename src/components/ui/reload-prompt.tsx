@@ -21,7 +21,7 @@ function ReloadPrompt() {
         );
       }
     },
-    onRegisterError(error) {
+    onRegisterError(_) {
       toaster.create({
         title: "Error registering service worker",
         description: "App will not be available offline.",
