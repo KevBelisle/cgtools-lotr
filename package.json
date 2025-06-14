@@ -7,7 +7,8 @@
     "build": "vite build --base=/cgtools-lotr/ && tsc --noEmit",
     "serve": "vite build && vite preview",
     "start": "vite",
-    "postinstall": "cp ./node_modules/sql.js/dist/sql-wasm.wasm ./src/sqljs/sql-wasm.wasm"
+    "postinstall": "cp ./node_modules/sql.js/dist/sql-wasm.wasm ./src/sqljs/sql-wasm.wasm",
+    "generate-assets": "pwa-assets-generator --preset minimal-2023 public/cgtools-icon.svg"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.16.1",
