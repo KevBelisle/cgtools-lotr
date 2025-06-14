@@ -3,6 +3,7 @@ import { CardSide } from "@/lotr/lotr-schema";
 import {
   Box,
   Card,
+  Tag as ChakraTag,
   Em,
   HStack,
   IconButton,
@@ -100,8 +101,8 @@ export function CardSideInfo({
               </Tooltip>
               {cardSide.ResourceCost != null && (
                 <Tooltip content="Resource cost">
-                  <Tag size="lg" variant={"subtle"}>
-                    <HStack>
+                  <ChakraTag.Root size="lg" variant={"subtle"}>
+                    <ChakraTag.Label display="flex" flexDir="row" gap="1">
                       <Text>Cost:</Text>
                       <Text
                         fontFamily={"vafthrudnir"}
@@ -109,8 +110,8 @@ export function CardSideInfo({
                       >
                         {cardSide.ResourceCost}
                       </Text>
-                    </HStack>
-                  </Tag>
+                    </ChakraTag.Label>
+                  </ChakraTag.Root>
                 </Tooltip>
               )}
               {cardSide.ThreatCost != null && (
