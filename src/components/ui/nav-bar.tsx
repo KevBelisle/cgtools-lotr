@@ -1,12 +1,22 @@
 import { config } from "@/lotr/config";
-import { Container, HStack, Heading, VStack } from "@chakra-ui/react";
+import { Button, Container, HStack, Heading, VStack } from "@chakra-ui/react";
 //import { CustomButtonLink } from "./customButtonLink";
 
 import ReloadPrompt from "@/components/ui/reload-prompt";
-import { Link } from "@tanstack/react-router";
+import {
+  Link,
+  useCanGoBack,
+  useRouter,
+  useRouterState,
+} from "@tanstack/react-router";
+import { LuChevronLeft } from "react-icons/lu";
 import { CustomButtonLink } from "./custom-button-link";
 
 export default function NavBar() {
+  const location = useRouterState({ select: (s) => s.location.pathname });
+  const router = useRouter();
+  const canGoBack = useCanGoBack();
+
   return (
     <>
       <Container
@@ -26,7 +36,7 @@ export default function NavBar() {
               </Heading>
             </Link>
           </VStack>
-          <HStack gap={8}>
+          <HStack gap={4}>
             <CustomButtonLink
               to="/cards/search"
               search={{ query: "" }}
@@ -49,6 +59,22 @@ export default function NavBar() {
           </HStack>
         </HStack>
       </Container>
+
+      {canGoBack && location !== "/cards/search" && location !== "/products" ? (
+        <Button
+          onClick={() => router.history.back()}
+          position="absolute"
+          size="xs"
+          mt={2}
+          ml={2}
+          variant="surface"
+          colorPalette="sand"
+          zIndex={1000}
+        >
+          <LuChevronLeft />
+          Back
+        </Button>
+      ) : null}
     </>
   );
 }
