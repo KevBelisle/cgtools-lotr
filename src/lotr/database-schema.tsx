@@ -63,7 +63,6 @@ export interface ProductCardTable {
   FrontImageUrl: string;
   BackNumber: string | null;
   BackImageUrl: string | null;
-  OctgnId: string | null;
   RingsDbCode: string | null;
 }
 
@@ -165,7 +164,6 @@ export const cardBaseQuery = kysely
           "pc.FrontImageUrl as pc.FrontImageUrl",
           "pc.BackNumber as pc.BackNumber",
           "pc.BackImageUrl as pc.BackImageUrl",
-          "pc.OctgnId as pc.OctgnId",
           "pc.RingsDbCode as pc.RingsDbCode",
 
           "p.Code as p.Code",

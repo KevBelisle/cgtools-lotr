@@ -49,7 +49,6 @@ export type ProductCard = {
   FrontImageUrl: string;
   BackNumber: string | null;
   BackImageUrl: string | null;
-  OctgnId: string | null;
   RingsDbCode: string | null;
 };
 
@@ -139,7 +138,6 @@ export function lotrCardFromCardBaseQuery(card: CardBaseQueryResult): Card {
           FrontImageUrl: pc["pc.FrontImageUrl"],
           BackNumber: pc["pc.BackNumber"],
           BackImageUrl: pc["pc.BackImageUrl"],
-          OctgnId: pc["pc.OctgnId"],
           RingsDbCode: pc["pc.RingsDbCode"],
         }) as ProductCard,
     ),

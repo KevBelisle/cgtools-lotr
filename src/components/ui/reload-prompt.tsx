@@ -12,9 +12,6 @@ function ReloadPrompt() {
     updateServiceWorker,
   } = useRegisterSW({
     onRegistered(r) {
-      // eslint-disable-next-line prefer-template
-      console.log("SW Registered: " + r);
-
       if (r) {
         setInterval(
           () => {
@@ -25,7 +22,6 @@ function ReloadPrompt() {
       }
     },
     onRegisterError(error) {
-      console.log("SW registration error", error);
       toaster.create({
         title: "Error registering service worker",
         description: "App will not be available offline.",
@@ -34,7 +30,6 @@ function ReloadPrompt() {
       });
     },
     onOfflineReady() {
-      console.log("App is ready to work offline");
       setOfflineReady(true);
     },
   });
