@@ -1,13 +1,17 @@
-import { SvgIcon } from "@/components/ui/svg-icon";
 import { Tag } from "@/components/ui/tag";
 import { Card, type HTMLChakraProps, Image } from "@chakra-ui/react";
 import { Link } from "@tanstack/react-router";
+import { expansionIcons } from "../expansion-icons";
 import { Product } from "../lotr-schema";
 
 function ProductCard({
   product,
   ...rootProps
 }: { product: Product } & HTMLChakraProps<"div">) {
+  const ProductIcon = product.ExpansionSymbol
+    ? expansionIcons[product.ExpansionSymbol]
+    : null;
+
   return (
     <Card.Root size="sm" flexDirection="row" {...rootProps}>
       <Image
@@ -22,10 +26,9 @@ function ProductCard({
       />
       <Card.Body gap="2">
         <Card.Title fontFamily="ringbearer" fontWeight="normal" fontSize="lg">
-          {product.ExpansionSymbol ? (
+          {ProductIcon ? (
             <>
-              <SvgIcon
-                src={`/src/assets/expansion%20symbols/${product.ExpansionSymbol}?react`}
+              <ProductIcon
                 width="1.4em"
                 height="1.4em"
                 style={{ display: "inline-block" }}

@@ -1,4 +1,3 @@
-import { SvgIcon } from "@/components/ui/svg-icon";
 import { Tag } from "@/components/ui/tag";
 import {
   cardBaseQuery,
@@ -6,6 +5,7 @@ import {
   type CardBaseQueryResult,
 } from "@/lotr/database-schema";
 import sphereData from "@/lotr/display/sphere-data";
+import { expansionIcons } from "@/lotr/expansion-icons";
 import { Card, lotrCardFromCardBaseQuery, Product } from "@/lotr/lotr-schema";
 import execCompiledQuery from "@/sqljs/exec-compiled-query";
 import {
@@ -133,6 +133,10 @@ export const Route = createFileRoute("/products/$product-code")({
 function generateCardRows(card: Card, product: Product) {
   const { SphereIcon } = sphereData(card.Front.Sphere);
 
+  const ProductIcon = product.ExpansionSymbol
+    ? expansionIcons[product.ExpansionSymbol]
+    : null;
+
   const cardRows = [
     <GridItem
       display="grid"
@@ -143,10 +147,9 @@ function generateCardRows(card: Card, product: Product) {
     >
       <GridItem color="gray.500" pr={2} textAlign="right">
         <Text fontSize="xs" textAlign="left">
-          {product.ExpansionSymbol ? (
+          {ProductIcon ? (
             <>
-              <SvgIcon
-                src={`/src/assets/expansion%20symbols/${product.ExpansionSymbol}?react`}
+              <ProductIcon
                 width="1.2em"
                 height="1.2em"
                 style={{
@@ -196,10 +199,9 @@ function generateCardRows(card: Card, product: Product) {
           <Text fontSize="xs" textAlign="left">
             {card.ProductCards[0].BackNumber != card.ProductCards[0].Number ? (
               <>
-                {product.ExpansionSymbol ? (
+                {ProductIcon ? (
                   <>
-                    <SvgIcon
-                      src={`/src/assets/expansion%20symbols/${product.ExpansionSymbol}?react`}
+                    <ProductIcon
                       width="1.2em"
                       height="1.2em"
                       style={{
@@ -249,6 +251,10 @@ function RouteComponent() {
   let columnBreak = Math.ceil(cardRows.length / 2);
   if (cardRows[columnBreak].key?.endsWith("-BACK")) columnBreak += 1;
 
+  const ProductIcon = product.ExpansionSymbol
+    ? expansionIcons[product.ExpansionSymbol]
+    : null;
+
   return (
     <Container display="flex" py={8} gap={8} flexDirection={"column"}>
       <Box as="header" display={"flex"} flexDirection="column" gap={4}>
@@ -267,10 +273,9 @@ function RouteComponent() {
           fontWeight="normal"
           textWrap="balance"
         >
-          {product.ExpansionSymbol ? (
+          {ProductIcon ? (
             <>
-              <SvgIcon
-                src={`/src/assets/expansion%20symbols/${product.ExpansionSymbol}?react`}
+              <ProductIcon
                 width="1.4em"
                 height="1.4em"
                 style={{ display: "inline-block" }}
