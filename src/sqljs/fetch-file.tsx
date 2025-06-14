@@ -17,9 +17,22 @@ export default async function* loadFile(
     const { done, value } = await reader.read();
 
     if (done) {
+      console.log(
+        `Download complete. Total received: ${receivedLength} bytes.`,
+      );
+      if (receivedLength < buffer.byteLength) {
+        console.warn(
+          `Trimming buffer from ${buffer.byteLength} to ${receivedLength}...`,
+        );
+        buffer = buffer.subarray(0, receivedLength);
+      }
       break;
     }
 
+    if (receivedLength + value.length > buffer.byteLength) {
+      console.warn(`Received data exceeds buffer size. Doublig buffer size...`);
+      buffer = resizeUint8Array(buffer, buffer.byteLength * 2);
+    }
     buffer.set(value, receivedLength);
     receivedLength += value.length;
 
@@ -29,4 +42,15 @@ export default async function* loadFile(
   }
 
   return buffer;
+}
+
+function resizeUint8Array(
+  originalArray: Uint8Array,
+  newSize: number,
+): Uint8Array<ArrayBuffer> {
+  const newArray = new Uint8Array(newSize);
+  newArray.set(
+    originalArray.subarray(0, Math.min(originalArray.length, newSize)),
+  );
+  return newArray;
 }
