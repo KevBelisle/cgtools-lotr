@@ -16,6 +16,7 @@ import {
   GridItem,
   Heading,
   HStack,
+  Image,
   List,
   Text,
 } from "@chakra-ui/react";
@@ -251,6 +252,15 @@ function RouteComponent() {
   return (
     <Container display="flex" py={8} gap={8} flexDirection={"column"}>
       <Box as="header" display={"flex"} flexDirection="column" gap={4}>
+        <Image
+          objectFit="contain"
+          alignSelf="center"
+          width="100%"
+          maxH="300px"
+          src={`./product-images/${product.Code.toLowerCase()}_main.png`}
+          aspectRatio={1}
+          padding={2}
+        />
         <Heading
           fontFamily="ringbearer"
           size="4xl"
@@ -268,7 +278,6 @@ function RouteComponent() {
             </>
           ) : null}
           {product.Name}
-          {/* </HStack> */}
         </Heading>
         <HStack wrap="wrap">
           <Tag size="lg">
