@@ -8,6 +8,11 @@ export default async function* loadFile(
   let receivedLength = 0;
   let buffer = new Uint8Array(contentLength);
 
+  console.log(`Downloading file from ${dbFileUrl}...`);
+  console.log(`Content-Length: ${contentLength} bytes`);
+  console.log(`Buffer size: ${buffer.length} bytes`);
+  console.log(`Receiving data...`);
+
   while (true) {
     const { done, value } = await reader.read();
 
@@ -17,6 +22,8 @@ export default async function* loadFile(
 
     buffer.set(value, receivedLength);
     receivedLength += value.length;
+
+    console.log(`Received ${receivedLength} bytes.`);
 
     yield (receivedLength / contentLength) * 100;
   }
