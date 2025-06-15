@@ -61,19 +61,20 @@ export default function NavBar() {
       </Container>
 
       {canGoBack && location !== "/cards/search" && location !== "/products" ? (
-        <Button
-          onClick={() => router.history.back()}
-          position="absolute"
-          size="xs"
-          mt={2}
-          ml={2}
-          variant="surface"
-          colorPalette="sand"
-          zIndex={1000}
-        >
-          <LuChevronLeft />
-          Back
-        </Button>
+        <Container>
+          <Button
+            onClick={() => router.history.back()}
+            position="absolute"
+            size="xs"
+            mt={2}
+            variant="surface"
+            colorPalette="sand"
+            zIndex={1000}
+          >
+            <LuChevronLeft />
+            Back
+          </Button>
+        </Container>
       ) : null}
     </>
   );
