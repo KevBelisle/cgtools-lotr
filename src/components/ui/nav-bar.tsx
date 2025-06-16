@@ -26,6 +26,7 @@ export default function NavBar() {
         borderBottomWidth={"1px"}
         background="night.900"
         color="white"
+        mb={2}
       >
         <HStack justifyContent={"space-between"} py={2}>
           <VStack alignItems={"flex-start"} gap={0}>
@@ -66,7 +67,6 @@ export default function NavBar() {
             onClick={() => router.history.back()}
             position="absolute"
             size="xs"
-            mt={2}
             variant="surface"
             colorPalette="sand"
             zIndex={1000}
