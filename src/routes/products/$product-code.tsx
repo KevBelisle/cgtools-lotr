@@ -21,7 +21,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/products/$product-code")({
   component: RouteComponent,
@@ -38,6 +38,8 @@ export const Route = createFileRoute("/products/$product-code")({
       compiledProductQuery,
       context.sqljsDbContext.sqljsDb!,
     )[0];
+
+    const isRepackage = productQueryResult.IsRepackage;
 
     const compiledCardQuery = cardBaseQuery
       .leftJoin("productCards as pc", "pc.CardSlug", "c.Slug")
@@ -63,13 +65,14 @@ export const Route = createFileRoute("/products/$product-code")({
         return parseInt(aNumber) - parseInt(bNumber);
       });
 
-    const repackagedCardCount = execCompiledQuery(
+    const reprintedCardCount = execCompiledQuery(
       kysely
         .selectFrom("productCards as pc")
         .leftJoin("productCards as pc2", "pc2.CardSlug", "pc.CardSlug")
         .leftJoin("products as p2", "p2.Code", "pc2.ProductCode")
         .where("pc.ProductCode", "=", params["product-code"])
-        .where("p2.IsRepackage", "=", true)
+        .where("pc2.ProductCode", "!=", params["product-code"])
+        .where("p2.IsRepackage", "=", !isRepackage)
         .select((eb) =>
           eb.fn.count<number>("pc.CardSlug").distinct().as("count"),
         )
@@ -77,44 +80,15 @@ export const Route = createFileRoute("/products/$product-code")({
       context.sqljsDbContext.sqljsDb!,
     )[0].count;
 
-    const repackageCardDistribution = execCompiledQuery(
+    const reprintedCardDistribution = execCompiledQuery(
       kysely
         .selectFrom("productCards as pc")
-        .leftJoin("productCards as pc2", "pc2.CardSlug", "pc.CardSlug")
-        .leftJoin("products as p2", "p2.Code", "pc2.ProductCode")
+        .innerJoin("productCards as pc2", "pc2.CardSlug", "pc.CardSlug")
+        .innerJoin("products as p2", "p2.Code", "pc2.ProductCode")
         .where("pc.ProductCode", "=", params["product-code"])
-        .where("p2.IsRepackage", "=", true)
-        .groupBy("p2.Name")
-        .select("p2.Name")
-        .select((eb) => eb.fn.countAll().as("count"))
-        .compile(),
-      context.sqljsDbContext.sqljsDb!,
-    );
-
-    const originalCardCount = execCompiledQuery(
-      kysely
-        .selectFrom("productCards as pc")
-        .leftJoin("productCards as pc2", "pc2.CardSlug", "pc.CardSlug")
-        .leftJoin("products as p2", "p2.Code", "pc2.ProductCode")
-        .where("pc.ProductCode", "=", params["product-code"])
-        .where("p2.IsRepackage", "=", false)
-        .select((eb) =>
-          eb.fn.count<number>("pc.CardSlug").distinct().as("count"),
-        )
-        .compile(),
-      context.sqljsDbContext.sqljsDb!,
-    )[0].count;
-
-    const originalCardDistribution = execCompiledQuery(
-      kysely
-        .selectFrom("productCards as pc")
-        .leftJoin("productCards as pc2", "pc2.CardSlug", "pc.CardSlug")
-        .leftJoin("products as p2", "p2.Code", "pc2.ProductCode")
-        .where("pc.ProductCode", "=", params["product-code"])
-        .where("p2.IsRepackage", "=", false)
-        .groupBy("p2.Name")
-        .select("p2.Name")
-        .select((eb) => eb.fn.countAll<number>().as("count"))
+        .where("pc2.ProductCode", "!=", params["product-code"])
+        .where("p2.IsRepackage", "=", !isRepackage)
+        .select(["pc.CardSlug", "pc2.ProductCode", "p2.Name"])
         .compile(),
       context.sqljsDbContext.sqljsDb!,
     );
@@ -122,15 +96,15 @@ export const Route = createFileRoute("/products/$product-code")({
     return {
       product: productQueryResult,
       cards: cardQueryResults,
-      repackagedCardCount: repackagedCardCount,
-      repackageCardDistribution: repackageCardDistribution,
-      originalCardCount: originalCardCount,
-      originalCardDistribution: originalCardDistribution,
+      reprintedCardCount: reprintedCardCount,
+      reprintedCardDistribution: reprintedCardDistribution,
     };
   },
 });
 
-function generateCardRows(card: Card, product: Product) {
+const highlightColor = "teal.800";
+
+function generateCardRows(card: Card, product: Product, highlighted: boolean) {
   const { SphereIcon } = sphereData(card.Front.Sphere);
 
   const ProductIcon = product.ExpansionSymbol
@@ -170,7 +144,13 @@ function generateCardRows(card: Card, product: Product) {
         </Text>{" "}
         x
       </GridItem>
-      <GridItem display="flex" alignItems="center">
+      <GridItem
+        display="flex"
+        alignItems="center"
+        px="1"
+        backgroundColor={highlighted ? highlightColor : "transparent"}
+        borderRadius="sm"
+      >
         <Text flexGrow={1}>
           <Link to="/cards/$card-slug" params={{ "card-slug": card.Slug }}>
             {card.Front.Title}
@@ -178,7 +158,11 @@ function generateCardRows(card: Card, product: Product) {
         </Text>
         <Tag>{card.Front.Type}</Tag>
         {SphereIcon ? (
-          <Tag colorPalette={card.Front.Sphere?.toLowerCase() ?? "gray"} ml={2}>
+          <Tag
+            colorPalette={card.Front.Sphere?.toLowerCase() ?? "gray"}
+            bg="night.900"
+            ml={2}
+          >
             <SphereIcon width="1em" height="1em" />
           </Tag>
         ) : null}
@@ -219,11 +203,19 @@ function generateCardRows(card: Card, product: Product) {
           </Text>
         </GridItem>
         <GridItem color="gray.500"></GridItem>
-        <GridItem>
-          <Text color="gray.500" display="inline">
-            Back:{" "}
+        <GridItem
+          display="flex"
+          alignItems="center"
+          px="1"
+          backgroundColor={highlighted ? highlightColor : "transparent"}
+          borderRadius="sm"
+        >
+          <Text flexGrow={1}>
+            <Text color="gray.500" display="inline" as="span">
+              Back:{" "}
+            </Text>
+            {card.Back!.Title}
           </Text>
-          {card.Back!.Title}
           <Tag float="right">{card.Back!.Type}</Tag>
         </GridItem>
       </GridItem>,
@@ -233,28 +225,193 @@ function generateCardRows(card: Card, product: Product) {
   return cardRows;
 }
 
-function RouteComponent() {
-  const {
-    product,
-    cards,
-    repackagedCardCount,
-    repackageCardDistribution,
-    originalCardCount,
-    originalCardDistribution,
-  } = Route.useLoaderData();
-
-  const cardRows = useMemo(
-    () => cards.flatMap((card) => generateCardRows(card, product)),
-    [cards, product],
+function CardNotice({
+  isRepackage,
+  cardCount,
+  reprintedCardCount,
+  reprintedCardDistribution,
+  hightlightedProductCodes,
+  setHighlightedProductCodes,
+}: {
+  isRepackage: boolean;
+  cardCount: number;
+  reprintedCardCount: number;
+  reprintedCardDistribution: {
+    CardSlug: string;
+    ProductCode: string;
+    Name: string;
+  }[];
+  hightlightedProductCodes: string[];
+  setHighlightedProductCodes: React.Dispatch<React.SetStateAction<string[]>>;
+}) {
+  const reprintedCardList = reprintedCardDistribution.reduce(
+    (acc, item) => {
+      acc[item.ProductCode] = acc[item.ProductCode] ?? {
+        Name: item.Name,
+        ProductCode: item.ProductCode,
+        count: 0,
+      };
+      acc[item.ProductCode].count += 1;
+      return acc;
+    },
+    {} as Record<string, { Name: string; ProductCode: string; count: number }>,
   );
 
-  let columnBreak = Math.ceil(cardRows.length / 2);
-  if (cardRows[columnBreak].key?.endsWith("-BACK")) columnBreak += 1;
+  return (
+    <Alert.Root status="info" colorPalette={"sand"} variant="surface">
+      <Alert.Indicator />
+      <Alert.Content>
+        <Alert.Title pb={2}>
+          {isRepackage ? (
+            <>
+              This is from the <b>repackaged content</b> for the game.
+            </>
+          ) : (
+            <>
+              This is from the <b>original releases</b> of the game.
+            </>
+          )}
+        </Alert.Title>
+        <Alert.Description>
+          <Text
+            fontSize="sm"
+            onClick={() =>
+              setHighlightedProductCodes((prev) =>
+                prev.length > 1 ? [] : Object.keys(reprintedCardList),
+              )
+            }
+            bg={
+              hightlightedProductCodes.length > 1
+                ? highlightColor
+                : "transparent"
+            }
+            px={1}
+            borderRadius="sm"
+            width="fit-content"
+          >
+            {reprintedCardCount} of its {cardCount} cards were included in
+            {isRepackage ? " original releases" : " repackaged content"}
+            {cardCount >= 1 ? ":" : "."}
+          </Text>
+          <List.Root variant="marker" ml={4} mt="1" gap="1">
+            {Object.values(reprintedCardList)
+              .sort((a, b) => b.count - a.count)
+              .map((item) => {
+                return hightlightedProductCodes.some(
+                  (code) => code === item.ProductCode,
+                ) ? (
+                  <List.Item key={item.Name}>
+                    <Text
+                      onClick={() => setHighlightedProductCodes([])}
+                      fontWeight="semibold"
+                      bg={highlightColor}
+                      width="fit-content"
+                      py="0"
+                      px="1"
+                      borderRadius="sm"
+                    >
+                      {item.count} in {item.Name}
+                    </Text>
+                  </List.Item>
+                ) : (
+                  <List.Item key={item.Name}>
+                    <Text
+                      onClick={() =>
+                        setHighlightedProductCodes([item.ProductCode])
+                      }
+                    >
+                      {item.count} in {item.Name}
+                    </Text>
+                  </List.Item>
+                );
+              })}
+          </List.Root>
+        </Alert.Description>
+      </Alert.Content>
+    </Alert.Root>
+  );
+}
+
+function RouteComponent() {
+  const { product, cards, reprintedCardCount, reprintedCardDistribution } =
+    Route.useLoaderData();
 
   const ProductIcon = product.ExpansionSymbol
     ? expansionIcons[product.ExpansionSymbol]
     : null;
 
+  let [hightlightedProductCodes, setHighlightedProductCodes] = useState(
+    [] as string[],
+  );
+
+  const cardNotice = (
+    <CardNotice
+      isRepackage={true}
+      cardCount={cards.length}
+      reprintedCardCount={reprintedCardCount}
+      reprintedCardDistribution={reprintedCardDistribution}
+      hightlightedProductCodes={hightlightedProductCodes}
+      setHighlightedProductCodes={setHighlightedProductCodes}
+    />
+  );
+
+  const highlightedCardSlugs = reprintedCardDistribution
+    .filter((item) =>
+      hightlightedProductCodes.some((code) => code === item.ProductCode),
+    )
+    .map((item) => item.CardSlug);
+
+  const cardRows = useMemo(
+    () =>
+      cards.flatMap((card) =>
+        generateCardRows(
+          card,
+          product,
+          highlightedCardSlugs.some((x) => x === card.Slug),
+        ),
+      ),
+    [cards, product, highlightedCardSlugs],
+  );
+
+  let columnBreak = Math.ceil(cardRows.length / 2);
+  if (cardRows[columnBreak].key?.endsWith("-BACK")) columnBreak += 1;
+
+  /*
+    // Original product
+    const repackagedList = repackageCardDistribution.reduce(
+      (acc, item) => {
+        acc[item.Name] = acc[item.Name] ?? { Name: item.Name, count: 0 };
+        acc[item.Name].count += 1;
+        return acc;
+      },
+      {} as Record<string, { Name: string; count: number }>,
+    );
+
+    alertContent = (
+      <>
+        <Alert.Title pb={2}>
+          This is from the <b>original release</b> of the game.
+        </Alert.Title>
+        <Alert.Description>
+          <Text fontSize="sm">
+            {repackagedCardCount} of its {cards.length} cards have been included
+            in repackaged content
+            {repackagedCardCount >= 1 ? ":" : "."}
+          </Text>
+          <List.Root variant="marker" ml={4}>
+            {Object.values(repackagedList)
+              .sort((a, b) => b.count - a.count)
+              .map((item) => (
+                <List.Item key={item.Name}>
+                  {item.count} in {item.Name}
+                </List.Item>
+              ))}
+          </List.Root>
+        </Alert.Description>
+      </>
+    );
+  }
+*/
   return (
     <Container display="flex" py={8} gap={8} flexDirection={"column"}>
       <Box as="header" display={"flex"} flexDirection="column" gap={4}>
@@ -293,54 +450,7 @@ function RouteComponent() {
           <Tag size="lg">{product.FirstReleased}</Tag>
         </HStack>
 
-        <Alert.Root status="info" colorPalette={"sand"} variant="surface">
-          <Alert.Indicator />
-          <Alert.Content>
-            {product.IsRepackage ? (
-              <>
-                <Alert.Title pb={2}>
-                  This is from the <b>repackaged content</b> for the game.
-                </Alert.Title>
-                <Alert.Description>
-                  <Text fontSize="sm">
-                    {originalCardCount} of its {cards.length} cards were
-                    included in original releases
-                    {originalCardCount >= 1 ? ":" : "."}
-                  </Text>
-                  <List.Root variant="marker" ml={4}>
-                    {originalCardDistribution
-                      .sort((a, b) => b.count - a.count)
-                      .map((item) => (
-                        <List.Item key={item.Name}>
-                          {item.count} in {item.Name}
-                        </List.Item>
-                      ))}
-                  </List.Root>
-                </Alert.Description>
-              </>
-            ) : (
-              <>
-                <Alert.Title pb={2}>
-                  This is from the <b>original release</b> of the game.
-                </Alert.Title>
-                <Alert.Description>
-                  <Text fontSize="sm">
-                    {repackagedCardCount} of its {cards.length} cards have been
-                    included in repackaged content
-                    {repackagedCardCount >= 1 ? ":" : "."}
-                  </Text>
-                  <List.Root variant="marker" ml={4}>
-                    {repackageCardDistribution.map((item) => (
-                      <List.Item key={item.Name}>
-                        {item.count} in {item.Name}
-                      </List.Item>
-                    ))}
-                  </List.Root>
-                </Alert.Description>
-              </>
-            )}
-          </Alert.Content>
-        </Alert.Root>
+        {cardNotice}
       </Box>
 
       <Grid
