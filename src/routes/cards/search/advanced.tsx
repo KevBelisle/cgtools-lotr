@@ -1,5 +1,5 @@
 import { Container, Separator } from "@chakra-ui/react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useContext } from "react";
 
 import { SearchFilters } from "@/components/search/search";
@@ -20,9 +20,7 @@ export const Route = createFileRoute("/cards/search/advanced")({
 });
 
 function RouteComponent() {
-  const { query } = Route.useSearch();
   const [searchFilters, setSearchFilters] = useContext(SearchFilterContext);
-  const navigate = useNavigate();
 
   return (
     <Container py={4}>
