@@ -29,7 +29,6 @@ export const SmallCard = ({
       boxShadow={"0 0.5rem 2.5rem -2rem var(--chakra-colors-night-950)"}
       backgroundColor={backgroundColor}
       borderColor={borderColor}
-      fontSize="sm"
       fontFamily={"EB Garamond, times, serif"}
       {...rootProps}
     >

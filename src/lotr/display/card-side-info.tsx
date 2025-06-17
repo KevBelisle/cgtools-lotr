@@ -44,7 +44,6 @@ export function CardSideInfo({
 }) {
   return (
     <>
-      {" "}
       <Card.Header
         fontFamily={"vafthrudnir"}
         fontVariant={"small-caps"}
@@ -95,7 +94,11 @@ export function CardSideInfo({
           <HStack justifyContent="space-between" flexWrap={"wrap"}>
             <HStack justifyContent="flex-end">
               <Tooltip content="Card type">
-                <Tag fontFamily={"sans-serif"}>
+                <Tag
+                  size="lg"
+                  variant="subtle"
+                  fontFamily="EB Garamond, times, serif"
+                >
                   {cardSide.Type}
                   {cardSide.Subtype && ` - ${cardSide.Subtype}`}
                 </Tag>
@@ -104,7 +107,7 @@ export function CardSideInfo({
                 <Tooltip content="Resource cost">
                   <ChakraTag.Root size="lg" variant={"subtle"}>
                     <ChakraTag.Label display="flex" flexDir="row" gap="1">
-                      <Text>Cost:</Text>
+                      <Text fontFamily="EB Garamond, times, serif">Cost:</Text>
                       <Text
                         fontFamily={"vafthrudnir"}
                         style={{ transform: "translate(0, 3px)" }}
@@ -179,7 +182,7 @@ export function CardSideInfo({
 
               {cardSide.Willpower != null && (
                 <Tooltip content="Willpower">
-                  <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
+                  <Tag size="lg" fontFamily={"vafthrudnir"} variant={"subtle"}>
                     <HStack gap="1">
                       <span style={{ transform: "translate(0, 3px)" }}>
                         {cardSide.Willpower}
@@ -196,7 +199,7 @@ export function CardSideInfo({
               )}
               {cardSide.Attack != null && (
                 <Tooltip content="Attack">
-                  <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
+                  <Tag size="lg" fontFamily={"vafthrudnir"} variant={"subtle"}>
                     <HStack gap="1">
                       <span style={{ transform: "translate(0, 3px)" }}>
                         {cardSide.Attack}
@@ -213,7 +216,7 @@ export function CardSideInfo({
               )}
               {cardSide.Defense != null && (
                 <Tooltip content="Defense">
-                  <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
+                  <Tag size="lg" fontFamily={"vafthrudnir"} variant={"subtle"}>
                     <HStack gap="1">
                       <span style={{ transform: "translate(0, 3px)" }}>
                         {cardSide.Defense}
@@ -230,7 +233,7 @@ export function CardSideInfo({
               )}
               {cardSide.HitPoints != null && (
                 <Tooltip content="Hit points">
-                  <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
+                  <Tag size="lg" fontFamily={"vafthrudnir"} variant={"subtle"}>
                     <HStack gap="1">
                       <span style={{ transform: "translate(0, 3px)" }}>
                         {cardSide.HitPoints}
