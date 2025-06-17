@@ -298,7 +298,7 @@ export function CardSideInfo({
             <Text textWrap={"pretty"} fontStyle={"italic"}>
               {cardSide.FlavorText.split(/[\n\r]+/)
                 .flatMap((str, index) => [
-                  formatCardText(str),
+                  str,
                   <br key={index} style={{ marginBottom: "0.5rem" }} />,
                 ])
                 .slice(0, -1)}
