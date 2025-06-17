@@ -30,7 +30,7 @@ export const SmallCard = ({
       backgroundColor={backgroundColor}
       borderColor={borderColor}
       fontSize="sm"
-      fontFamily={"times, serif"}
+      fontFamily={"EB Garamond, times, serif"}
       {...rootProps}
     >
       <CardSideInfo

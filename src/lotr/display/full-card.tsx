@@ -33,7 +33,7 @@ export const FullCard = memo(
         backgroundColor={backgroundColor}
         borderColor={borderColor}
         fontSize="sm"
-        fontFamily={"times, serif"}
+        fontFamily={"EB Garamond, times, serif"}
         {...rootProps}
       >
         <CardSideInfo

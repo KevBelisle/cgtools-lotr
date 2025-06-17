@@ -15,6 +15,7 @@ import { Link } from "@tanstack/react-router";
 import { LuUndo } from "react-icons/lu";
 
 import { Tooltip } from "@/components/ui/tooltip";
+import { formatCardText } from "@/lotr/card-text-formatting";
 
 import Attack from "@/lotr/icons/game icons/Attack.svg?react";
 import Defense from "@/lotr/icons/game icons/Defense.svg?react";
@@ -253,11 +254,31 @@ export function CardSideInfo({
           </Em>
           {cardSide.Text && (
             <Text textWrap={"pretty"}>
-              {cardSide.Text.replaceAll('\\"', '"')
-                .split("\\r\\n")
-                .flatMap((str, index) => [str, <br key={index} />])}
+              {cardSide.Text.split(/[\n\r]+/)
+                .flatMap((str, index) => [
+                  formatCardText(str),
+                  <br key={index} style={{ marginBottom: "0.5rem" }} />,
+                ])
+                .slice(0, -1)}
             </Text>
           )}
+
+          {cardSide.Text && cardSide.ShadowEffect ? (
+            <Separator borderColor={borderColor} variant={"dotted"} />
+          ) : null}
+
+          {cardSide.ShadowEffect && (
+            <Text textWrap={"pretty"} fontStyle={"italic"}>
+              <b>Shadow:</b>{" "}
+              {cardSide.ShadowEffect.split(/[\n\r]+/)
+                .flatMap((str, index) => [
+                  formatCardText(str),
+                  <br key={index} style={{ marginBottom: "0.5rem" }} />,
+                ])
+                .slice(0, -1)}
+            </Text>
+          )}
+
           {cardSide.VictoryPoints && (
             <Text
               textWrap={"pretty"}
@@ -267,16 +288,20 @@ export function CardSideInfo({
               Victory {cardSide.VictoryPoints}.
             </Text>
           )}
-          {(cardSide.Text || cardSide.VictoryPoints) &&
+
+          {(cardSide.Text || cardSide.ShadowEffect || cardSide.VictoryPoints) &&
           showFlavorText &&
           cardSide.FlavorText ? (
             <Separator borderColor={borderColor} variant={"dotted"} />
           ) : null}
           {showFlavorText && cardSide.FlavorText && (
             <Text textWrap={"pretty"} fontStyle={"italic"}>
-              {cardSide.FlavorText.replaceAll('\\"', '"')
-                .split("\\r\\n")
-                .flatMap((str, index) => [str, <br key={index} />])}
+              {cardSide.FlavorText.split(/[\n\r]+/)
+                .flatMap((str, index) => [
+                  formatCardText(str),
+                  <br key={index} style={{ marginBottom: "0.5rem" }} />,
+                ])
+                .slice(0, -1)}
             </Text>
           )}
 
