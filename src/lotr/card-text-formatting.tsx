@@ -1,7 +1,7 @@
 import regexifyString from "regexify-string";
 
-//import { Baggins } from '@/lotr/icons/game icons/Baggins.svg?react'
-//import { Fellowship } from '@/lotr/icons/game icons/Fellowship.svg?react'
+import Baggins from "@/lotr/icons/game icons/Baggins.svg?react";
+import Fellowship from "@/lotr/icons/game icons/Fellowship.svg?react";
 import Leadership from "@/lotr/icons/game icons/Leadership.svg?react";
 import Lore from "@/lotr/icons/game icons/Lore.svg?react";
 import Spirit from "@/lotr/icons/game icons/Spirit.svg?react";
@@ -39,8 +39,16 @@ const textReplacements = [
     replacement: <b>Valour Planning Action:</b>,
   },
   {
+    pattern: /Refresh Action:/,
+    replacement: <b>Refresh Action:</b>,
+  },
+  {
     pattern: /Planning Action:/,
     replacement: <b>Planning Action:</b>,
+  },
+  {
+    pattern: /Travel Action:/,
+    replacement: <b>Travel Action:</b>,
   },
   {
     pattern: /Valour Action:/,
@@ -73,6 +81,10 @@ const textReplacements = [
   {
     pattern: /Response:/,
     replacement: <b>Response:</b>,
+  },
+  {
+    pattern: /Riddle:/,
+    replacement: <b>Riddle:</b>,
   },
   {
     pattern: /Attack(?=\W)/,
@@ -114,6 +126,14 @@ const textReplacements = [
   {
     pattern: /Tactics/,
     replacement: <Tactics style={{ ...svgStyle }} />,
+  },
+  {
+    pattern: /Baggins(?= resource)|(?<=non-)Baggins/,
+    replacement: <Baggins style={{ ...svgStyle }} />,
+  },
+  {
+    pattern: /Fellowship/,
+    replacement: <Fellowship style={{ ...svgStyle }} />,
   },
 ];
 
