@@ -62,7 +62,15 @@ export const Route = createFileRoute("/products/$product-code")({
       .sort((a, b) => {
         const aNumber = a.ProductCards[0].Number;
         const bNumber = b.ProductCards[0].Number;
-        return parseInt(aNumber) - parseInt(bNumber);
+        const aBackNumber = a.ProductCards[0].BackNumber ?? "";
+        const bBackNumber = b.ProductCards[0].BackNumber ?? "";
+
+        return (
+          aNumber.localeCompare(bNumber, "en", { numeric: true }) ||
+          aBackNumber.localeCompare(bBackNumber, "en", { numeric: true })
+        );
+
+        //return parseInt(aNumber) - parseInt(bNumber);
       });
 
     const reprintedCardCount = execCompiledQuery(
@@ -156,7 +164,10 @@ function generateCardRows(card: Card, product: Product, highlighted: boolean) {
             {card.Front.Title}
           </Link>
         </Text>
-        <Tag>{card.Front.Type}</Tag>
+        <Tag>
+          {card.Front.Type}
+          {card.Front.Subtype ? ` - ${card.Front.Subtype}` : null}
+        </Tag>
         {SphereIcon ? (
           <Tag
             colorPalette={card.Front.Sphere?.toLowerCase() ?? "gray"}
@@ -216,7 +227,10 @@ function generateCardRows(card: Card, product: Product, highlighted: boolean) {
             </Text>
             {card.Back!.Title}
           </Text>
-          <Tag float="right">{card.Back!.Type}</Tag>
+          <Tag float="right">
+            {card.Back!.Type}
+            {card.Back!.Subtype ? ` - ${card.Back!.Subtype}` : null}
+          </Tag>
         </GridItem>
       </GridItem>,
     );
@@ -225,7 +239,7 @@ function generateCardRows(card: Card, product: Product, highlighted: boolean) {
   return cardRows;
 }
 
-function CardNotice({
+function ReprintedCardsNotice({
   isRepackage,
   cardCount,
   reprintedCardCount,
@@ -291,7 +305,7 @@ function CardNotice({
           >
             {reprintedCardCount} of its {cardCount} cards were included in
             {isRepackage ? " original releases" : " repackaged content"}
-            {cardCount >= 1 ? ":" : "."}
+            {reprintedCardCount >= 1 ? ":" : "."}
           </Text>
           <List.Root variant="marker" ml={4} mt="1" gap="1">
             {Object.values(reprintedCardList)
@@ -345,8 +359,8 @@ function RouteComponent() {
   );
 
   const cardNotice = (
-    <CardNotice
-      isRepackage={true}
+    <ReprintedCardsNotice
+      isRepackage={product.IsRepackage}
       cardCount={cards.length}
       reprintedCardCount={reprintedCardCount}
       reprintedCardDistribution={reprintedCardDistribution}
@@ -376,81 +390,61 @@ function RouteComponent() {
   let columnBreak = Math.ceil(cardRows.length / 2);
   if (cardRows[columnBreak].key?.endsWith("-BACK")) columnBreak += 1;
 
-  /*
-    // Original product
-    const repackagedList = repackageCardDistribution.reduce(
-      (acc, item) => {
-        acc[item.Name] = acc[item.Name] ?? { Name: item.Name, count: 0 };
-        acc[item.Name].count += 1;
-        return acc;
-      },
-      {} as Record<string, { Name: string; count: number }>,
-    );
-
-    alertContent = (
-      <>
-        <Alert.Title pb={2}>
-          This is from the <b>original release</b> of the game.
-        </Alert.Title>
-        <Alert.Description>
-          <Text fontSize="sm">
-            {repackagedCardCount} of its {cards.length} cards have been included
-            in repackaged content
-            {repackagedCardCount >= 1 ? ":" : "."}
-          </Text>
-          <List.Root variant="marker" ml={4}>
-            {Object.values(repackagedList)
-              .sort((a, b) => b.count - a.count)
-              .map((item) => (
-                <List.Item key={item.Name}>
-                  {item.count} in {item.Name}
-                </List.Item>
-              ))}
-          </List.Root>
-        </Alert.Description>
-      </>
-    );
-  }
-*/
   return (
     <Container display="flex" py={8} gap={8} flexDirection={"column"}>
-      <Box as="header" display={"flex"} flexDirection="column" gap={4}>
+      <Box
+        as="header"
+        display={"flex"}
+        flexDirection="column"
+        gap={4}
+        md={{ flexDirection: "row", alignItems: "flex-end" }}
+      >
         <Image
           objectFit="contain"
           alignSelf="center"
-          width="100%"
-          maxH="300px"
           src={`./product-images/${product.Code.toLowerCase()}_main.png`}
           aspectRatio={1}
           padding={2}
+          width="100%"
+          maxH="300px"
+          flexGrow={0}
+          md={{ width: "300px", maxHeight: "300px" }}
         />
-        <Heading
-          fontFamily="ringbearer"
-          size="4xl"
-          fontWeight="normal"
-          textWrap="balance"
+        <Box
+          as="header"
+          display={"flex"}
+          flexDirection="column"
+          gap={4}
+          flexGrow={1}
         >
-          {ProductIcon ? (
-            <>
-              <ProductIcon
-                width="1.4em"
-                height="1.4em"
-                style={{ display: "inline-block" }}
-              />{" "}
-            </>
-          ) : null}
-          {product.Name}
-        </Heading>
-        <HStack wrap="wrap">
-          <Tag size="lg">
-            Aka: {product.Code}, {product.Abbreviation}
-          </Tag>
-          <Tag size="lg">{product.Type}</Tag>
-          <Tag size="lg">Cycle: {product.Cycle}</Tag>
-          <Tag size="lg">{product.FirstReleased}</Tag>
-        </HStack>
+          <Heading
+            fontFamily="ringbearer"
+            size="4xl"
+            fontWeight="normal"
+            textWrap="balance"
+          >
+            {ProductIcon ? (
+              <>
+                <ProductIcon
+                  width="1.4em"
+                  height="1.4em"
+                  style={{ display: "inline-block" }}
+                />{" "}
+              </>
+            ) : null}
+            {product.Name}
+          </Heading>
+          <HStack wrap="wrap">
+            <Tag size="lg">
+              Aka: {product.Code}, {product.Abbreviation}
+            </Tag>
+            <Tag size="lg">{product.Type}</Tag>
+            <Tag size="lg">Cycle: {product.Cycle}</Tag>
+            <Tag size="lg">{product.FirstReleased}</Tag>
+          </HStack>
 
-        {cardNotice}
+          {cardNotice}
+        </Box>
       </Box>
 
       <Grid
