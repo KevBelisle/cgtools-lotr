@@ -121,42 +121,54 @@ export function CardSideInfo({
               {cardSide.ThreatCost != null && (
                 <Tooltip content="Threat cost">
                   <Tag size="lg" fontFamily={"vafthrudnir"} variant={"subtle"}>
-                    <Threat
-                      style={{
-                        display: "inline",
-                        height: "1rem",
-                        width: "1rem",
-                      }}
-                    />{" "}
-                    {cardSide.ThreatCost}
+                    <HStack gap="1">
+                      <Threat
+                        style={{
+                          display: "inline",
+                          height: "1rem",
+                          width: "1rem",
+                        }}
+                      />{" "}
+                      <span style={{ transform: "translate(0, 3px)" }}>
+                        {cardSide.ThreatCost}
+                      </span>
+                    </HStack>
                   </Tag>
                 </Tooltip>
               )}
               {cardSide.QuestPoints != null && (
                 <Tooltip content="Quest points">
                   <Tag size="lg" fontFamily={"vafthrudnir"} variant={"subtle"}>
-                    <Threat
-                      style={{
-                        display: "inline",
-                        height: "1rem",
-                        width: "1rem",
-                      }}
-                    />{" "}
-                    {cardSide.QuestPoints}
+                    <HStack gap="1">
+                      <Threat
+                        style={{
+                          display: "inline",
+                          height: "1rem",
+                          width: "1rem",
+                        }}
+                      />{" "}
+                      <span style={{ transform: "translate(0, 3px)" }}>
+                        {cardSide.QuestPoints}
+                      </span>
+                    </HStack>
                   </Tag>
                 </Tooltip>
               )}
               {cardSide.EngagementCost != null && (
                 <Tooltip content="Engagement cost">
                   <Tag size="lg" fontFamily={"vafthrudnir"} variant={"subtle"}>
-                    <Threat
-                      style={{
-                        display: "inline",
-                        height: "1rem",
-                        width: "1rem",
-                      }}
-                    />{" "}
-                    {cardSide.EngagementCost}
+                    <HStack gap="1">
+                      <Threat
+                        style={{
+                          display: "inline",
+                          height: "1rem",
+                          width: "1rem",
+                        }}
+                      />{" "}
+                      <span style={{ transform: "translate(0, 3px)" }}>
+                        {cardSide.EngagementCost}
+                      </span>
+                    </HStack>
                   </Tag>
                 </Tooltip>
               )}
