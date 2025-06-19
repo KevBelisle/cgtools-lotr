@@ -15,7 +15,7 @@ import { Link } from "@tanstack/react-router";
 import { LuUndo } from "react-icons/lu";
 
 import { Tooltip } from "@/components/ui/tooltip";
-import { formatCardText } from "@/lotr/card-text-formatting";
+import { formatCardText, formatNumber } from "@/lotr/card-text-formatting";
 
 import Attack from "@/lotr/icons/game icons/Attack.svg?react";
 import Defense from "@/lotr/icons/game icons/Defense.svg?react";
@@ -112,7 +112,7 @@ export function CardSideInfo({
                         fontFamily={"vafthrudnir"}
                         style={{ transform: "translate(0, 3px)" }}
                       >
-                        {cardSide.ResourceCost}
+                        {formatNumber(cardSide.ResourceCost)}
                       </Text>
                     </ChakraTag.Label>
                   </ChakraTag.Root>
@@ -130,7 +130,7 @@ export function CardSideInfo({
                         }}
                       />{" "}
                       <span style={{ transform: "translate(0, 3px)" }}>
-                        {cardSide.ThreatCost}
+                        {formatNumber(cardSide.ThreatCost)}
                       </span>
                     </HStack>
                   </Tag>
@@ -148,7 +148,7 @@ export function CardSideInfo({
                         }}
                       />{" "}
                       <span style={{ transform: "translate(0, 3px)" }}>
-                        {cardSide.QuestPoints}
+                        {formatNumber(cardSide.QuestPoints)}
                       </span>
                     </HStack>
                   </Tag>
@@ -166,7 +166,7 @@ export function CardSideInfo({
                         }}
                       />{" "}
                       <span style={{ transform: "translate(0, 3px)" }}>
-                        {cardSide.EngagementCost}
+                        {formatNumber(cardSide.EngagementCost)}
                       </span>
                     </HStack>
                   </Tag>
@@ -179,7 +179,7 @@ export function CardSideInfo({
                   <Tag fontFamily={"vafthrudnir"} variant={"subtle"}>
                     <HStack gap="1">
                       <span style={{ transform: "translate(0, 3px)" }}>
-                        {cardSide.ThreatStrength}
+                        {formatNumber(cardSide.ThreatStrength)}
                       </span>
                       <Threat
                         style={{
@@ -197,7 +197,7 @@ export function CardSideInfo({
                   <Tag size="lg" fontFamily={"vafthrudnir"} variant={"subtle"}>
                     <HStack gap="1">
                       <span style={{ transform: "translate(0, 3px)" }}>
-                        {cardSide.Willpower}
+                        {formatNumber(cardSide.Willpower)}
                       </span>
                       <Willpower
                         style={{
@@ -214,7 +214,7 @@ export function CardSideInfo({
                   <Tag size="lg" fontFamily={"vafthrudnir"} variant={"subtle"}>
                     <HStack gap="1">
                       <span style={{ transform: "translate(0, 3px)" }}>
-                        {cardSide.Attack}
+                        {formatNumber(cardSide.Attack)}
                       </span>
                       <Attack
                         style={{
@@ -231,7 +231,7 @@ export function CardSideInfo({
                   <Tag size="lg" fontFamily={"vafthrudnir"} variant={"subtle"}>
                     <HStack gap="1">
                       <span style={{ transform: "translate(0, 3px)" }}>
-                        {cardSide.Defense}
+                        {formatNumber(cardSide.Defense)}
                       </span>
                       <Defense
                         style={{
@@ -248,7 +248,7 @@ export function CardSideInfo({
                   <Tag size="lg" fontFamily={"vafthrudnir"} variant={"subtle"}>
                     <HStack gap="1">
                       <span style={{ transform: "translate(0, 3px)" }}>
-                        {cardSide.HitPoints}
+                        {formatNumber(cardSide.HitPoints)}
                       </span>
                       <HitPoints
                         style={{

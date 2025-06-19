@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { useCallback, useState } from "react";
 
+import { formatNumber } from "@/lotr/card-text-formatting";
 import { CardSideTable } from "@/lotr/database-schema";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 import { Checkbox } from "../ui/checkbox";
@@ -130,7 +131,7 @@ export function RangeFilter({
                   (
                   {[
                     `${filter.value.range[0]}-${filter.value.range[1]}`,
-                    ...filter.value.special,
+                    ...filter.value.special.map(formatNumber),
                   ].join(", ")}
                   )
                 </Em>
@@ -177,7 +178,7 @@ export function RangeFilter({
             </Slider.Control>
           </Slider.Root>
 
-          <HStack mt={4}>
+          <HStack mt={4} gap={8}>
             {filter.special.map((special) => {
               return (
                 <Checkbox
@@ -187,7 +188,7 @@ export function RangeFilter({
                     handleSpecialChange(special, details)
                   }
                 >
-                  {special}
+                  {formatNumber(special)}
                 </Checkbox>
               );
             })}
