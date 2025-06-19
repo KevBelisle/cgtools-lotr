@@ -1,6 +1,7 @@
 import {
   createListCollection,
   IconButton,
+  IconButtonProps,
   Portal,
   Select,
   useSelectContext,
@@ -12,25 +13,25 @@ import { LuArrowDownNarrowWide } from "react-icons/lu";
 import { sortOptions } from "@/lotr/sort-options";
 import { SortOrderContext, SortOrderType } from "../ui/sort-order-provider";
 
-function SelectTrigger() {
+function SelectTrigger({
+  ...props
+}: IconButtonProps & React.RefAttributes<HTMLButtonElement>) {
   const select = useSelectContext();
   return (
     <IconButton
       size="lg"
-      borderColor="sand.500"
-      borderWidth={2}
-      background="sand.100"
       variant="subtle"
-      color="night.900"
-      borderRadius={0}
       {...select.getTriggerProps()}
+      {...props}
     >
       <LuArrowDownNarrowWide />
     </IconButton>
   );
 }
 
-export function OrderSelect() {
+export function OrderSelect({
+  ...props
+}: IconButtonProps & React.RefAttributes<HTMLButtonElement>) {
   const [sortOrder, setSortOrder] = useContext(SortOrderContext);
   const router = useRouter();
 
@@ -68,7 +69,7 @@ export function OrderSelect() {
     >
       <Select.HiddenSelect />
       <Select.Control>
-        <SelectTrigger />
+        <SelectTrigger {...props} />
       </Select.Control>
       <Portal>
         <Select.Positioner>

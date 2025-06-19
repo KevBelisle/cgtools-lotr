@@ -1,6 +1,7 @@
 import {
   createListCollection,
   IconButton,
+  IconButtonProps,
   Portal,
   Select,
   Text,
@@ -12,28 +13,27 @@ import { useCallback, useContext, useMemo } from "react";
 import { displayOptions } from "@/lotr/display-options";
 import { DisplayContext } from "../ui/display-provider";
 
-function SelectTrigger() {
+function SelectTrigger({
+  ...props
+}: IconButtonProps & React.RefAttributes<HTMLButtonElement>) {
   const select = useSelectContext();
   const Icon = displayOptions[parseInt(select.value[0])].icon;
 
   return (
     <IconButton
       size="lg"
-      borderColor="sand.500"
-      borderWidth={2}
-      background="sand.100"
       variant="subtle"
-      color="night.900"
-      borderRadius={0}
-      borderRightRadius={4}
       {...select.getTriggerProps()}
+      {...props}
     >
       <Icon />
     </IconButton>
   );
 }
 
-export function DisplaySelect() {
+export function DisplaySelect({
+  ...props
+}: IconButtonProps & React.RefAttributes<HTMLButtonElement>) {
   const [displayOption, setDisplayOption] = useContext(DisplayContext);
   const router = useRouter();
 
@@ -72,7 +72,7 @@ export function DisplaySelect() {
     >
       <Select.HiddenSelect />
       <Select.Control>
-        <SelectTrigger />
+        <SelectTrigger {...props} />
       </Select.Control>
       <Portal>
         <Select.Positioner>

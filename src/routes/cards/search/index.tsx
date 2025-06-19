@@ -26,17 +26,23 @@ export const Route = createFileRoute("/cards/search/")({
   loader: async ({ context, deps: { query: titleSearch } }) => {
     const searchFilters = context.searchFilterContext[0];
     const sortOrder = context.sortOrderContext[0];
+    const rcoOnly = context.rcoOnlyFilterContext[0];
 
     let filteredQuery = cardBaseQuery;
+
+    if (rcoOnly) {
+      // If RCO only filter is enabled, we filter the query to only include RCO cards
+      filteredQuery = filteredQuery.where("c.IsRCO", "=", true);
+    }
 
     for (const filter of Object.values(searchFilters)) {
       const frontColumn = `f.${filter.id}` as keyof Omit<
         CardBaseQueryResult,
-        "ProductCards"
+        "ProductCards" | "IsRCO"
       >;
       const backColumn = `b.${filter.id}` as keyof Omit<
         CardBaseQueryResult,
-        "ProductCards"
+        "ProductCards" | "IsRCO"
       >;
 
       switch (filter.type) {

@@ -18,6 +18,7 @@ export interface Database {
 
 export interface CardTable {
   Slug: string;
+  IsRCO: boolean;
   FrontSlug: string;
   BackSlug: string | null;
 }
@@ -95,11 +96,9 @@ export const cardBaseQuery = kysely
   .selectFrom("cards as c")
   .leftJoin("cardSides as f", "f.Slug", "c.FrontSlug")
   .leftJoin("cardSides as b", "b.Slug", "c.BackSlug")
-  // .leftJoin("productCards as pc", "pc.CardSlug", "c.Slug")
-  // .leftJoin("products as p", "p.Code", "pc.ProductCode")
   .select((eb) => [
     "c.Slug as c.Slug",
-
+    "c.IsRCO as c.IsRCO",
     "f.Slug as f.Slug",
     "f.Title as f.Title",
     "f.Text as f.Text",

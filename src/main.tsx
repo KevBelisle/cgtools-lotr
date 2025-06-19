@@ -23,6 +23,10 @@ import {
   SortOrderContext,
   SortOrderProvider,
 } from "@/components/ui/sort-order-provider";
+import {
+  RCOOnlyFilterContext,
+  RCOOnlyFilterProvider,
+} from "@/lotr/rco-filter-provider";
 import { routeTree } from "./routeTree.gen";
 import "./styles.css";
 
@@ -41,6 +45,7 @@ const router = createRouter({
     sqljsDbContext: undefined!,
     searchFilterContext: [undefined!, () => {}],
     sortOrderContext: ["Random", () => {}],
+    rcoOnlyFilterContext: [{ checked: true }, () => {}],
   },
 });
 
@@ -55,6 +60,7 @@ const RouterProvider = () => {
   const sqljsDbContext = useContext(SqljsDbContext);
   const searchFilterContext = useContext(SearchFilterContext);
   const sortOrderContext = useContext(SortOrderContext);
+  const rcoOnlyFilterContext = useContext(RCOOnlyFilterContext);
   return (
     <TanstackRouterProvider
       router={router}
@@ -62,6 +68,7 @@ const RouterProvider = () => {
         searchFilterContext: searchFilterContext,
         sqljsDbContext: sqljsDbContext,
         sortOrderContext: sortOrderContext,
+        rcoOnlyFilterContext: rcoOnlyFilterContext,
       }}
     />
   );
@@ -80,13 +87,15 @@ const App = () => {
       <ChakraProvider>
         <SqljsProvider>
           <SqljsDbProvider dbUrl={"lotr_lcg.db"} loading={loading}>
-            <SearchFilterProvider>
-              <SortOrderProvider>
-                <DisplayOptionProvider>
-                  <RouterProvider />
-                </DisplayOptionProvider>
-              </SortOrderProvider>
-            </SearchFilterProvider>
+            <RCOOnlyFilterProvider>
+              <SearchFilterProvider>
+                <SortOrderProvider>
+                  <DisplayOptionProvider>
+                    <RouterProvider />
+                  </DisplayOptionProvider>
+                </SortOrderProvider>
+              </SearchFilterProvider>
+            </RCOOnlyFilterProvider>
           </SqljsDbProvider>
         </SqljsProvider>
       </ChakraProvider>

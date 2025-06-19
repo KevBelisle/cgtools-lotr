@@ -53,6 +53,7 @@ export type ProductCard = {
 
 export type Card = {
   Slug: string;
+  IsRCO: boolean;
   Front: CardSide;
   Back: CardSide | null;
   ProductCards: ProductCard[];
@@ -61,6 +62,7 @@ export type Card = {
 export function lotrCardFromCardBaseQuery(card: CardBaseQueryResult): Card {
   return {
     Slug: card["c.Slug"],
+    IsRCO: card["c.IsRCO"] ?? false,
     Front: {
       Slug: card["f.Slug"]!,
       Title: card["f.Title"]!,

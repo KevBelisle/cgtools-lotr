@@ -1,8 +1,9 @@
 import ControlledInput from "@/components/ui/controlled-input";
 import type { Card as GameCard } from "@/lotr/lotr-schema";
+import { RCOFilter } from "@/lotr/rco-filter";
+import { RCOOnlyFilterContext } from "@/lotr/rco-filter-provider";
 import {
   Badge,
-  Box,
   Container,
   Group,
   IconButton,
@@ -51,6 +52,7 @@ export const CardSearch = ({
   cards: GameCard[];
 }) => {
   const [displayOption] = useContext(DisplayContext);
+  const [RCOOnlyFilter] = useContext(RCOOnlyFilterContext);
 
   const onChange = useCallback((e: any) => setQuery(e.target.value), []);
   const navigate = useNavigate();
@@ -61,8 +63,8 @@ export const CardSearch = ({
   ).length;
 
   return (
-    <Container mb="16">
-      <Group attached my={16} width={"100%"}>
+    <>
+      <Container my={16} display="flex" flexDirection="column">
         <ControlledInput
           placeholder="Find by title..."
           value={query}
@@ -70,20 +72,38 @@ export const CardSearch = ({
           size="lg"
           borderColor="sand.500"
           borderWidth={2}
-          borderRightWidth={0}
           background="sand.50"
           variant="subtle"
           color="night.900"
+          alignSelf="stretch"
+          borderRadius={6}
+          borderBottomRightRadius={0}
         />
-        <Box marginInlineEnd={"-2px"}>
+        <Group
+          attached
+          width="fit-content"
+          alignSelf="flex-end"
+          borderColor="sand.500"
+          borderWidth={2}
+          borderTopWidth={0}
+          background="night.800"
+          borderBottomRadius={6}
+          color="sand.200"
+        >
+          <RCOFilter
+            borderRightWidth="2px"
+            borderRightStyle="solid"
+            borderRightColor="sand.500"
+            alignSelf="stretch"
+            borderBottomLeftRadius={4}
+            backgroundColor={RCOOnlyFilter.checked ? "teal.800" : "night.800"}
+            color={RCOOnlyFilter.checked ? "white" : "sand.200"}
+          />
+
           <IconButton
             size="lg"
-            borderColor="sand.500"
-            borderWidth={2}
-            background="sand.100"
             variant="subtle"
-            color="night.900"
-            borderRadius={0}
+            background="transparent"
             onClick={() =>
               navigate({ to: "/cards/search/advanced", search: { query } })
             }
@@ -105,13 +125,15 @@ export const CardSearch = ({
               </>
             )}
           </IconButton>
-        </Box>
-        <OrderSelect />
-        <DisplaySelect />
-      </Group>
-      <SimpleGrid gap="6" minChildWidth={displayOption.minWidth ?? "450px"}>
-        <MemoizedCardResults cards={cards} />
-      </SimpleGrid>
-    </Container>
+          <OrderSelect background="transparent" />
+          <DisplaySelect background="transparent" />
+        </Group>
+      </Container>
+      <Container my={16}>
+        <SimpleGrid gap="6" minChildWidth={displayOption.minWidth ?? "450px"}>
+          <MemoizedCardResults cards={cards} />
+        </SimpleGrid>
+      </Container>
+    </>
   );
 };
