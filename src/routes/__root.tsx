@@ -5,6 +5,7 @@ import { NotFound } from "@/components/pages/not-found";
 import { SearchFilterContextType } from "@/components/ui/advanced-filters-provider";
 import NavBar from "@/components/ui/nav-bar";
 import { SortOrderContextType } from "@/components/ui/sort-order-provider";
+import Footer from "@/lotr/footer";
 import { RCOOnlyFilterContextType } from "@/lotr/rco-filter-provider";
 import { SqljsDbContextType } from "@/sqljs/sqljs-provider";
 
@@ -25,6 +26,8 @@ function RootComponent() {
     <>
       <NavBar />
       <Outlet />
+
+      <Footer />
 
       <Toaster />
     </>
