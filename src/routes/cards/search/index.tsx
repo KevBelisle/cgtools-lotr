@@ -30,7 +30,7 @@ export const Route = createFileRoute("/cards/search/")({
 
     let filteredQuery = cardBaseQuery;
 
-    if (rcoOnly) {
+    if (rcoOnly.checked) {
       // If RCO only filter is enabled, we filter the query to only include RCO cards
       filteredQuery = filteredQuery.where("c.IsRCO", "=", true);
     }
