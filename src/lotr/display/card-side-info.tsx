@@ -268,7 +268,7 @@ export function CardSideInfo({
             {cardSide.Traits.split(",").join(" ")}
           </Em>
           {cardSide.Text && (
-            <Text textWrap={"pretty"} fontSize={"lg"}>
+            <Text textWrap={"pretty"}>
               {cardSide.Text.split(/[\n\r]+/)
                 .flatMap((str, index) => [
                   formatCardText(str),
@@ -279,11 +279,11 @@ export function CardSideInfo({
           )}
 
           {cardSide.Text && cardSide.ShadowEffect ? (
-            <Separator borderColor={borderColor} variant={"dotted"} />
+            <Separator borderColor={borderColor} variant={"dotted"} my={1} />
           ) : null}
 
           {cardSide.ShadowEffect && (
-            <Text textWrap={"pretty"} fontStyle={"italic"} fontSize={"lg"}>
+            <Text textWrap={"pretty"} fontStyle={"italic"}>
               <b>Shadow:</b>{" "}
               {cardSide.ShadowEffect.split(/[\n\r]+/)
                 .flatMap((str, index) => [
@@ -299,7 +299,6 @@ export function CardSideInfo({
               textWrap={"pretty"}
               fontWeight={"bold"}
               alignSelf={"flex-end"}
-              fontSize={"lg"}
             >
               Victory {cardSide.VictoryPoints}.
             </Text>
@@ -308,10 +307,10 @@ export function CardSideInfo({
           {(cardSide.Text || cardSide.ShadowEffect || cardSide.VictoryPoints) &&
           showFlavorText &&
           cardSide.FlavorText ? (
-            <Separator borderColor={borderColor} variant={"dotted"} />
+            <Separator borderColor={borderColor} variant={"dotted"} my={1} />
           ) : null}
           {showFlavorText && cardSide.FlavorText && (
-            <Text textWrap={"pretty"} fontStyle={"italic"} fontSize={"lg"}>
+            <Text textWrap={"pretty"} fontStyle={"italic"}>
               {cardSide.FlavorText.split(/[\n\r]+/)
                 .flatMap((str, index) => [
                   str,
