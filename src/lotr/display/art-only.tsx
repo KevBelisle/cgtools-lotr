@@ -58,8 +58,6 @@ export const CardImages = memo(
       navigate({ to: "/cards/$card-slug", params: { "card-slug": card.Slug } });
     }, [card.Slug, navigate]);
 
-    console.log(`${card.Slug} highlighted: ${highlighted}`);
-
     return (
       <>
         <Image
