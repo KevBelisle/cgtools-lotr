@@ -123,7 +123,7 @@ function CardResults({
   highlightedCardSlugs,
 }: {
   cards: GameCard[];
-  highlightedCardSlugs?: string[];
+  highlightedCardSlugs: string[];
 }): ReactNode[] {
   const [displayOption] = useContext(DisplayContext);
   const DisplayComponent = displayOption.component;
