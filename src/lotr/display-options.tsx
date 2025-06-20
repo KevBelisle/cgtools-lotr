@@ -17,7 +17,9 @@ import {
 
 export type DisplayOptionType = {
   name: string;
-  component: ComponentType<{ card: Card } & HTMLChakraProps<"div">>;
+  component: ComponentType<
+    { card: Card; highlighted?: boolean } & HTMLChakraProps<"div">
+  >;
   icon: IconType;
   minWidth?: string;
 };

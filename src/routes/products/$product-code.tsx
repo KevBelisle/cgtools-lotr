@@ -116,18 +116,31 @@ export const Route = createFileRoute("/products/$product-code")({
   },
 });
 
-const highlightColor = "teal.800";
+const highlightColor = "yellow.700";
 
-function CardResults({ cards }: { cards: GameCard[] }): ReactNode[] {
+function CardResults({
+  cards,
+  highlightedCardSlugs,
+}: {
+  cards: GameCard[];
+  highlightedCardSlugs?: string[];
+}): ReactNode[] {
   const [displayOption] = useContext(DisplayContext);
   const DisplayComponent = displayOption.component;
 
+  console.log(highlightedCardSlugs);
+
   return cards.map((card) => {
+    const highlighted = highlightedCardSlugs
+      ? highlightedCardSlugs.includes(card.Slug)
+      : false;
+
     return (
       <DisplayComponent
         key={card.Slug}
         card={card}
         maxWidth="calc(100vw - 2 * var(--chakra-spacing-4))"
+        highlighted={highlighted}
       />
     );
   });
@@ -139,6 +152,11 @@ const MemoizedCardResults = memo(CardResults, (prevProps, nextProps) => {
     prevProps.cards.length == nextProps.cards.length &&
     prevProps.cards.every(
       (card, index) => card.Slug === nextProps.cards[index]?.Slug,
+    ) &&
+    prevProps.highlightedCardSlugs.length ==
+      nextProps.highlightedCardSlugs.length &&
+    prevProps.highlightedCardSlugs.every(
+      (slug, index) => slug === nextProps.highlightedCardSlugs[index],
     )
   );
 });
@@ -514,7 +532,10 @@ function RouteComponent() {
         </Grid>
       ) : (
         <SimpleGrid gap="6" minChildWidth={displayOption.minWidth ?? "450px"}>
-          <MemoizedCardResults cards={cards} />
+          <MemoizedCardResults
+            cards={cards}
+            highlightedCardSlugs={highlightedCardSlugs}
+          />
         </SimpleGrid>
       )}
     </Container>

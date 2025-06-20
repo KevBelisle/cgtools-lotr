@@ -6,9 +6,11 @@ import { SmallCard } from "@/lotr/display/small-card";
 
 export const SmallCardWithArt = ({
   card,
+  highlighted,
   ...rootProps
 }: {
   card: GameCard;
+  highlighted?: boolean;
 } & HTMLChakraProps<"div">) => {
   return (
     <Box {...rootProps}>
@@ -26,10 +28,10 @@ export const SmallCardWithArt = ({
           justifyContent={"center"}
           alignItems={"center"}
         >
-          <CardImages card={card} />
+          <CardImages card={card} highlighted={highlighted} />
         </Box>
       </Box>
-      <SmallCard card={card} />
+      <SmallCard card={card} highlighted={highlighted} />
     </Box>
   );
 };

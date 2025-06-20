@@ -11,9 +11,11 @@ import sphereData from "./sphere-data";
 export const FullCard = memo(
   ({
     card,
+    highlighted,
     ...rootProps
   }: {
     card: GameCard;
+    highlighted?: boolean;
   } & HTMLChakraProps<"div">) => {
     const [side, setSide] = useState("front" as "front" | "back");
     const flipCard = () => {
@@ -30,10 +32,14 @@ export const FullCard = memo(
       <Card.Root
         size={"sm"}
         borderWidth={2}
-        boxShadow={"0 0.5rem 2.5rem -2rem var(--chakra-colors-night-950)"}
         backgroundColor={backgroundColor}
         borderColor={borderColor}
         fontFamily={"EB Garamond, times, serif"}
+        boxShadow={
+          highlighted
+            ? "0 0 0 3px var(--chakra-colors-yellow-600), 0 0 15px -3px var(--chakra-colors-yellow-600)"
+            : "none"
+        }
         {...rootProps}
       >
         <CardSideInfo

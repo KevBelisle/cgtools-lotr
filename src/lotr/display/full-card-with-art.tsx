@@ -6,9 +6,11 @@ import { FullCard } from "@/lotr/display/full-card";
 
 export const FullCardWithArt = ({
   card,
+  highlighted,
   ...rootProps
 }: {
   card: GameCard;
+  highlighted?: boolean;
 } & HTMLChakraProps<"div">) => {
   return (
     <Box {...rootProps}>
@@ -26,10 +28,10 @@ export const FullCardWithArt = ({
           justifyContent={"center"}
           alignItems={"center"}
         >
-          <CardImages card={card} />
+          <CardImages card={card} highlighted={highlighted} />
         </Box>
       </Box>
-      <FullCard card={card} />
+      <FullCard card={card} highlighted={highlighted} />
     </Box>
   );
 };
