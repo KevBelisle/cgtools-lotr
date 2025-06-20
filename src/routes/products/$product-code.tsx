@@ -50,21 +50,57 @@ export const Route = createFileRoute("/products/$product-code")({
       .where("pc.ProductCode", "=", params["product-code"])
       .compile();
 
-    const cardQueryResults = (
+    let cardQueryResults = (
       execCompiledQuery(
         compiledCardQuery,
         context.sqljsDbContext.sqljsDb!,
       ) as CardBaseQueryResult[]
-    )
-      .map(lotrCardFromCardBaseQuery)
+    ).map(lotrCardFromCardBaseQuery);
+
+    let seenProductCardNumbers: Record<string, string[]> = {};
+
+    cardQueryResults = cardQueryResults
       .map((card) => {
-        card.ProductCards = card.ProductCards.sort((a, b) =>
-          a.Product.Code === params["product-code"]
-            ? -1
-            : b.Product.Code === params["product-code"]
-              ? 1
-              : 0,
+        // card.ProductCards = card.ProductCards.sort((a, b) =>
+        //   a.Product.Code === params["product-code"]
+        //     ? -1
+        //     : b.Product.Code === params["product-code"]
+        //       ? 1
+        //       : 0,
+        // );
+
+        let { currentProductCards, otherProductsCards } = Object.groupBy(
+          card.ProductCards,
+          (pc) =>
+            pc.Product.Code === params["product-code"]
+              ? "currentProductCards"
+              : "otherProductsCards",
         );
+
+        // Annoying workaround for the TPLES that has 2 copies of Gandalf, with different numbers...
+        if ((currentProductCards ?? []).length > 1) {
+          debugger;
+
+          let { alreadySeen, notYetSeen } = Object.groupBy(
+            currentProductCards ?? [],
+            (pc) =>
+              seenProductCardNumbers[card.Slug]?.includes(pc.Number)
+                ? "alreadySeen"
+                : "notYetSeen",
+          );
+          currentProductCards = [...(notYetSeen ?? []), ...(alreadySeen ?? [])];
+
+          seenProductCardNumbers[card.Slug] = [
+            ...(seenProductCardNumbers[card.Slug] ?? []),
+            currentProductCards[0].Number,
+          ];
+        }
+
+        card.ProductCards = [
+          ...(currentProductCards ?? []),
+          ...(otherProductsCards ?? []),
+        ];
+
         return card;
       })
       .sort((a, b) => {
@@ -127,8 +163,6 @@ function CardResults({
 }): ReactNode[] {
   const [displayOption] = useContext(DisplayContext);
   const DisplayComponent = displayOption.component;
-
-  console.log(highlightedCardSlugs);
 
   return cards.map((card) => {
     const highlighted = highlightedCardSlugs
