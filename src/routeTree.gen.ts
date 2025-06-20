@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as ProductsRouteImport } from './routes/products/route'
 import { Route as IndexImport } from './routes/index'
 import { Route as ProductsIndexImport } from './routes/products/index'
 import { Route as ProductsRepackagedImport } from './routes/products/repackaged'
@@ -19,10 +20,17 @@ import { Route as ProductsOriginalImport } from './routes/products/original'
 import { Route as ProductsNightmareImport } from './routes/products/nightmare'
 import { Route as ProductsProductCodeImport } from './routes/products/$product-code'
 import { Route as CardsCardSlugImport } from './routes/cards/$card-slug'
+import { Route as CardsSearchRouteImport } from './routes/cards/search/route'
 import { Route as CardsSearchIndexImport } from './routes/cards/search/index'
 import { Route as CardsSearchAdvancedImport } from './routes/cards/search/advanced'
 
 // Create/Update Routes
+
+const ProductsRouteRoute = ProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -31,39 +39,39 @@ const IndexRoute = IndexImport.update({
 } as any)
 
 const ProductsIndexRoute = ProductsIndexImport.update({
-  id: '/products/',
-  path: '/products/',
-  getParentRoute: () => rootRoute,
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProductsRouteRoute,
 } as any)
 
 const ProductsRepackagedRoute = ProductsRepackagedImport.update({
-  id: '/products/repackaged',
-  path: '/products/repackaged',
-  getParentRoute: () => rootRoute,
+  id: '/repackaged',
+  path: '/repackaged',
+  getParentRoute: () => ProductsRouteRoute,
 } as any)
 
 const ProductsPodRoute = ProductsPodImport.update({
-  id: '/products/pod',
-  path: '/products/pod',
-  getParentRoute: () => rootRoute,
+  id: '/pod',
+  path: '/pod',
+  getParentRoute: () => ProductsRouteRoute,
 } as any)
 
 const ProductsOriginalRoute = ProductsOriginalImport.update({
-  id: '/products/original',
-  path: '/products/original',
-  getParentRoute: () => rootRoute,
+  id: '/original',
+  path: '/original',
+  getParentRoute: () => ProductsRouteRoute,
 } as any)
 
 const ProductsNightmareRoute = ProductsNightmareImport.update({
-  id: '/products/nightmare',
-  path: '/products/nightmare',
-  getParentRoute: () => rootRoute,
+  id: '/nightmare',
+  path: '/nightmare',
+  getParentRoute: () => ProductsRouteRoute,
 } as any)
 
 const ProductsProductCodeRoute = ProductsProductCodeImport.update({
-  id: '/products/$product-code',
-  path: '/products/$product-code',
-  getParentRoute: () => rootRoute,
+  id: '/$product-code',
+  path: '/$product-code',
+  getParentRoute: () => ProductsRouteRoute,
 } as any)
 
 const CardsCardSlugRoute = CardsCardSlugImport.update({
@@ -72,16 +80,22 @@ const CardsCardSlugRoute = CardsCardSlugImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const CardsSearchIndexRoute = CardsSearchIndexImport.update({
-  id: '/cards/search/',
-  path: '/cards/search/',
+const CardsSearchRouteRoute = CardsSearchRouteImport.update({
+  id: '/cards/search',
+  path: '/cards/search',
   getParentRoute: () => rootRoute,
 } as any)
 
+const CardsSearchIndexRoute = CardsSearchIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => CardsSearchRouteRoute,
+} as any)
+
 const CardsSearchAdvancedRoute = CardsSearchAdvancedImport.update({
-  id: '/cards/search/advanced',
-  path: '/cards/search/advanced',
-  getParentRoute: () => rootRoute,
+  id: '/advanced',
+  path: '/advanced',
+  getParentRoute: () => CardsSearchRouteRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -95,6 +109,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/products': {
+      id: '/products'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof ProductsRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/cards/search': {
+      id: '/cards/search'
+      path: '/cards/search'
+      fullPath: '/cards/search'
+      preLoaderRoute: typeof CardsSearchRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/cards/$card-slug': {
       id: '/cards/$card-slug'
       path: '/cards/$card-slug'
@@ -104,76 +132,113 @@ declare module '@tanstack/react-router' {
     }
     '/products/$product-code': {
       id: '/products/$product-code'
-      path: '/products/$product-code'
+      path: '/$product-code'
       fullPath: '/products/$product-code'
       preLoaderRoute: typeof ProductsProductCodeImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof ProductsRouteImport
     }
     '/products/nightmare': {
       id: '/products/nightmare'
-      path: '/products/nightmare'
+      path: '/nightmare'
       fullPath: '/products/nightmare'
       preLoaderRoute: typeof ProductsNightmareImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof ProductsRouteImport
     }
     '/products/original': {
       id: '/products/original'
-      path: '/products/original'
+      path: '/original'
       fullPath: '/products/original'
       preLoaderRoute: typeof ProductsOriginalImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof ProductsRouteImport
     }
     '/products/pod': {
       id: '/products/pod'
-      path: '/products/pod'
+      path: '/pod'
       fullPath: '/products/pod'
       preLoaderRoute: typeof ProductsPodImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof ProductsRouteImport
     }
     '/products/repackaged': {
       id: '/products/repackaged'
-      path: '/products/repackaged'
+      path: '/repackaged'
       fullPath: '/products/repackaged'
       preLoaderRoute: typeof ProductsRepackagedImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof ProductsRouteImport
     }
     '/products/': {
       id: '/products/'
-      path: '/products'
-      fullPath: '/products'
+      path: '/'
+      fullPath: '/products/'
       preLoaderRoute: typeof ProductsIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof ProductsRouteImport
     }
     '/cards/search/advanced': {
       id: '/cards/search/advanced'
-      path: '/cards/search/advanced'
+      path: '/advanced'
       fullPath: '/cards/search/advanced'
       preLoaderRoute: typeof CardsSearchAdvancedImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof CardsSearchRouteImport
     }
     '/cards/search/': {
       id: '/cards/search/'
-      path: '/cards/search'
-      fullPath: '/cards/search'
+      path: '/'
+      fullPath: '/cards/search/'
       preLoaderRoute: typeof CardsSearchIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof CardsSearchRouteImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface ProductsRouteRouteChildren {
+  ProductsProductCodeRoute: typeof ProductsProductCodeRoute
+  ProductsNightmareRoute: typeof ProductsNightmareRoute
+  ProductsOriginalRoute: typeof ProductsOriginalRoute
+  ProductsPodRoute: typeof ProductsPodRoute
+  ProductsRepackagedRoute: typeof ProductsRepackagedRoute
+  ProductsIndexRoute: typeof ProductsIndexRoute
+}
+
+const ProductsRouteRouteChildren: ProductsRouteRouteChildren = {
+  ProductsProductCodeRoute: ProductsProductCodeRoute,
+  ProductsNightmareRoute: ProductsNightmareRoute,
+  ProductsOriginalRoute: ProductsOriginalRoute,
+  ProductsPodRoute: ProductsPodRoute,
+  ProductsRepackagedRoute: ProductsRepackagedRoute,
+  ProductsIndexRoute: ProductsIndexRoute,
+}
+
+const ProductsRouteRouteWithChildren = ProductsRouteRoute._addFileChildren(
+  ProductsRouteRouteChildren,
+)
+
+interface CardsSearchRouteRouteChildren {
+  CardsSearchAdvancedRoute: typeof CardsSearchAdvancedRoute
+  CardsSearchIndexRoute: typeof CardsSearchIndexRoute
+}
+
+const CardsSearchRouteRouteChildren: CardsSearchRouteRouteChildren = {
+  CardsSearchAdvancedRoute: CardsSearchAdvancedRoute,
+  CardsSearchIndexRoute: CardsSearchIndexRoute,
+}
+
+const CardsSearchRouteRouteWithChildren =
+  CardsSearchRouteRoute._addFileChildren(CardsSearchRouteRouteChildren)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/products': typeof ProductsRouteRouteWithChildren
+  '/cards/search': typeof CardsSearchRouteRouteWithChildren
   '/cards/$card-slug': typeof CardsCardSlugRoute
   '/products/$product-code': typeof ProductsProductCodeRoute
   '/products/nightmare': typeof ProductsNightmareRoute
   '/products/original': typeof ProductsOriginalRoute
   '/products/pod': typeof ProductsPodRoute
   '/products/repackaged': typeof ProductsRepackagedRoute
-  '/products': typeof ProductsIndexRoute
+  '/products/': typeof ProductsIndexRoute
   '/cards/search/advanced': typeof CardsSearchAdvancedRoute
-  '/cards/search': typeof CardsSearchIndexRoute
+  '/cards/search/': typeof CardsSearchIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -192,6 +257,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/products': typeof ProductsRouteRouteWithChildren
+  '/cards/search': typeof CardsSearchRouteRouteWithChildren
   '/cards/$card-slug': typeof CardsCardSlugRoute
   '/products/$product-code': typeof ProductsProductCodeRoute
   '/products/nightmare': typeof ProductsNightmareRoute
@@ -207,15 +274,17 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/products'
+    | '/cards/search'
     | '/cards/$card-slug'
     | '/products/$product-code'
     | '/products/nightmare'
     | '/products/original'
     | '/products/pod'
     | '/products/repackaged'
-    | '/products'
+    | '/products/'
     | '/cards/search/advanced'
-    | '/cards/search'
+    | '/cards/search/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -231,6 +300,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/products'
+    | '/cards/search'
     | '/cards/$card-slug'
     | '/products/$product-code'
     | '/products/nightmare'
@@ -245,28 +316,16 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ProductsRouteRoute: typeof ProductsRouteRouteWithChildren
+  CardsSearchRouteRoute: typeof CardsSearchRouteRouteWithChildren
   CardsCardSlugRoute: typeof CardsCardSlugRoute
-  ProductsProductCodeRoute: typeof ProductsProductCodeRoute
-  ProductsNightmareRoute: typeof ProductsNightmareRoute
-  ProductsOriginalRoute: typeof ProductsOriginalRoute
-  ProductsPodRoute: typeof ProductsPodRoute
-  ProductsRepackagedRoute: typeof ProductsRepackagedRoute
-  ProductsIndexRoute: typeof ProductsIndexRoute
-  CardsSearchAdvancedRoute: typeof CardsSearchAdvancedRoute
-  CardsSearchIndexRoute: typeof CardsSearchIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ProductsRouteRoute: ProductsRouteRouteWithChildren,
+  CardsSearchRouteRoute: CardsSearchRouteRouteWithChildren,
   CardsCardSlugRoute: CardsCardSlugRoute,
-  ProductsProductCodeRoute: ProductsProductCodeRoute,
-  ProductsNightmareRoute: ProductsNightmareRoute,
-  ProductsOriginalRoute: ProductsOriginalRoute,
-  ProductsPodRoute: ProductsPodRoute,
-  ProductsRepackagedRoute: ProductsRepackagedRoute,
-  ProductsIndexRoute: ProductsIndexRoute,
-  CardsSearchAdvancedRoute: CardsSearchAdvancedRoute,
-  CardsSearchIndexRoute: CardsSearchIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -280,46 +339,66 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/cards/$card-slug",
-        "/products/$product-code",
-        "/products/nightmare",
-        "/products/original",
-        "/products/pod",
-        "/products/repackaged",
-        "/products/",
-        "/cards/search/advanced",
-        "/cards/search/"
+        "/products",
+        "/cards/search",
+        "/cards/$card-slug"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
+    "/products": {
+      "filePath": "products/route.tsx",
+      "children": [
+        "/products/$product-code",
+        "/products/nightmare",
+        "/products/original",
+        "/products/pod",
+        "/products/repackaged",
+        "/products/"
+      ]
+    },
+    "/cards/search": {
+      "filePath": "cards/search/route.tsx",
+      "children": [
+        "/cards/search/advanced",
+        "/cards/search/"
+      ]
+    },
     "/cards/$card-slug": {
       "filePath": "cards/$card-slug.tsx"
     },
     "/products/$product-code": {
-      "filePath": "products/$product-code.tsx"
+      "filePath": "products/$product-code.tsx",
+      "parent": "/products"
     },
     "/products/nightmare": {
-      "filePath": "products/nightmare.tsx"
+      "filePath": "products/nightmare.tsx",
+      "parent": "/products"
     },
     "/products/original": {
-      "filePath": "products/original.tsx"
+      "filePath": "products/original.tsx",
+      "parent": "/products"
     },
     "/products/pod": {
-      "filePath": "products/pod.tsx"
+      "filePath": "products/pod.tsx",
+      "parent": "/products"
     },
     "/products/repackaged": {
-      "filePath": "products/repackaged.tsx"
+      "filePath": "products/repackaged.tsx",
+      "parent": "/products"
     },
     "/products/": {
-      "filePath": "products/index.tsx"
+      "filePath": "products/index.tsx",
+      "parent": "/products"
     },
     "/cards/search/advanced": {
-      "filePath": "cards/search/advanced.tsx"
+      "filePath": "cards/search/advanced.tsx",
+      "parent": "/cards/search"
     },
     "/cards/search/": {
-      "filePath": "cards/search/index.tsx"
+      "filePath": "cards/search/index.tsx",
+      "parent": "/cards/search"
     }
   }
 }

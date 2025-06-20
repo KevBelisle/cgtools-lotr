@@ -1,6 +1,6 @@
 import {
+  Button,
   createListCollection,
-  IconButton,
   IconButtonProps,
   Portal,
   Select,
@@ -10,31 +10,32 @@ import {
 import { useRouter } from "@tanstack/react-router";
 import { useCallback, useContext, useMemo } from "react";
 
-import { displayOptions } from "@/lotr/display-options";
+import { type DisplayOptionType } from "@/lotr/display-options";
 import { DisplayContext } from "../ui/display-provider";
 
 function SelectTrigger({
+  displayOption,
+  showLabel = false,
   ...props
-}: IconButtonProps & React.RefAttributes<HTMLButtonElement>) {
+}: { displayOption: DisplayOptionType; showLabel: boolean } & IconButtonProps &
+  React.RefAttributes<HTMLButtonElement>) {
   const select = useSelectContext();
-  const Icon = displayOptions[parseInt(select.value[0])].icon;
+  const Icon = displayOption.icon;
 
   return (
-    <IconButton
-      size="lg"
-      variant="subtle"
-      {...select.getTriggerProps()}
-      {...props}
-    >
-      <Icon />
-    </IconButton>
+    <Button size="lg" variant="subtle" {...select.getTriggerProps()} {...props}>
+      <Icon /> {showLabel ? displayOption.name : null}
+    </Button>
   );
 }
 
 export function DisplaySelect({
+  showLabel = false,
   ...props
-}: IconButtonProps & React.RefAttributes<HTMLButtonElement>) {
-  const [displayOption, setDisplayOption] = useContext(DisplayContext);
+}: { showLabel?: boolean } & IconButtonProps &
+  React.RefAttributes<HTMLButtonElement>) {
+  const [displayOption, setDisplayOption, displayOptions] =
+    useContext(DisplayContext);
   const router = useRouter();
 
   const onValueChange = useCallback(
@@ -72,7 +73,11 @@ export function DisplaySelect({
     >
       <Select.HiddenSelect />
       <Select.Control>
-        <SelectTrigger {...props} />
+        <SelectTrigger
+          displayOption={displayOption}
+          showLabel={showLabel}
+          {...props}
+        />
       </Select.Control>
       <Portal>
         <Select.Positioner>

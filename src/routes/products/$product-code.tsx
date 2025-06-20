@@ -1,3 +1,5 @@
+import { DisplaySelect } from "@/components/search/display-select";
+import { DisplayContext } from "@/components/ui/display-provider";
 import { Tag } from "@/components/ui/tag";
 import {
   cardBaseQuery,
@@ -6,6 +8,7 @@ import {
 } from "@/lotr/database-schema";
 import sphereData from "@/lotr/display/sphere-data";
 import { expansionIcons } from "@/lotr/expansion-icons";
+import type { Card as GameCard } from "@/lotr/lotr-schema";
 import { Card, lotrCardFromCardBaseQuery, Product } from "@/lotr/lotr-schema";
 import execCompiledQuery from "@/sqljs/exec-compiled-query";
 import {
@@ -18,10 +21,11 @@ import {
   HStack,
   Image,
   List,
+  SimpleGrid,
   Text,
 } from "@chakra-ui/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { memo, ReactNode, useContext, useMemo, useState } from "react";
 
 export const Route = createFileRoute("/products/$product-code")({
   component: RouteComponent,
@@ -109,6 +113,31 @@ export const Route = createFileRoute("/products/$product-code")({
 });
 
 const highlightColor = "teal.800";
+
+function CardResults({ cards }: { cards: GameCard[] }): ReactNode[] {
+  const [displayOption] = useContext(DisplayContext);
+  const DisplayComponent = displayOption.component;
+
+  return cards.map((card) => {
+    return (
+      <DisplayComponent
+        key={card.Slug}
+        card={card}
+        maxWidth="calc(100vw - 2 * var(--chakra-spacing-4))"
+      />
+    );
+  });
+}
+
+const MemoizedCardResults = memo(CardResults, (prevProps, nextProps) => {
+  // Only re-render if the cards array has changed
+  return (
+    prevProps.cards.length == nextProps.cards.length &&
+    prevProps.cards.every(
+      (card, index) => card.Slug === nextProps.cards[index]?.Slug,
+    )
+  );
+});
 
 function generateCardRows(card: Card, product: Product, highlighted: boolean) {
   const { SphereIcon } = sphereData(card.Front.Sphere);
@@ -348,6 +377,8 @@ function RouteComponent() {
   const { product, cards, reprintedCardCount, reprintedCardDistribution } =
     Route.useLoaderData();
 
+  const [displayOption] = useContext(DisplayContext);
+
   const ProductIcon = product.ExpansionSymbol
     ? expansionIcons[product.ExpansionSymbol]
     : null;
@@ -399,7 +430,7 @@ function RouteComponent() {
       >
         <Image
           objectFit="contain"
-          alignSelf="center"
+          alignSelf="flex-start"
           src={`./product-images/${product.Code.toLowerCase()}_main.png`}
           aspectRatio={1}
           padding={2}
@@ -445,20 +476,43 @@ function RouteComponent() {
         </Box>
       </Box>
 
-      <Grid
-        templateColumns="repeat(1, max-content max-content 1fr)"
-        templateRows="auto"
-        lg={{
-          gridTemplateColumns: "repeat(2, max-content max-content 1fr)",
-          gridTemplateRows: `repeat(${columnBreak}, auto)`,
-          gridAutoFlow: "column",
-        }}
-        gapX={2}
-        gapY={2}
-        alignItems="baseline"
+      <Alert.Root
+        status="info"
+        colorPalette={"sand"}
+        variant="surface"
+        p={"1px"}
+        pl={4}
+        display="flex"
+        justifyContent="flex-end"
+        alignItems="center"
+        alignSelf="flex-end"
+        width="fit-content"
+        mb={-4}
       >
-        {cardRows}
-      </Grid>
+        <Text>View as: </Text>
+        <DisplaySelect showLabel={true} size="sm" />
+      </Alert.Root>
+
+      {displayOption.name === "Card list" ? (
+        <Grid
+          templateColumns="repeat(1, max-content max-content 1fr)"
+          templateRows="auto"
+          lg={{
+            gridTemplateColumns: "repeat(2, max-content max-content 1fr)",
+            gridTemplateRows: `repeat(${columnBreak}, auto)`,
+            gridAutoFlow: "column",
+          }}
+          gapX={2}
+          gapY={2}
+          alignItems="baseline"
+        >
+          {cardRows}
+        </Grid>
+      ) : (
+        <SimpleGrid gap="6" minChildWidth={displayOption.minWidth ?? "450px"}>
+          <MemoizedCardResults cards={cards} />
+        </SimpleGrid>
+      )}
     </Container>
   );
 }

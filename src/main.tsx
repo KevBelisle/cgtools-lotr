@@ -6,10 +6,7 @@ import {
 import { StrictMode, useCallback, useContext } from "react";
 import ReactDOM from "react-dom/client";
 
-import {
-  SearchFilterContext,
-  SearchFilterProvider,
-} from "@/components/ui/advanced-filters-provider";
+import { SearchFilterContext } from "@/components/ui/advanced-filters-provider";
 import { ChakraProvider } from "@/components/ui/chakra-provider";
 import {
   SqljsDbContext,
@@ -17,16 +14,9 @@ import {
   SqljsProvider,
 } from "@/sqljs/sqljs-provider";
 
-import { DisplayOptionProvider } from "@/components/ui/display-provider";
 import Loading from "@/components/ui/loading";
-import {
-  SortOrderContext,
-  SortOrderProvider,
-} from "@/components/ui/sort-order-provider";
-import {
-  RCOOnlyFilterContext,
-  RCOOnlyFilterProvider,
-} from "@/lotr/rco-filter-provider";
+import { SortOrderContext } from "@/components/ui/sort-order-provider";
+import { RCOOnlyFilterContext } from "@/lotr/rco-filter-provider";
 import { routeTree } from "./routeTree.gen";
 import "./styles.css";
 
@@ -87,15 +77,7 @@ const App = () => {
       <ChakraProvider>
         <SqljsProvider>
           <SqljsDbProvider dbUrl={"lotr_lcg.db"} loading={loading}>
-            <RCOOnlyFilterProvider>
-              <SearchFilterProvider>
-                <SortOrderProvider>
-                  <DisplayOptionProvider>
-                    <RouterProvider />
-                  </DisplayOptionProvider>
-                </SortOrderProvider>
-              </SearchFilterProvider>
-            </RCOOnlyFilterProvider>
+            <RouterProvider />
           </SqljsDbProvider>
         </SqljsProvider>
       </ChakraProvider>
