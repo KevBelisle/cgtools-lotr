@@ -1,5 +1,12 @@
 import { config } from "@/lotr/config";
-import { Button, Container, HStack, Heading, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  Link as ChakraLink,
+  Container,
+  HStack,
+  Heading,
+  VStack,
+} from "@chakra-ui/react";
 //import { CustomButtonLink } from "./customButtonLink";
 
 import ReloadPrompt from "@/components/ui/reload-prompt";
@@ -9,7 +16,7 @@ import {
   useRouter,
   useRouterState,
 } from "@tanstack/react-router";
-import { LuChevronLeft } from "react-icons/lu";
+import { LuChevronLeft, LuExternalLink } from "react-icons/lu";
 import { CustomButtonLink } from "./custom-button-link";
 
 export default function NavBar() {
@@ -38,6 +45,16 @@ export default function NavBar() {
             </Link>
           </VStack>
           <HStack gap={4}>
+            <ChakraLink
+              href="https://old.lotr.cardgame.tools"
+              target="_blank"
+              rel="noopener noreferrer"
+              fontSize="xs"
+              color="orange.300"
+              mx={4}
+            >
+              Old Site <LuExternalLink />
+            </ChakraLink>
             <CustomButtonLink
               to="/cards/search"
               search={{ query: "" }}
