@@ -58,8 +58,12 @@ export const Route = createFileRoute("/products/$product-code")({
     )
       .map(lotrCardFromCardBaseQuery)
       .map((card) => {
-        card.ProductCards = card.ProductCards.filter(
-          (pc) => pc.Product.Code === params["product-code"],
+        card.ProductCards = card.ProductCards.sort((a, b) =>
+          a.Product.Code === params["product-code"]
+            ? -1
+            : b.Product.Code === params["product-code"]
+              ? 1
+              : 0,
         );
         return card;
       })
