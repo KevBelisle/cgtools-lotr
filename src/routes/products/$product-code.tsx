@@ -69,8 +69,6 @@ export const Route = createFileRoute("/products/$product-code")({
           aNumber.localeCompare(bNumber, "en", { numeric: true }) ||
           aBackNumber.localeCompare(bBackNumber, "en", { numeric: true })
         );
-
-        //return parseInt(aNumber) - parseInt(bNumber);
       });
 
     const reprintedCardCount = execCompiledQuery(
