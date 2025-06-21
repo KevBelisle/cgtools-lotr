@@ -24,6 +24,7 @@ import Threat from "@/lotr/icons/game icons/Threat.svg?react";
 import Willpower from "@/lotr/icons/game icons/Willpower.svg?react";
 
 import Unique from "@/lotr/icons/game icons/Unique.svg?react";
+import { Fragment } from "react";
 
 export function CardSideInfo({
   cardSide,
@@ -271,8 +272,8 @@ export function CardSideInfo({
             <Text textWrap={"pretty"}>
               {cardSide.Text.split(/[\n\r]+/)
                 .flatMap((str, index) => [
-                  formatCardText(str),
-                  <br key={index} style={{ marginBottom: "0.5rem" }} />,
+                  <Fragment key={`${index}-0`}>{formatCardText(str)}</Fragment>,
+                  <br key={`${index}-1`} style={{ marginBottom: "0.5rem" }} />,
                 ])
                 .slice(0, -1)}
             </Text>
@@ -287,8 +288,8 @@ export function CardSideInfo({
               <b>Shadow:</b>{" "}
               {cardSide.ShadowEffect.split(/[\n\r]+/)
                 .flatMap((str, index) => [
-                  formatCardText(str),
-                  <br key={index} style={{ marginBottom: "0.5rem" }} />,
+                  <Fragment key={`${index}-0`}>{str}</Fragment>,
+                  <br key={`${index}-1`} style={{ marginBottom: "0.5rem" }} />,
                 ])
                 .slice(0, -1)}
             </Text>
@@ -313,8 +314,8 @@ export function CardSideInfo({
             <Text textWrap={"pretty"} fontStyle={"italic"}>
               {cardSide.FlavorText.split(/[\n\r]+/)
                 .flatMap((str, index) => [
-                  str,
-                  <br key={index} style={{ marginBottom: "0.5rem" }} />,
+                  <Fragment key={`${index}-0`}>{str}</Fragment>,
+                  <br key={`${index}-1`} style={{ marginBottom: "0.5rem" }} />,
                 ])
                 .slice(0, -1)}
             </Text>

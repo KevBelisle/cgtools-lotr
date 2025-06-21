@@ -1,3 +1,4 @@
+import { Fragment, ReactNode } from "react";
 import regexifyString from "regexify-string";
 
 import Baggins from "@/lotr/icons/game icons/Baggins.svg?react";
@@ -138,18 +139,22 @@ const textReplacements = [
 ];
 
 const formatCardText = (text: string) => {
-  let output: (string | Element)[] = [text];
+  let output: (string | ReactNode)[] = [text];
 
   textReplacements.forEach(({ pattern, replacement }) => {
     output = output.flatMap((part) => {
-      if (typeof part !== "string") return [part] as (string | Element)[];
+      if (typeof part !== "string") return [part] as (string | ReactNode)[];
 
       return regexifyString({
         pattern,
         decorator: () => replacement,
         input: part,
-      }) as (string | Element)[];
+      }) as (string | ReactNode)[];
     });
+  });
+
+  output = output.map((part, index) => {
+    return <Fragment key={index}>{part}</Fragment>;
   });
 
   return <>{output}</>;
