@@ -16,7 +16,10 @@ import {
 
 import Loading from "@/components/ui/loading";
 import { SortOrderContext } from "@/components/ui/sort-order-provider";
-import { RCOOnlyFilterContext } from "@/lotr/rco-filter-provider";
+import {
+  RCOOnlyFilterContext,
+  RCOOnlyFilterProvider,
+} from "@/lotr/rco-filter-provider";
 import { routeTree } from "./routeTree.gen";
 import "./styles.css";
 
@@ -77,7 +80,9 @@ const App = () => {
       <ChakraProvider>
         <SqljsProvider>
           <SqljsDbProvider dbUrl={"lotr_lcg.db"} loading={loading}>
-            <RouterProvider />
+            <RCOOnlyFilterProvider>
+              <RouterProvider />
+            </RCOOnlyFilterProvider>
           </SqljsDbProvider>
         </SqljsProvider>
       </ChakraProvider>
