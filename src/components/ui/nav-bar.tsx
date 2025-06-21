@@ -1,5 +1,6 @@
 import { config } from "@/lotr/config";
 import {
+  Box,
   Button,
   Link as ChakraLink,
   Container,
@@ -35,8 +36,8 @@ export default function NavBar() {
         color="white"
         mb={2}
       >
-        <HStack justifyContent={"space-between"} py={2}>
-          <VStack alignItems={"flex-start"} gap={0}>
+        <Box overflow="auto" py={2}>
+          <VStack alignItems={"flex-start"} gap={0} float="left">
             <Link to="/cards/search" search={{ query: "" }}>
               <Heading as="h1">{config.gameName}</Heading>
               <Heading as="h2" size="xs" fontWeight={200}>
@@ -44,7 +45,7 @@ export default function NavBar() {
               </Heading>
             </Link>
           </VStack>
-          <HStack gap={4}>
+          <HStack gap={4} float="right" height="46px">
             <ChakraLink
               href="https://old.lotr.cardgame.tools"
               target="_blank"
@@ -75,7 +76,7 @@ export default function NavBar() {
             </CustomButtonLink>
             <ReloadPrompt />
           </HStack>
-        </HStack>
+        </Box>
       </Container>
 
       {canGoBack && location !== "/cards/search" && location !== "/products" ? (
