@@ -79,8 +79,6 @@ export const Route = createFileRoute("/products/$product-code")({
 
         // Annoying workaround for the TPLES that has 2 copies of Gandalf, with different numbers...
         if ((currentProductCards ?? []).length > 1) {
-          debugger;
-
           let { alreadySeen, notYetSeen } = Object.groupBy(
             currentProductCards ?? [],
             (pc) =>
@@ -171,7 +169,7 @@ function CardResults({
 
     return (
       <DisplayComponent
-        key={card.Slug}
+        key={`${card.Slug}-${card.ProductCards[0].Number}`}
         card={card}
         maxWidth="calc(100vw - 2 * var(--chakra-spacing-4))"
         highlighted={highlighted}
@@ -206,7 +204,7 @@ function generateCardRows(card: Card, product: Product, highlighted: boolean) {
     <GridItem
       display="grid"
       gridTemplateColumns="subgrid"
-      key={card.Slug}
+      key={`${card.Slug}-${card.ProductCards[0].Number}`}
       gridColumnStart="span 3"
       alignItems="baseline"
     >
