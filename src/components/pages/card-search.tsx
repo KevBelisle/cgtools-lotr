@@ -9,14 +9,13 @@ import {
   IconButton,
   SimpleGrid,
 } from "@chakra-ui/react";
-import { ReactNode, useNavigate, useRouter } from "@tanstack/react-router";
+import { ReactNode, useNavigate } from "@tanstack/react-router";
 import { memo, useCallback, useContext } from "react";
 import { LuFilter } from "react-icons/lu";
 import { DisplaySelect } from "../search/display-select";
 import { OrderSelect } from "../search/sort-select";
 import { SearchFilterContext } from "../ui/advanced-filters-provider";
 import { DisplayContext } from "../ui/display-provider";
-import { SortOrderContext } from "../ui/sort-order-provider";
 
 function CardResults({ cards }: { cards: GameCard[] }): ReactNode[] {
   const [displayOption] = useContext(DisplayContext);
@@ -47,7 +46,7 @@ export const CardSearch = ({
   query,
   setQuery,
   cards,
-  nextPage,
+  //nextPage,
 }: {
   query: string;
   setQuery: (query: string) => void;
@@ -56,8 +55,8 @@ export const CardSearch = ({
 }) => {
   const [displayOption] = useContext(DisplayContext);
   const [RCOOnlyFilter] = useContext(RCOOnlyFilterContext);
-  const [sortOrder] = useContext(SortOrderContext);
-  const router = useRouter();
+  //const [sortOrder] = useContext(SortOrderContext);
+  //const router = useRouter();
 
   const onChange = useCallback((e: any) => setQuery(e.target.value), []);
   const navigate = useNavigate();

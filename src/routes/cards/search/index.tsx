@@ -166,7 +166,7 @@ function CardSearchRouteComponent() {
     setQuery(query);
     debouncedNavigate({
       search: (prev: any) => {
-        return { ...prev, query: query };
+        return { ...prev, query: query, page: "1" };
       },
       replace: true,
     });
