@@ -82,6 +82,11 @@ export const CardImages = memo(
         />
         <Image
           src={backImageUrl}
+          filter={
+            card.Back?.Title
+              ? ""
+              : "brightness(0.85) contrast(0.85) saturate(0.85)"
+          }
           alt={card.Back?.Title ?? "Back of card"}
           bg={"night.800"}
           width={width}
