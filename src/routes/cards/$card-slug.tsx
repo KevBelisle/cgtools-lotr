@@ -2,7 +2,7 @@ import { cardBaseQuery, CardBaseQueryResult } from "@/lotr/database-schema";
 import FullCard from "@/lotr/display/full-card";
 import { Card, lotrCardFromCardBaseQuery } from "@/lotr/lotr-schema";
 import execCompiledQuery from "@/sqljs/exec-compiled-query";
-import { Container, HStack, Image } from "@chakra-ui/react";
+import { Link as ChakraLink, Container, HStack, Image } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/cards/$card-slug")({
@@ -79,36 +79,67 @@ function RouteComponent() {
   return (
     <Container py={8}>
       <HStack justifyContent={"space-around"} mb={8} flexWrap="wrap">
-        <Image
-          src={`https://images.cardgame.tools/lotr/sm/${card.ProductCards[0]?.FrontImageUrl}`}
-          alt={card.Front.Title}
-          bg={"night.800"}
-          width={width}
-          maxWidth={maxWidth}
-          height={height}
-          maxHeight={maxHeight}
-          aspectRatio={aspectRatio}
-          borderRadius={borderRadius}
-          borderWidth={3}
-          borderStyle={"solid"}
-          borderColor={"night.800"}
-          transform={frontTransform}
-        />
-        <Image
-          src={backImageUrl}
-          alt={card.Back?.Title ?? "Back of card"}
-          bg={"night.800"}
-          width={width}
-          maxWidth={maxWidth}
-          height={height}
-          maxHeight={maxHeight}
-          aspectRatio={aspectRatio}
-          borderRadius={borderRadius}
-          borderWidth={3}
-          borderStyle={"solid"}
-          borderColor={"night.800"}
-          transform={backTransform}
-        />
+        <ChakraLink
+          target="_blank"
+          href={`https://images.cardgame.tools/lotr/${card.ProductCards[0]?.FrontImageUrl}`}
+          cursor="zoom-in"
+        >
+          <Image
+            src={`https://images.cardgame.tools/lotr/sm/${card.ProductCards[0]?.FrontImageUrl}`}
+            alt={card.Front.Title}
+            bg={"night.800"}
+            width={width}
+            maxWidth={maxWidth}
+            height={height}
+            maxHeight={maxHeight}
+            aspectRatio={aspectRatio}
+            borderRadius={borderRadius}
+            borderWidth={3}
+            borderStyle={"solid"}
+            borderColor={"night.800"}
+            transform={frontTransform}
+          />
+        </ChakraLink>
+
+        {card.ProductCards[0].BackImageUrl ? (
+          <ChakraLink
+            target="_blank"
+            href={`https://images.cardgame.tools/lotr/${card.ProductCards[0]?.BackImageUrl}`}
+            cursor="zoom-in"
+          >
+            <Image
+              src={backImageUrl}
+              alt={card.Back?.Title ?? "Back of card"}
+              bg={"night.800"}
+              width={width}
+              maxWidth={maxWidth}
+              height={height}
+              maxHeight={maxHeight}
+              aspectRatio={aspectRatio}
+              borderRadius={borderRadius}
+              borderWidth={3}
+              borderStyle={"solid"}
+              borderColor={"night.800"}
+              transform={backTransform}
+            />
+          </ChakraLink>
+        ) : (
+          <Image
+            src={backImageUrl}
+            alt={card.Back?.Title ?? "Back of card"}
+            bg={"night.800"}
+            width={width}
+            maxWidth={maxWidth}
+            height={height}
+            maxHeight={maxHeight}
+            aspectRatio={aspectRatio}
+            borderRadius={borderRadius}
+            borderWidth={3}
+            borderStyle={"solid"}
+            borderColor={"night.800"}
+            transform={backTransform}
+          />
+        )}
       </HStack>
       <FullCard key={card.Slug} card={card} />
     </Container>
