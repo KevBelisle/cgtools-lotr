@@ -14,6 +14,9 @@ import {
   SqljsProvider,
 } from "@/sqljs/sqljs-provider";
 
+import { SearchFilterProvider } from "@/components/ui/advanced-filters-provider";
+import { SortOrderProvider } from "@/components/ui/sort-order-provider";
+
 import Loading from "@/components/ui/loading";
 import { SortOrderContext } from "@/components/ui/sort-order-provider";
 import {
@@ -81,7 +84,11 @@ const App = () => {
         <SqljsProvider>
           <SqljsDbProvider dbUrl={"lotr_lcg.db"} loading={loading}>
             <RCOOnlyFilterProvider>
-              <RouterProvider />
+              <SearchFilterProvider>
+                <SortOrderProvider>
+                  <RouterProvider />
+                </SortOrderProvider>
+              </SearchFilterProvider>
             </RCOOnlyFilterProvider>
           </SqljsDbProvider>
         </SqljsProvider>

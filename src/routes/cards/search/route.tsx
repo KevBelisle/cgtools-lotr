@@ -1,8 +1,6 @@
-import { SearchFilterProvider } from "@/components/ui/advanced-filters-provider";
-import { DisplayOptionProvider } from "@/components/ui/display-provider";
-import { SortOrderProvider } from "@/components/ui/sort-order-provider";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 
+import { DisplayOptionProvider } from "@/components/ui/display-provider";
 import { displayOptions } from "@/lotr/display-options";
 
 export const Route = createFileRoute("/cards/search")({
@@ -11,15 +9,11 @@ export const Route = createFileRoute("/cards/search")({
 
 function RouteComponent() {
   return (
-    <SearchFilterProvider>
-      <SortOrderProvider>
-        <DisplayOptionProvider
-          displayOptions={displayOptions}
-          persistedStateKey="cards-display-option"
-        >
-          <Outlet />
-        </DisplayOptionProvider>
-      </SortOrderProvider>
-    </SearchFilterProvider>
+    <DisplayOptionProvider
+      displayOptions={displayOptions}
+      persistedStateKey="cards-display-option"
+    >
+      <Outlet />
+    </DisplayOptionProvider>
   );
 }
