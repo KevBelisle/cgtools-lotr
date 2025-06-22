@@ -21,7 +21,9 @@ export default defineConfig({
       registerType: "prompt",
       workbox: {
         maximumFileSizeToCacheInBytes: 7.5 * 1024 * 1024, // 7.5MB
-        globPatterns: ["**/*.{js,css,html,db,sqlite3,wasm}"],
+        globPatterns: [
+          "**/*.{js,css,html,db,sqlite3,wasm,woff,woff2,svg,png,jpg,jpeg,ico}",
+        ],
       },
       devOptions: {
         enabled: true,
