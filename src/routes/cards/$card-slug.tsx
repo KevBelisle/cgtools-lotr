@@ -29,18 +29,17 @@ function RouteComponent() {
 
   const isEncounterCard =
     ([
-      "QUEST",
-      "ENEMY",
-      "SHIP_ENEMY",
-      "LOCATION",
-      "TREACHERY",
-      "ENCOUNTER_SIDE_QUEST",
-      "CAVE",
-      "OBJECTIVE",
-      "OBJECTIVE_HERO",
-      "OBJECTIVE_ALLY",
-      "OBJECTIVE_LOCATION",
-      "SHIP_OBJECTIVE",
+      "Quest",
+      "Enemy",
+      "ShipEnemy",
+      "Location",
+      "Treachery",
+      "EncounterSideQuest",
+      "Objective",
+      "ObjectiveHero",
+      "ObjectiveAlly",
+      "ObjectiveLocation",
+      "ShipObjective",
     ].includes(card.Front.Type) ||
       card.Front.Keywords?.includes("Encounter.")) &&
     !card.Front.Text.includes("functions like a player card");
