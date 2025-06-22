@@ -9,7 +9,6 @@ import { useState } from "react";
 
 type TitleSearch = {
   query: string;
-  page: number;
 };
 
 const pageSize = 30;
@@ -20,14 +19,13 @@ export const Route = createFileRoute("/cards/search/")({
   validateSearch: (search: Record<string, unknown>): TitleSearch => {
     return {
       query: search.query as string,
-      page: search.page ? Number(search.page) : 1,
     };
   },
-  loaderDeps: ({ search: { query, page } }) => ({ query, page }),
+  loaderDeps: ({ search: { query } }) => ({ query }),
   staleTime: 0,
   preloadStaleTime: 0,
 
-  loader: async ({ context, deps: { query: titleSearch, page: page } }) => {
+  loader: async ({ context, deps: { query: titleSearch } }) => {
     const searchFilters = context.searchFilterContext[0];
     const sortOrder = context.sortOrderContext[0];
     const rcoOnly = context.rcoOnlyFilterContext[0];
@@ -128,10 +126,7 @@ export const Route = createFileRoute("/cards/search/")({
       );
     }
 
-    const compiledQuery = filteredQuery
-      .offset(pageSize * (page - 1))
-      .limit(pageSize)
-      .compile();
+    const compiledQuery = filteredQuery.limit(pageSize).compile();
 
     const queryResults = execCompiledQuery(
       compiledQuery,
@@ -166,29 +161,15 @@ function CardSearchRouteComponent() {
     setQuery(query);
     debouncedNavigate({
       search: (prev: any) => {
-        return { ...prev, query: query, page: "1" };
+        return { ...prev, query: query };
       },
       replace: true,
     });
   };
 
-  const nextPage = () => {
-    debouncedNavigate({
-      search: (prev: any) => {
-        return { ...prev, page: prev.page + 1 };
-      },
-      replace: false,
-    });
-  };
-
   return (
     <>
-      <CardSearch
-        query={query}
-        setQuery={rawSetQuery}
-        cards={cards}
-        nextPage={nextPage}
-      />
+      <CardSearch query={query} setQuery={rawSetQuery} cards={cards} />
     </>
   );
 }

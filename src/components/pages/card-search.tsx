@@ -46,12 +46,10 @@ export const CardSearch = ({
   query,
   setQuery,
   cards,
-  //nextPage,
 }: {
   query: string;
   setQuery: (query: string) => void;
   cards: GameCard[];
-  nextPage: () => void;
 }) => {
   const [displayOption] = useContext(DisplayContext);
   const [RCOOnlyFilter] = useContext(RCOOnlyFilterContext);
@@ -137,26 +135,6 @@ export const CardSearch = ({
         <SimpleGrid gap="6" minChildWidth={displayOption.minWidth ?? "450px"}>
           <MemoizedCardResults cards={cards} />
         </SimpleGrid>
-
-        {/*cards.length > 0 &&
-          (sortOrder === "Random" ? (
-            <Button
-              variant="outline"
-              colorScheme="teal"
-              onClick={() => router.invalidate()}
-            >
-              Shuffle cards <LuDices />
-            </Button>
-          ) : (
-            <Button
-              variant="outline"
-              colorScheme="teal"
-              onClick={nextPage}
-              disabled={cards.length < 30}
-            >
-              Next page <LuMoveRight />
-            </Button>
-          ))*/}
       </Container>
     </>
   );

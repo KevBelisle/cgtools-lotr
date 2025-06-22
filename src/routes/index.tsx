@@ -5,11 +5,5 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  return (
-    <Navigate
-      to="/cards/search"
-      search={{ query: "", page: 1 }}
-      replace={true}
-    />
-  );
+  return <Navigate to="/cards/search" search={{ query: "" }} replace={true} />;
 }

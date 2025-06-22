@@ -38,7 +38,7 @@ export default function NavBar() {
       >
         <Box overflow="auto" py={2}>
           <VStack alignItems={"flex-start"} gap={0} float="left">
-            <Link to="/cards/search" search={{ query: "", page: 1 }}>
+            <Link to="/cards/search" search={{ query: "" }}>
               <Heading as="h1">{config.gameName}</Heading>
               <Heading as="h2" size="xs" fontWeight={200}>
                 by CardGame.Tools
@@ -58,7 +58,7 @@ export default function NavBar() {
             </ChakraLink>
             <CustomButtonLink
               to="/cards/search"
-              search={{ query: "", page: 1 }}
+              search={{ query: "" }}
               size="xs"
               variant={"surface"}
               preload={"intent"}
