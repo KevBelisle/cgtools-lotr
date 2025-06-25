@@ -21,34 +21,47 @@ export const CardImages = memo(
       backTransform = "rotate(-2deg) translate(0%, -25%)"; // Adjust transform for horizontal cards
     }
 
-    const isEncounterCard =
-      ([
-        "Quest",
-        "Enemy",
-        "ShipEnemy",
-        "Location",
-        "Treachery",
-        "EncounterSideQuest",
-        "Objective",
-        "ObjectiveHero",
-        "ObjectiveAlly",
-        "ObjectiveLocation",
-        "ShipObjective",
-      ].includes(card.Front.Type) ||
-        card.Front.Keywords?.includes("Encounter.")) &&
-      !card.Front.Text.includes("functions like a player card");
+    // const isEncounterCard =
+    //   ([
+    //     "Quest",
+    //     "Enemy",
+    //     "ShipEnemy",
+    //     "Location",
+    //     "Treachery",
+    //     "EncounterSideQuest",
+    //     "Objective",
+    //     "ObjectiveHero",
+    //     "ObjectiveAlly",
+    //     "ObjectiveLocation",
+    //     "ShipObjective",
+    //   ].includes(card.Front.Type) ||
+    //     card.Front.Keywords?.includes("Encounter.")) &&
+    //   !card.Front.Text.includes("functions like a player card");
+
+    // const backImageUrl = card.ProductCards[0].BackImageUrl
+    //   ? `https://images.cardgame.tools/lotr/sm/${card.ProductCards[0].BackImageUrl}`
+    //   : isEncounterCard
+    //     ? {
+    //         Horizontal: "./images/HorizontalEncounterBack.jpg",
+    //         Vertical: "./images/VerticalEncounterBack.jpg",
+    //       }[card.Front.Orientation]
+    //     : {
+    //         Horizontal: "./images/HorizontalPlayerBack.jpg",
+    //         Vertical: "./images/VerticalPlayerBack.jpg",
+    //       }[card.Front.Orientation];
 
     const backImageUrl = card.ProductCards[0].BackImageUrl
       ? `https://images.cardgame.tools/lotr/sm/${card.ProductCards[0].BackImageUrl}`
-      : isEncounterCard
-        ? {
+      : {
+          Encounter: {
             Horizontal: "./images/HorizontalEncounterBack.jpg",
             Vertical: "./images/VerticalEncounterBack.jpg",
-          }[card.Front.Orientation]
-        : {
+          },
+          Player: {
             Horizontal: "./images/HorizontalPlayerBack.jpg",
             Vertical: "./images/VerticalPlayerBack.jpg",
-          }[card.Front.Orientation];
+          },
+        }[card.StandardCardBack!][card.Front.Orientation];
 
     const highlighBackImageOnHover = !!card.ProductCards[0].BackImageUrl;
 

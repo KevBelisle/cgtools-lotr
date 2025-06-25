@@ -21,6 +21,7 @@ export interface CardTable {
   IsRCO: boolean;
   FrontSlug: string;
   BackSlug: string | null;
+  StandardCardBack: "Encounter" | "Player" | null;
 }
 
 export interface CardSideTable {
@@ -44,7 +45,7 @@ export interface CardSideTable {
   EngagementCost: number | null;
   ShadowEffect: string | null;
   MaxPerDeck: number | null;
-  Orientation: string;
+  Orientation: "Horizontal" | "Vertical";
   Sphere: string | null;
   Type: string;
   Direction: string | null;
@@ -99,6 +100,8 @@ export const cardBaseQuery = kysely
   .select((eb) => [
     "c.Slug as c.Slug",
     "c.IsRCO as c.IsRCO",
+    "c.StandardCardBack as c.StandardCardBack",
+
     "f.Slug as f.Slug",
     "f.Title as f.Title",
     "f.Text as f.Text",

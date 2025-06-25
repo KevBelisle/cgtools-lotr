@@ -21,7 +21,7 @@ export type CardSide = {
   EngagementCost: number | null;
   ShadowEffect: string | null;
   MaxPerDeck: number | null;
-  Orientation: string;
+  Orientation: "Horizontal" | "Vertical";
   Sphere: string | null;
   Type: string;
   Direction: string | null;
@@ -54,6 +54,7 @@ export type ProductCard = {
 export type Card = {
   Slug: string;
   IsRCO: boolean;
+  StandardCardBack: "Encounter" | "Player" | null;
   Front: CardSide;
   Back: CardSide | null;
   ProductCards: ProductCard[];
@@ -63,6 +64,7 @@ export function lotrCardFromCardBaseQuery(card: CardBaseQueryResult): Card {
   return {
     Slug: card["c.Slug"],
     IsRCO: card["c.IsRCO"] ?? false,
+    StandardCardBack: card["c.StandardCardBack"],
     Front: {
       Slug: card["f.Slug"]!,
       Title: card["f.Title"]!,

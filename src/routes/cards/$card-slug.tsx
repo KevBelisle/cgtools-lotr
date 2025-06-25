@@ -27,34 +27,47 @@ export const Route = createFileRoute("/cards/$card-slug")({
 function RouteComponent() {
   const card = Route.useLoaderData();
 
-  const isEncounterCard =
-    ([
-      "Quest",
-      "Enemy",
-      "ShipEnemy",
-      "Location",
-      "Treachery",
-      "EncounterSideQuest",
-      "Objective",
-      "ObjectiveHero",
-      "ObjectiveAlly",
-      "ObjectiveLocation",
-      "ShipObjective",
-    ].includes(card.Front.Type) ||
-      card.Front.Keywords?.includes("Encounter.")) &&
-    !card.Front.Text.includes("functions like a player card");
+  // const isEncounterCard =
+  //   ([
+  //     "Quest",
+  //     "Enemy",
+  //     "ShipEnemy",
+  //     "Location",
+  //     "Treachery",
+  //     "EncounterSideQuest",
+  //     "Objective",
+  //     "ObjectiveHero",
+  //     "ObjectiveAlly",
+  //     "ObjectiveLocation",
+  //     "ShipObjective",
+  //   ].includes(card.Front.Type) ||
+  //     card.Front.Keywords?.includes("Encounter.")) &&
+  //   !card.Front.Text.includes("functions like a player card");
+
+  // const backImageUrl = card.ProductCards[0].BackImageUrl
+  //   ? `https://images.cardgame.tools/lotr/sm/${card.ProductCards[0].BackImageUrl}`
+  //   : isEncounterCard
+  //     ? {
+  //         Horizontal: "./images/HorizontalEncounterBack.jpg",
+  //         Vertical: "./images/VerticalEncounterBack.jpg",
+  //       }[card.Front.Orientation]
+  //     : {
+  //         Horizontal: "./images/HorizontalPlayerBack.jpg",
+  //         Vertical: "./images/VerticalPlayerBack.jpg",
+  //       }[card.Front.Orientation];
 
   const backImageUrl = card.ProductCards[0].BackImageUrl
     ? `https://images.cardgame.tools/lotr/sm/${card.ProductCards[0].BackImageUrl}`
-    : isEncounterCard
-      ? {
+    : {
+        Encounter: {
           Horizontal: "./images/HorizontalEncounterBack.jpg",
           Vertical: "./images/VerticalEncounterBack.jpg",
-        }[card.Front.Orientation]
-      : {
+        },
+        Player: {
           Horizontal: "./images/HorizontalPlayerBack.jpg",
           Vertical: "./images/VerticalPlayerBack.jpg",
-        }[card.Front.Orientation];
+        },
+      }[card.StandardCardBack!][card.Front.Orientation];
 
   let aspectRatio = 2.5 / 3.5; // Default for vertical cards
   let borderRadius = "4.2% / 3%"; // Default border radius
