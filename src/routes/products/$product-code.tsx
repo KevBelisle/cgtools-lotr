@@ -21,6 +21,7 @@ import {
   HStack,
   Image,
   List,
+  Separator,
   SimpleGrid,
   Text,
 } from "@chakra-ui/react";
@@ -349,6 +350,7 @@ function ReprintedCardsNotice({
         ProductCode: item.ProductCode,
         Cycle: item.Cycle,
         Type: item.Type,
+        IsRepackage: item.IsRepackage,
         count: 0,
       };
       acc[item.ProductCode].count += 1;
@@ -365,6 +367,18 @@ function ReprintedCardsNotice({
         count: number;
       }
     >,
+  );
+  const groupedReprintedCardList = Object.values(
+    Object.groupBy(
+      Object.values(reprintedCardList),
+      (item) => (item.IsRepackage && "Repackaged") || item.Cycle || "Other",
+    ),
+  );
+
+  const sortedGroupedReprintedCardList = groupedReprintedCardList.sort(
+    (a, b) =>
+      (b?.reduce((acc, item) => acc + item.count, 0) ?? 0) -
+      (a?.reduce((acc, item) => acc + item.count, 0) ?? 0),
   );
 
   return (
@@ -400,50 +414,90 @@ function ReprintedCardsNotice({
             width="fit-content"
           >
             {reprintedCardCount} of its {cardCount} cards were included in
-            {isRepackage ? " original releases" : " repackaged content"}
-            {reprintedCardCount >= 1 ? ":" : "."}
+            {isRepackage ? " original releases" : " repackaged content"}.
           </Text>
-          <List.Root variant="marker" ml={4} mt="1" gap="1">
-            {Object.values(reprintedCardList)
-              .sort((a, b) => b.count - a.count)
-              .map((item) => {
-                return hightlightedProductCodes.some(
-                  (code) => code === item.ProductCode,
-                ) ? (
-                  <List.Item key={item.Name}>
-                    <Text
-                      onClick={() => setHighlightedProductCodes([])}
-                      fontWeight="semibold"
-                      bg={highlightColor}
-                      width="fit-content"
-                      py="0"
-                      px="1"
-                      borderRadius="sm"
-                    >
-                      {item.count} in {item.Name} ({item.Cycle})
-                    </Text>
-                  </List.Item>
-                ) : (
-                  <List.Item key={item.Name}>
-                    <Text
-                      onClick={() =>
-                        setHighlightedProductCodes([item.ProductCode])
-                      }
-                    >
-                      {item.count} in {item.Name}{" "}
-                      {item.Cycle && !item.IsRepackage && (
-                        <Text as="span" color="sand.500">
-                          {item.Type == "Nightmare_Expansion"
-                            ? " Nightmare Deck "
-                            : null}
-                          ({item.Cycle} cycle)
+          {reprintedCardCount >= 1 ? <Separator my={4} /> : null}
+          <Box columns="auto 24rem">
+            <List.Root variant="marker" ml={4} gap="1">
+              {sortedGroupedReprintedCardList!.map((group, index) => {
+                const children = group!
+                  .sort((a, b) => b.count - a.count)
+                  .map((item) => {
+                    return hightlightedProductCodes.some(
+                      (code) => code === item.ProductCode,
+                    ) ? (
+                      <List.Item
+                        key={item.Name}
+                        breakAfter="avoid"
+                        _last={{ breakAfter: "auto" }}
+                      >
+                        <Text
+                          onClick={() => setHighlightedProductCodes([])}
+                          fontWeight="semibold"
+                          bg={highlightColor}
+                          width="fit-content"
+                          py="0"
+                          px="1"
+                          borderRadius="sm"
+                        >
+                          {item.count} in {item.Name}{" "}
+                          {item.Type == "Nightmare_Expansion" ? (
+                            <Text as="span" color="sand.500">
+                              Nightmare Deck
+                            </Text>
+                          ) : (
+                            ""
+                          )}
                         </Text>
-                      )}
-                    </Text>
-                  </List.Item>
-                );
+                      </List.Item>
+                    ) : (
+                      <List.Item
+                        key={item.Name}
+                        breakAfter="avoid"
+                        _last={{ breakAfter: "auto" }}
+                      >
+                        <Text
+                          onClick={() =>
+                            setHighlightedProductCodes([item.ProductCode])
+                          }
+                        >
+                          {item.count} in {item.Name}{" "}
+                          {item.Type == "Nightmare_Expansion" ? (
+                            <Text as="span" color="sand.500">
+                              Nightmare Deck
+                            </Text>
+                          ) : (
+                            ""
+                          )}
+                        </Text>
+                      </List.Item>
+                    );
+                  });
+
+                if (group![0].Cycle && !group![0].IsRepackage) {
+                  return (
+                    <List.Item key={index}>
+                      <Text as="p" breakAfter="avoid">
+                        {group!.reduce((acc, item) => acc + item.count, 0)} in
+                        the {group![0].Cycle} cycle
+                      </Text>
+                      <List.Root
+                        variant="marker"
+                        ml={4}
+                        mt="1"
+                        gap="1"
+                        color="sand.300"
+                      >
+                        {children}
+                      </List.Root>
+                    </List.Item>
+                  );
+                } else {
+                  return <>{children}</>;
+                }
               })}
-          </List.Root>
+            </List.Root>
+          </Box>
         </Alert.Description>
       </Alert.Content>
     </Alert.Root>
