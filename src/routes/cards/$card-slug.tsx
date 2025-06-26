@@ -154,7 +154,7 @@ function RouteComponent() {
           />
         )}
       </HStack>
-      <FullCard key={card.Slug} card={card} />
+      <FullCard key={card.Slug} card={card} showBothSides={true} />
     </Container>
   );
 }

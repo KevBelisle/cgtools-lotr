@@ -1,6 +1,12 @@
 import { Tag } from "@/components/ui/tag";
 import { Card as GameCard } from "@/lotr/lotr-schema";
-import { Card, type HTMLChakraProps, List, Text } from "@chakra-ui/react";
+import {
+  Card,
+  type HTMLChakraProps,
+  List,
+  Separator,
+  Text,
+} from "@chakra-ui/react";
 import { Link } from "@tanstack/react-router";
 import { memo, useState } from "react";
 
@@ -12,16 +18,26 @@ export const FullCard = memo(
   ({
     card,
     highlighted,
+    showBothSides,
     ...rootProps
   }: {
     card: GameCard;
     highlighted?: boolean;
+    showBothSides?: boolean;
   } & HTMLChakraProps<"div">) => {
-    const [side, setSide] = useState("front" as "front" | "back");
+    let [side, setSide] = useState("front" as "front" | "back");
     const flipCard = () => {
       setSide((prevSide) => (prevSide === "front" ? "back" : "front"));
     };
-    const hasBack = !!card.Back?.Title;
+
+    let hasBack = !!card.Back?.Title;
+
+    if (hasBack && showBothSides) {
+      showBothSides = true;
+    } else {
+      showBothSides = false;
+    }
+
     const cardSide = side === "front" ? card.Front : card.Back!;
 
     const { backgroundColor, borderColor, SphereIcon } = sphereData(
@@ -42,15 +58,39 @@ export const FullCard = memo(
         }
         {...rootProps}
       >
-        <CardSideInfo
-          cardSide={cardSide}
-          cardSlug={card.Slug}
-          borderColor={borderColor}
-          SphereIcon={SphereIcon}
-          hasBack={hasBack}
-          onFlipCard={flipCard}
-          showFlavorText={true}
-        />
+        {showBothSides ? (
+          <>
+            <CardSideInfo
+              cardSide={card.Front}
+              cardSlug={card.Slug}
+              borderColor={borderColor}
+              SphereIcon={SphereIcon}
+              hasBack={false}
+              onFlipCard={flipCard}
+              showFlavorText={true}
+            />
+            <Separator />
+            <CardSideInfo
+              cardSide={card.Back!}
+              cardSlug={card.Slug}
+              borderColor={borderColor}
+              SphereIcon={SphereIcon}
+              hasBack={false}
+              onFlipCard={flipCard}
+              showFlavorText={true}
+            />
+          </>
+        ) : (
+          <CardSideInfo
+            cardSide={cardSide}
+            cardSlug={card.Slug}
+            borderColor={borderColor}
+            SphereIcon={SphereIcon}
+            hasBack={hasBack}
+            onFlipCard={flipCard}
+            showFlavorText={true}
+          />
+        )}
 
         <Card.Footer
           borderTopColor={borderColor}
