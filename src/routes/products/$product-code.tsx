@@ -61,14 +61,6 @@ export const Route = createFileRoute("/products/$product-code")({
 
     cardQueryResults = cardQueryResults
       .map((card) => {
-        // card.ProductCards = card.ProductCards.sort((a, b) =>
-        //   a.Product.Code === params["product-code"]
-        //     ? -1
-        //     : b.Product.Code === params["product-code"]
-        //       ? 1
-        //       : 0,
-        // );
-
         let { currentProductCards, otherProductsCards } = Object.groupBy(
           card.ProductCards,
           (pc) =>
@@ -93,6 +85,7 @@ export const Route = createFileRoute("/products/$product-code")({
             currentProductCards[0].Number,
           ];
         }
+        // End of annoying workaround
 
         card.ProductCards = [
           ...(currentProductCards ?? []),
@@ -136,7 +129,14 @@ export const Route = createFileRoute("/products/$product-code")({
         .where("pc.ProductCode", "=", params["product-code"])
         .where("pc2.ProductCode", "!=", params["product-code"])
         .where("p2.IsRepackage", "=", !isRepackage)
-        .select(["pc.CardSlug", "pc2.ProductCode", "p2.Name"])
+        .select([
+          "pc.CardSlug",
+          "pc2.ProductCode",
+          "p2.Name",
+          "p2.Cycle",
+          "p2.Type",
+          "p2.IsRepackage",
+        ])
         .compile(),
       context.sqljsDbContext.sqljsDb!,
     );
@@ -334,6 +334,9 @@ function ReprintedCardsNotice({
   reprintedCardDistribution: {
     CardSlug: string;
     ProductCode: string;
+    Cycle: string | null;
+    Type: string;
+    IsRepackage: boolean;
     Name: string;
   }[];
   hightlightedProductCodes: string[];
@@ -344,12 +347,24 @@ function ReprintedCardsNotice({
       acc[item.ProductCode] = acc[item.ProductCode] ?? {
         Name: item.Name,
         ProductCode: item.ProductCode,
+        Cycle: item.Cycle,
+        Type: item.Type,
         count: 0,
       };
       acc[item.ProductCode].count += 1;
       return acc;
     },
-    {} as Record<string, { Name: string; ProductCode: string; count: number }>,
+    {} as Record<
+      string,
+      {
+        Name: string;
+        ProductCode: string;
+        Cycle: string | null;
+        Type: string;
+        IsRepackage: boolean;
+        count: number;
+      }
+    >,
   );
 
   return (
@@ -405,7 +420,7 @@ function ReprintedCardsNotice({
                       px="1"
                       borderRadius="sm"
                     >
-                      {item.count} in {item.Name}
+                      {item.count} in {item.Name} ({item.Cycle})
                     </Text>
                   </List.Item>
                 ) : (
@@ -415,7 +430,15 @@ function ReprintedCardsNotice({
                         setHighlightedProductCodes([item.ProductCode])
                       }
                     >
-                      {item.count} in {item.Name}
+                      {item.count} in {item.Name}{" "}
+                      {item.Cycle && !item.IsRepackage && (
+                        <Text as="span" color="sand.500">
+                          {item.Type == "Nightmare_Expansion"
+                            ? " Nightmare Deck "
+                            : null}
+                          ({item.Cycle} cycle)
+                        </Text>
+                      )}
                     </Text>
                   </List.Item>
                 );
