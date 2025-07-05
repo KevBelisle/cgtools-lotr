@@ -62,7 +62,7 @@ export default defineConfig({
     }),
   ],
   build: {
-    target: "ES2022", // Enables top-level await
+    target: "ES2024", // Enables top-level await
     sourcemap: true, // Enable source maps for easier debugging
   },
 });

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
-    "lib": ["DOM", "DOM.Iterable", "DOM.AsyncIterable", "WebWorker", "ES2022"],
+    "lib": ["DOM", "DOM.Iterable", "DOM.AsyncIterable", "WebWorker", "ES2024"],
     "skipLibCheck": true,
     "target": "ESNext",
     "module": "ESNext",
