@@ -19,8 +19,11 @@ import { Route as ProductsPodImport } from './routes/products/pod'
 import { Route as ProductsOriginalImport } from './routes/products/original'
 import { Route as ProductsNightmareImport } from './routes/products/nightmare'
 import { Route as ProductsProductCodeImport } from './routes/products/$product-code'
+import { Route as GlossaryGlossaryTermImport } from './routes/glossary/$glossary-term'
 import { Route as CardsCardSlugImport } from './routes/cards/$card-slug'
+import { Route as GlossarySearchRouteImport } from './routes/glossary/search/route'
 import { Route as CardsSearchRouteImport } from './routes/cards/search/route'
+import { Route as GlossarySearchIndexImport } from './routes/glossary/search/index'
 import { Route as CardsSearchIndexImport } from './routes/cards/search/index'
 import { Route as CardsSearchAdvancedImport } from './routes/cards/search/advanced'
 
@@ -74,9 +77,21 @@ const ProductsProductCodeRoute = ProductsProductCodeImport.update({
   getParentRoute: () => ProductsRouteRoute,
 } as any)
 
+const GlossaryGlossaryTermRoute = GlossaryGlossaryTermImport.update({
+  id: '/glossary/$glossary-term',
+  path: '/glossary/$glossary-term',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const CardsCardSlugRoute = CardsCardSlugImport.update({
   id: '/cards/$card-slug',
   path: '/cards/$card-slug',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const GlossarySearchRouteRoute = GlossarySearchRouteImport.update({
+  id: '/glossary/search',
+  path: '/glossary/search',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -84,6 +99,12 @@ const CardsSearchRouteRoute = CardsSearchRouteImport.update({
   id: '/cards/search',
   path: '/cards/search',
   getParentRoute: () => rootRoute,
+} as any)
+
+const GlossarySearchIndexRoute = GlossarySearchIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => GlossarySearchRouteRoute,
 } as any)
 
 const CardsSearchIndexRoute = CardsSearchIndexImport.update({
@@ -123,11 +144,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CardsSearchRouteImport
       parentRoute: typeof rootRoute
     }
+    '/glossary/search': {
+      id: '/glossary/search'
+      path: '/glossary/search'
+      fullPath: '/glossary/search'
+      preLoaderRoute: typeof GlossarySearchRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/cards/$card-slug': {
       id: '/cards/$card-slug'
       path: '/cards/$card-slug'
       fullPath: '/cards/$card-slug'
       preLoaderRoute: typeof CardsCardSlugImport
+      parentRoute: typeof rootRoute
+    }
+    '/glossary/$glossary-term': {
+      id: '/glossary/$glossary-term'
+      path: '/glossary/$glossary-term'
+      fullPath: '/glossary/$glossary-term'
+      preLoaderRoute: typeof GlossaryGlossaryTermImport
       parentRoute: typeof rootRoute
     }
     '/products/$product-code': {
@@ -186,6 +221,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CardsSearchIndexImport
       parentRoute: typeof CardsSearchRouteImport
     }
+    '/glossary/search/': {
+      id: '/glossary/search/'
+      path: '/'
+      fullPath: '/glossary/search/'
+      preLoaderRoute: typeof GlossarySearchIndexImport
+      parentRoute: typeof GlossarySearchRouteImport
+    }
   }
 }
 
@@ -226,11 +268,24 @@ const CardsSearchRouteRouteChildren: CardsSearchRouteRouteChildren = {
 const CardsSearchRouteRouteWithChildren =
   CardsSearchRouteRoute._addFileChildren(CardsSearchRouteRouteChildren)
 
+interface GlossarySearchRouteRouteChildren {
+  GlossarySearchIndexRoute: typeof GlossarySearchIndexRoute
+}
+
+const GlossarySearchRouteRouteChildren: GlossarySearchRouteRouteChildren = {
+  GlossarySearchIndexRoute: GlossarySearchIndexRoute,
+}
+
+const GlossarySearchRouteRouteWithChildren =
+  GlossarySearchRouteRoute._addFileChildren(GlossarySearchRouteRouteChildren)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/products': typeof ProductsRouteRouteWithChildren
   '/cards/search': typeof CardsSearchRouteRouteWithChildren
+  '/glossary/search': typeof GlossarySearchRouteRouteWithChildren
   '/cards/$card-slug': typeof CardsCardSlugRoute
+  '/glossary/$glossary-term': typeof GlossaryGlossaryTermRoute
   '/products/$product-code': typeof ProductsProductCodeRoute
   '/products/nightmare': typeof ProductsNightmareRoute
   '/products/original': typeof ProductsOriginalRoute
@@ -239,11 +294,13 @@ export interface FileRoutesByFullPath {
   '/products/': typeof ProductsIndexRoute
   '/cards/search/advanced': typeof CardsSearchAdvancedRoute
   '/cards/search/': typeof CardsSearchIndexRoute
+  '/glossary/search/': typeof GlossarySearchIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cards/$card-slug': typeof CardsCardSlugRoute
+  '/glossary/$glossary-term': typeof GlossaryGlossaryTermRoute
   '/products/$product-code': typeof ProductsProductCodeRoute
   '/products/nightmare': typeof ProductsNightmareRoute
   '/products/original': typeof ProductsOriginalRoute
@@ -252,6 +309,7 @@ export interface FileRoutesByTo {
   '/products': typeof ProductsIndexRoute
   '/cards/search/advanced': typeof CardsSearchAdvancedRoute
   '/cards/search': typeof CardsSearchIndexRoute
+  '/glossary/search': typeof GlossarySearchIndexRoute
 }
 
 export interface FileRoutesById {
@@ -259,7 +317,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/products': typeof ProductsRouteRouteWithChildren
   '/cards/search': typeof CardsSearchRouteRouteWithChildren
+  '/glossary/search': typeof GlossarySearchRouteRouteWithChildren
   '/cards/$card-slug': typeof CardsCardSlugRoute
+  '/glossary/$glossary-term': typeof GlossaryGlossaryTermRoute
   '/products/$product-code': typeof ProductsProductCodeRoute
   '/products/nightmare': typeof ProductsNightmareRoute
   '/products/original': typeof ProductsOriginalRoute
@@ -268,6 +328,7 @@ export interface FileRoutesById {
   '/products/': typeof ProductsIndexRoute
   '/cards/search/advanced': typeof CardsSearchAdvancedRoute
   '/cards/search/': typeof CardsSearchIndexRoute
+  '/glossary/search/': typeof GlossarySearchIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -276,7 +337,9 @@ export interface FileRouteTypes {
     | '/'
     | '/products'
     | '/cards/search'
+    | '/glossary/search'
     | '/cards/$card-slug'
+    | '/glossary/$glossary-term'
     | '/products/$product-code'
     | '/products/nightmare'
     | '/products/original'
@@ -285,10 +348,12 @@ export interface FileRouteTypes {
     | '/products/'
     | '/cards/search/advanced'
     | '/cards/search/'
+    | '/glossary/search/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/cards/$card-slug'
+    | '/glossary/$glossary-term'
     | '/products/$product-code'
     | '/products/nightmare'
     | '/products/original'
@@ -297,12 +362,15 @@ export interface FileRouteTypes {
     | '/products'
     | '/cards/search/advanced'
     | '/cards/search'
+    | '/glossary/search'
   id:
     | '__root__'
     | '/'
     | '/products'
     | '/cards/search'
+    | '/glossary/search'
     | '/cards/$card-slug'
+    | '/glossary/$glossary-term'
     | '/products/$product-code'
     | '/products/nightmare'
     | '/products/original'
@@ -311,6 +379,7 @@ export interface FileRouteTypes {
     | '/products/'
     | '/cards/search/advanced'
     | '/cards/search/'
+    | '/glossary/search/'
   fileRoutesById: FileRoutesById
 }
 
@@ -318,14 +387,18 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProductsRouteRoute: typeof ProductsRouteRouteWithChildren
   CardsSearchRouteRoute: typeof CardsSearchRouteRouteWithChildren
+  GlossarySearchRouteRoute: typeof GlossarySearchRouteRouteWithChildren
   CardsCardSlugRoute: typeof CardsCardSlugRoute
+  GlossaryGlossaryTermRoute: typeof GlossaryGlossaryTermRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProductsRouteRoute: ProductsRouteRouteWithChildren,
   CardsSearchRouteRoute: CardsSearchRouteRouteWithChildren,
+  GlossarySearchRouteRoute: GlossarySearchRouteRouteWithChildren,
   CardsCardSlugRoute: CardsCardSlugRoute,
+  GlossaryGlossaryTermRoute: GlossaryGlossaryTermRoute,
 }
 
 export const routeTree = rootRoute
@@ -341,7 +414,9 @@ export const routeTree = rootRoute
         "/",
         "/products",
         "/cards/search",
-        "/cards/$card-slug"
+        "/glossary/search",
+        "/cards/$card-slug",
+        "/glossary/$glossary-term"
       ]
     },
     "/": {
@@ -365,8 +440,17 @@ export const routeTree = rootRoute
         "/cards/search/"
       ]
     },
+    "/glossary/search": {
+      "filePath": "glossary/search/route.tsx",
+      "children": [
+        "/glossary/search/"
+      ]
+    },
     "/cards/$card-slug": {
       "filePath": "cards/$card-slug.tsx"
+    },
+    "/glossary/$glossary-term": {
+      "filePath": "glossary/$glossary-term.tsx"
     },
     "/products/$product-code": {
       "filePath": "products/$product-code.tsx",
@@ -399,6 +483,10 @@ export const routeTree = rootRoute
     "/cards/search/": {
       "filePath": "cards/search/index.tsx",
       "parent": "/cards/search"
+    },
+    "/glossary/search/": {
+      "filePath": "glossary/search/index.tsx",
+      "parent": "/glossary/search"
     }
   }
 }

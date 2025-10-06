@@ -23,6 +23,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
+    "react-markdown": "^10.1.0",
     "redaxios": "^0.5.1",
     "regexify-string": "^1.0.19",
     "sql.js": "^1.13.0",

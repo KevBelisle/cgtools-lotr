@@ -14,6 +14,7 @@ export interface Database {
   cardSides: CardSideTable;
   productCards: ProductCardTable;
   products: ProductTable;
+  glossary: GlossaryTable;
 }
 
 export interface CardTable {
@@ -79,10 +80,19 @@ export interface ProductTable {
   ExpansionSymbol: string | null;
 }
 
+export interface GlossaryTable {
+  Term: string;
+  Type: string;
+  Definition: string;
+  SeeAlso: string | null;
+  Source: string | null;
+}
+
 export type Card = Selectable<CardTable>;
 export type CardSide = Selectable<CardSideTable>;
 export type ProductCard = Selectable<ProductCardTable>;
 export type Product = Selectable<ProductTable>;
+export type Glossary = Selectable<GlossaryTable>;
 
 export const kysely = new Kysely<Database>({
   dialect: {

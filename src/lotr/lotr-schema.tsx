@@ -60,6 +60,14 @@ export type Card = {
   ProductCards: ProductCard[];
 };
 
+export type Glossary = {
+  Term: string;
+  Type: string;
+  Definition: string;
+  SeeAlso: string | null;
+  Source: string | null;
+};
+
 export function lotrCardFromCardBaseQuery(card: CardBaseQueryResult): Card {
   return {
     Slug: card["c.Slug"],

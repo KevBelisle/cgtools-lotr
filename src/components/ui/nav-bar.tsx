@@ -45,7 +45,7 @@ export default function NavBar() {
               </Heading>
             </Link>
           </VStack>
-          <HStack gap={4} float="right" height="46px">
+          <HStack gap={4} float="right" height="46px" marginRight="1px">
             <ChakraLink
               href="https://old.lotr.cardgame.tools"
               target="_blank"
@@ -74,20 +74,32 @@ export default function NavBar() {
             >
               Products
             </CustomButtonLink>
+            <CustomButtonLink
+              to="/glossary/search"
+              search={{ query: "" }}
+              size="xs"
+              variant={"surface"}
+              preload={"intent"}
+            >
+              Glossary
+            </CustomButtonLink>
             <ReloadPrompt />
           </HStack>
         </Box>
       </Container>
 
-      {canGoBack && location !== "/cards/search" && location !== "/products" ? (
-        <Container>
+      {canGoBack &&
+      location !== "/cards/search" &&
+      location !== "/glossary/search" &&
+      location !== "/products" ? (
+        <Container mt="-1" height="0" overflow="visible">
           <Button
             onClick={() => router.history.back()}
-            position="absolute"
             size="xs"
-            variant="surface"
+            variant="ghost"
             colorPalette="sand"
             zIndex={1000}
+            ml="-4"
           >
             <LuChevronLeft />
             Back
