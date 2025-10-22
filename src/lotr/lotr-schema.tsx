@@ -38,7 +38,7 @@ export type Product = {
   FirstReleased: string | null;
   IsRepackage: boolean;
   ExpansionSymbol: string | null;
-  RuleBooks: RuleBook[];
+  RuleBooks?: RuleBook[];
 };
 
 export type ProductCard = {
