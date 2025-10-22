@@ -15,6 +15,7 @@ export interface Database {
   productCards: ProductCardTable;
   products: ProductTable;
   glossary: GlossaryTable;
+  ruleBooks: RuleBookTable;
 }
 
 export interface CardTable {
@@ -88,11 +89,19 @@ export interface GlossaryTable {
   Source: string | null;
 }
 
+export interface RuleBookTable {
+  Filename: string;
+  Source: string | null;
+  ProductCode: string | null;
+  Title: string;
+}
+
 export type Card = Selectable<CardTable>;
 export type CardSide = Selectable<CardSideTable>;
 export type ProductCard = Selectable<ProductCardTable>;
 export type Product = Selectable<ProductTable>;
 export type Glossary = Selectable<GlossaryTable>;
+export type RuleBook = Selectable<RuleBookTable>;
 
 export const kysely = new Kysely<Database>({
   dialect: {

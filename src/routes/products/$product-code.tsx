@@ -8,17 +8,19 @@ import {
 } from "@/lotr/database-schema";
 import sphereData from "@/lotr/display/sphere-data";
 import { expansionIcons } from "@/lotr/expansion-icons";
-import type { Card as GameCard } from "@/lotr/lotr-schema";
+import type { Card as GameCard, RuleBook } from "@/lotr/lotr-schema";
 import { Card, lotrCardFromCardBaseQuery, Product } from "@/lotr/lotr-schema";
 import execCompiledQuery from "@/sqljs/exec-compiled-query";
 import {
   Alert,
   Box,
   Container,
+  Link as ExternalLink,
   Grid,
   GridItem,
   Heading,
   HStack,
+  Icon,
   Image,
   List,
   Separator,
@@ -26,7 +28,9 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { jsonArrayFrom } from "kysely/helpers/sqlite";
 import { memo, ReactNode, useContext, useMemo, useState } from "react";
+import { LuFileText } from "react-icons/lu";
 
 export const Route = createFileRoute("/products/$product-code")({
   component: RouteComponent,
@@ -35,7 +39,27 @@ export const Route = createFileRoute("/products/$product-code")({
     const compiledProductQuery = kysely
       .selectFrom("products as p")
       .where("p.Code", "=", params["product-code"])
-      .selectAll()
+      .select((eb) => [
+        "p.Code as Code",
+        "p.Name as Name",
+        "p.Type as Type",
+        "p.Abbreviation as Abbreviation",
+        "p.Cycle as Cycle",
+        "p.FirstReleased as FirstReleased",
+        "p.IsRepackage as IsRepackage",
+        "p.ExpansionSymbol as ExpansionSymbol",
+        jsonArrayFrom(
+          eb
+            .selectFrom("ruleBooks as rb")
+            .whereRef("rb.ProductCode", "=", "p.Code")
+            .select([
+              "rb.Filename as Filename",
+              "rb.Source as Source",
+              "rb.ProductCode as ProductCode",
+              "rb.Title as Title",
+            ]),
+        ).as("RuleBooks"),
+      ])
       .limit(1)
       .compile();
 
@@ -43,6 +67,10 @@ export const Route = createFileRoute("/products/$product-code")({
       compiledProductQuery,
       context.sqljsDbContext.sqljsDb!,
     )[0];
+
+    productQueryResult.RuleBooks = JSON.parse(
+      productQueryResult.RuleBooks as any,
+    ) as RuleBook[];
 
     const isRepackage = productQueryResult.IsRepackage;
 
@@ -603,6 +631,33 @@ function RouteComponent() {
             <Tag size="lg">{product.FirstReleased}</Tag>
           </HStack>
 
+          <Box
+            display="flex"
+            flexDirection="row"
+            gapX={8}
+            gapY={4}
+            flexWrap="wrap"
+          >
+            {product.RuleBooks.map((rb) => (
+              <ExternalLink
+                key={rb.Filename}
+                href={`https://images.cardgame.tools/lotr/rules/${rb.Filename}`}
+                target="_blank"
+              >
+                <Box display="flex" alignItems="flex-start" gap={2}>
+                  <Icon size="lg" color="yellow.700">
+                    <LuFileText />
+                  </Icon>
+                  <Box display="flex" flexDirection="column">
+                    {rb.Title}
+                    <Text fontSize="sm" color="gray.emphasized">
+                      Source: {rb.Source}
+                    </Text>
+                  </Box>
+                </Box>
+              </ExternalLink>
+            ))}
+          </Box>
           {cardNotice}
         </Box>
       </Box>

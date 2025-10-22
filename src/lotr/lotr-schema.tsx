@@ -38,6 +38,7 @@ export type Product = {
   FirstReleased: string | null;
   IsRepackage: boolean;
   ExpansionSymbol: string | null;
+  RuleBooks: RuleBook[];
 };
 
 export type ProductCard = {
@@ -66,6 +67,13 @@ export type Glossary = {
   Definition: string;
   SeeAlso: string | null;
   Source: string | null;
+};
+
+export type RuleBook = {
+  Filename: string;
+  Source: string | null;
+  ProductCode: string | null;
+  Title: string;
 };
 
 export function lotrCardFromCardBaseQuery(card: CardBaseQueryResult): Card {
