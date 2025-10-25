@@ -6,6 +6,7 @@ import {
   Container,
   HStack,
   Heading,
+  Menu,
   VStack,
 } from "@chakra-ui/react";
 //import { CustomButtonLink } from "./customButtonLink";
@@ -17,7 +18,7 @@ import {
   useRouter,
   useRouterState,
 } from "@tanstack/react-router";
-import { LuChevronLeft, LuExternalLink } from "react-icons/lu";
+import { LuChevronDown, LuChevronLeft, LuExternalLink } from "react-icons/lu";
 import { CustomButtonLink } from "./custom-button-link";
 
 export default function NavBar() {
@@ -74,15 +75,25 @@ export default function NavBar() {
             >
               Products
             </CustomButtonLink>
-            <CustomButtonLink
-              to="/glossary/search"
-              search={{ query: "" }}
-              size="xs"
-              variant={"surface"}
-              preload={"intent"}
-            >
-              Glossary
-            </CustomButtonLink>
+            <Menu.Root>
+              <Menu.Trigger>
+                <Button size="xs" variant={"surface"}>
+                  More <LuChevronDown />
+                </Button>
+              </Menu.Trigger>
+              <Menu.Positioner>
+                <Menu.Content>
+                  <Menu.Item asChild value="glossary" cursor="pointer">
+                    <Link to="/glossary/search" search={{ query: "" }}>
+                      Glossary
+                    </Link>
+                  </Menu.Item>
+                  <Menu.Item asChild value="rulebooks" cursor="pointer">
+                    <Link to="/rulebooks">Rulebooks</Link>
+                  </Menu.Item>
+                </Menu.Content>
+              </Menu.Positioner>
+            </Menu.Root>
             <ReloadPrompt />
           </HStack>
         </Box>
@@ -91,6 +102,7 @@ export default function NavBar() {
       {canGoBack &&
       location !== "/cards/search" &&
       location !== "/glossary/search" &&
+      location !== "/rulebooks" &&
       location !== "/products" ? (
         <Container mt="-1" height="0" overflow="visible">
           <Button

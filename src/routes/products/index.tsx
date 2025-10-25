@@ -100,7 +100,7 @@ function RouteComponent() {
               fontSize="2xl"
               as="h2"
             >
-              Print-on-demand scenarios
+              Print-on-demand Scenarios
             </Card.Title>
             <Card.Description as="div">
               <Text>

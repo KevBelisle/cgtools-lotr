@@ -8,8 +8,6 @@ export const Route = createFileRoute("/glossary/$glossary-term")({
   component: RouteComponent,
 
   loader: async ({ params, context }) => {
-    console.log("Loading glossary term", params["glossary-term"]);
-
     const compiledQuery = kysely
       .selectFrom("glossary as g")
       .where("g.Term", "=", params["glossary-term"])

@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as ProductsRouteImport } from './routes/products/route'
 import { Route as IndexImport } from './routes/index'
+import { Route as RulebooksIndexImport } from './routes/rulebooks/index'
 import { Route as ProductsIndexImport } from './routes/products/index'
 import { Route as ProductsRepackagedImport } from './routes/products/repackaged'
 import { Route as ProductsPodImport } from './routes/products/pod'
@@ -38,6 +39,12 @@ const ProductsRouteRoute = ProductsRouteImport.update({
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const RulebooksIndexRoute = RulebooksIndexImport.update({
+  id: '/rulebooks/',
+  path: '/rulebooks/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -207,6 +214,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsIndexImport
       parentRoute: typeof ProductsRouteImport
     }
+    '/rulebooks/': {
+      id: '/rulebooks/'
+      path: '/rulebooks'
+      fullPath: '/rulebooks'
+      preLoaderRoute: typeof RulebooksIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/cards/search/advanced': {
       id: '/cards/search/advanced'
       path: '/advanced'
@@ -292,6 +306,7 @@ export interface FileRoutesByFullPath {
   '/products/pod': typeof ProductsPodRoute
   '/products/repackaged': typeof ProductsRepackagedRoute
   '/products/': typeof ProductsIndexRoute
+  '/rulebooks': typeof RulebooksIndexRoute
   '/cards/search/advanced': typeof CardsSearchAdvancedRoute
   '/cards/search/': typeof CardsSearchIndexRoute
   '/glossary/search/': typeof GlossarySearchIndexRoute
@@ -307,6 +322,7 @@ export interface FileRoutesByTo {
   '/products/pod': typeof ProductsPodRoute
   '/products/repackaged': typeof ProductsRepackagedRoute
   '/products': typeof ProductsIndexRoute
+  '/rulebooks': typeof RulebooksIndexRoute
   '/cards/search/advanced': typeof CardsSearchAdvancedRoute
   '/cards/search': typeof CardsSearchIndexRoute
   '/glossary/search': typeof GlossarySearchIndexRoute
@@ -326,6 +342,7 @@ export interface FileRoutesById {
   '/products/pod': typeof ProductsPodRoute
   '/products/repackaged': typeof ProductsRepackagedRoute
   '/products/': typeof ProductsIndexRoute
+  '/rulebooks/': typeof RulebooksIndexRoute
   '/cards/search/advanced': typeof CardsSearchAdvancedRoute
   '/cards/search/': typeof CardsSearchIndexRoute
   '/glossary/search/': typeof GlossarySearchIndexRoute
@@ -346,6 +363,7 @@ export interface FileRouteTypes {
     | '/products/pod'
     | '/products/repackaged'
     | '/products/'
+    | '/rulebooks'
     | '/cards/search/advanced'
     | '/cards/search/'
     | '/glossary/search/'
@@ -360,6 +378,7 @@ export interface FileRouteTypes {
     | '/products/pod'
     | '/products/repackaged'
     | '/products'
+    | '/rulebooks'
     | '/cards/search/advanced'
     | '/cards/search'
     | '/glossary/search'
@@ -377,6 +396,7 @@ export interface FileRouteTypes {
     | '/products/pod'
     | '/products/repackaged'
     | '/products/'
+    | '/rulebooks/'
     | '/cards/search/advanced'
     | '/cards/search/'
     | '/glossary/search/'
@@ -390,6 +410,7 @@ export interface RootRouteChildren {
   GlossarySearchRouteRoute: typeof GlossarySearchRouteRouteWithChildren
   CardsCardSlugRoute: typeof CardsCardSlugRoute
   GlossaryGlossaryTermRoute: typeof GlossaryGlossaryTermRoute
+  RulebooksIndexRoute: typeof RulebooksIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -399,6 +420,7 @@ const rootRouteChildren: RootRouteChildren = {
   GlossarySearchRouteRoute: GlossarySearchRouteRouteWithChildren,
   CardsCardSlugRoute: CardsCardSlugRoute,
   GlossaryGlossaryTermRoute: GlossaryGlossaryTermRoute,
+  RulebooksIndexRoute: RulebooksIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -416,7 +438,8 @@ export const routeTree = rootRoute
         "/cards/search",
         "/glossary/search",
         "/cards/$card-slug",
-        "/glossary/$glossary-term"
+        "/glossary/$glossary-term",
+        "/rulebooks/"
       ]
     },
     "/": {
@@ -475,6 +498,9 @@ export const routeTree = rootRoute
     "/products/": {
       "filePath": "products/index.tsx",
       "parent": "/products"
+    },
+    "/rulebooks/": {
+      "filePath": "rulebooks/index.tsx"
     },
     "/cards/search/advanced": {
       "filePath": "cards/search/advanced.tsx",
