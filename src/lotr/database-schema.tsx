@@ -15,7 +15,7 @@ export interface Database {
   productCards: ProductCardTable;
   products: ProductTable;
   glossary: GlossaryTable;
-  ruleBooks: RuleBookTable;
+  rulebooks: RuleBookTable;
 }
 
 export interface CardTable {

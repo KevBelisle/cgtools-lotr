@@ -20,7 +20,7 @@ import {
   GridItem,
   Heading,
   HStack,
-  Icon,
+  IconButton,
   Image,
   List,
   Separator,
@@ -30,7 +30,7 @@ import {
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { jsonArrayFrom } from "kysely/helpers/sqlite";
 import { memo, ReactNode, useContext, useMemo, useState } from "react";
-import { LuFileText } from "react-icons/lu";
+import { TbFileTypeHtml, TbFileTypePdf } from "react-icons/tb";
 
 export const Route = createFileRoute("/products/$product-code")({
   component: RouteComponent,
@@ -50,7 +50,7 @@ export const Route = createFileRoute("/products/$product-code")({
         "p.ExpansionSymbol as ExpansionSymbol",
         jsonArrayFrom(
           eb
-            .selectFrom("ruleBooks as rb")
+            .selectFrom("rulebooks as rb")
             .whereRef("rb.ProductCode", "=", "p.Code")
             .select([
               "rb.Filename as Filename",
@@ -633,29 +633,50 @@ function RouteComponent() {
 
           <Box
             display="flex"
-            flexDirection="row"
+            flexDirection="column"
             gapX={8}
             gapY={4}
             flexWrap="wrap"
           >
-            {product.RuleBooks.map((rb) => (
-              <ExternalLink
-                key={rb.Filename}
-                href={`https://images.cardgame.tools/lotr/rules/${rb.Filename}`}
-                target="_blank"
-              >
-                <Box display="flex" alignItems="flex-start" gap={2}>
-                  <Icon size="lg" color="yellow.700">
-                    <LuFileText />
-                  </Icon>
-                  <Box display="flex" flexDirection="column">
-                    {rb.Title}
-                    <Text fontSize="sm" color="gray.emphasized">
-                      Source: {rb.Source}
-                    </Text>
-                  </Box>
+            {product.RuleBooks.map((rulebook) => (
+              <Box display="flex" alignItems="center" gap={2}>
+                <ExternalLink
+                  href={`https://images.cardgame.tools/lotr/rules/${rulebook.Filename}.pdf`}
+                  target="_blank"
+                >
+                  <IconButton
+                    size="xl"
+                    color="sand.600"
+                    variant="outline"
+                    _hover={{ color: "yellow.700" }}
+                  >
+                    <TbFileTypePdf
+                      style={{ width: "1.3em", height: "1.3em" }}
+                    />
+                  </IconButton>
+                </ExternalLink>
+                <Link
+                  to="/rulebooks/$rulebook"
+                  params={{ rulebook: rulebook.Filename }}
+                >
+                  <IconButton
+                    size="xl"
+                    color="sand.600"
+                    variant="outline"
+                    _hover={{ color: "yellow.700" }}
+                  >
+                    <TbFileTypeHtml
+                      style={{ width: "1.3em", height: "1.3em" }}
+                    />
+                  </IconButton>
+                </Link>
+                <Box display="flex" flexDirection="column" color="fg" ml={2}>
+                  {rulebook.Title}
+                  <Text fontSize="sm" color="gray.emphasized">
+                    Source: {rulebook.Source}
+                  </Text>
                 </Box>
-              </ExternalLink>
+              </Box>
             ))}
           </Box>
           {cardNotice}

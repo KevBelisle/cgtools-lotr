@@ -34,7 +34,7 @@ function RouteComponent() {
   const glossaryTerm = Route.useLoaderData();
 
   return (
-    <Container py={8} maxW="800px">
+    <Container py={8} maxW="4xl">
       <GlossaryTermCard
         Term={glossaryTerm.Term}
         Type={glossaryTerm.Type}

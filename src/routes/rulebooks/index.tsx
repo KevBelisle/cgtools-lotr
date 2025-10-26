@@ -6,20 +6,21 @@ import {
   Container,
   Link as ExternalLink,
   Heading,
-  Icon,
+  IconButton,
   SimpleGrid,
   Text,
 } from "@chakra-ui/react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { jsonObjectFrom } from "kysely/helpers/sqlite";
-import { LuFileText } from "react-icons/lu";
+import { Fragment } from "react";
+import { TbFileTypeHtml, TbFileTypePdf } from "react-icons/tb";
 
 export const Route = createFileRoute("/rulebooks/")({
   component: RouteComponent,
 
   loader: async ({ context }) => {
     const compiledQuery = kysely
-      .selectFrom("ruleBooks as r")
+      .selectFrom("rulebooks as r")
       .select((eb) => [
         "r.Filename as Filename",
         "r.Title as Title",
@@ -55,12 +56,10 @@ export const Route = createFileRoute("/rulebooks/")({
 });
 
 function RouteComponent() {
-  const ruleBooks = Route.useLoaderData();
-
-  console.log(ruleBooks);
+  const rulebooks = Route.useLoaderData();
 
   // REPACKAGED
-  const repackaged = ruleBooks.filter((rb) => rb.Product?.IsRepackage);
+  const repackaged = rulebooks.filter((rb) => rb.Product?.IsRepackage);
 
   const repackagedCore = repackaged.filter((x) => x.Product?.Type === "Core");
   const repackagedCycles = Array.from(
@@ -92,7 +91,7 @@ function RouteComponent() {
   );
 
   // ORIGINAL
-  const original = ruleBooks.filter(
+  const original = rulebooks.filter(
     (rb) =>
       rb.Product &&
       !rb.Product?.IsRepackage &&
@@ -130,17 +129,23 @@ function RouteComponent() {
       x.Product?.Cycle === "The Lord of the Rings",
   );
 
-  const nightmare = ruleBooks.filter(
+  const nightmare = rulebooks.filter(
     (rb) => rb.Product?.Type === "Nightmare_Expansion",
   );
-  const pod = ruleBooks.filter(
+  const pod = rulebooks.filter(
     (rb) =>
       !rb.Product?.IsRepackage && rb.Product?.Type === "Standalone_Scenario",
   );
-  const noProduct = ruleBooks.filter((rb) => !rb.Product);
+  const noProduct = rulebooks.filter((rb) => !rb.Product);
 
   return (
-    <Container display="flex" py={8} gap={8} flexDirection={"column"}>
+    <Container
+      display="flex"
+      py={8}
+      gap={8}
+      flexDirection={"column"}
+      maxW="6xl"
+    >
       <Card.Root
         width="100%"
         variant="outline"
@@ -163,35 +168,29 @@ function RouteComponent() {
             <Heading size="lg" textWrap="balance" mt={2} color="fg">
               Core
             </Heading>
-            <RuleBookLinkList ruleBooks={repackagedCore} />
+            <RuleBookLinkList rulebooks={repackagedCore} />
 
             <Heading size="lg" textWrap="balance" mt={2} color="fg">
               Starter decks
             </Heading>
-            <RuleBookLinkList ruleBooks={repackagedStarterDecks} />
+            <RuleBookLinkList rulebooks={repackagedStarterDecks} />
 
             <Heading size="lg" textWrap="balance" mt={2} color="fg">
               Cycles
             </Heading>
             {repackagedCycles.map(([cycleName, cycleRulebooks]) => (
-              <>
-                <Heading
-                  key={cycleName}
-                  size="md"
-                  textWrap="balance"
-                  mt={2}
-                  color="fg"
-                >
+              <Fragment key={cycleName}>
+                <Heading size="md" textWrap="balance" mt={2} color="fg">
                   {cycleName} cycle
                 </Heading>
-                <RuleBookLinkList ruleBooks={cycleRulebooks} />
-              </>
+                <RuleBookLinkList rulebooks={cycleRulebooks} />
+              </Fragment>
             ))}
 
             <Heading size="lg" textWrap="balance" mt={2} color="fg">
               Lord of the Rings saga expansions
             </Heading>
-            <RuleBookLinkList ruleBooks={repackagedLotrSaga} />
+            <RuleBookLinkList rulebooks={repackagedLotrSaga} />
           </Card.Description>
         </Card.Body>
       </Card.Root>
@@ -219,35 +218,29 @@ function RouteComponent() {
               <Heading size="lg" textWrap="balance" mt={2} color="fg">
                 Core
               </Heading>
-              <RuleBookLinkList ruleBooks={originalCore} />
+              <RuleBookLinkList rulebooks={originalCore} />
 
               <Heading size="lg" textWrap="balance" mt={2} color="fg">
                 Cycles
               </Heading>
               {originalCycles.map(([cycleName, cycleRulebooks]) => (
-                <>
-                  <Heading
-                    key={cycleName}
-                    size="md"
-                    textWrap="balance"
-                    mt={2}
-                    color="fg"
-                  >
+                <Fragment key={cycleName}>
+                  <Heading size="md" textWrap="balance" mt={2} color="fg">
                     {cycleName} cycle
                   </Heading>
-                  <RuleBookLinkList ruleBooks={cycleRulebooks} />
-                </>
+                  <RuleBookLinkList rulebooks={cycleRulebooks} />
+                </Fragment>
               ))}
 
               <Heading size="lg" textWrap="balance" mt={2} color="fg">
                 The Hobbit saga expansions
               </Heading>
-              <RuleBookLinkList ruleBooks={originalHobbitSaga} />
+              <RuleBookLinkList rulebooks={originalHobbitSaga} />
 
               <Heading size="lg" textWrap="balance" mt={2} color="fg">
                 Lord of the Rings saga expansions
               </Heading>
-              <RuleBookLinkList ruleBooks={originalLotrSaga} />
+              <RuleBookLinkList rulebooks={originalLotrSaga} />
             </Card.Description>
           </Card.Body>
         </Card.Root>
@@ -269,7 +262,7 @@ function RouteComponent() {
               Print-on-demand Scenarios
             </Card.Title>
             <Card.Description as="div">
-              <RuleBookLinkList ruleBooks={pod} />
+              <RuleBookLinkList rulebooks={pod} />
             </Card.Description>
           </Card.Body>
         </Card.Root>
@@ -291,7 +284,7 @@ function RouteComponent() {
               Nightmare Decks
             </Card.Title>
             <Card.Description as="div">
-              <RuleBookLinkList ruleBooks={nightmare} />
+              <RuleBookLinkList rulebooks={nightmare} />
             </Card.Description>
           </Card.Body>
         </Card.Root>
@@ -314,7 +307,7 @@ function RouteComponent() {
               General Documents
             </Card.Title>
             <Card.Description as="div">
-              <RuleBookLinkList ruleBooks={noProduct} />
+              <RuleBookLinkList rulebooks={noProduct} />
             </Card.Description>
           </Card.Body>
         </Card.Root>
@@ -323,33 +316,48 @@ function RouteComponent() {
   );
 }
 
-function RuleBookLinkList({ ruleBooks }: { ruleBooks: any[] }) {
+function RuleBookLinkList({ rulebooks }: { rulebooks: any[] }) {
   return (
     <SimpleGrid gap={4} minChildWidth="sm" mt={4} mb={6}>
-      {ruleBooks.map((rb) => (
-        <RuleBookLink ruleBook={rb} key={rb.Filename} />
+      {rulebooks.map((rb) => (
+        <RuleBookLink rulebook={rb} key={rb.Filename} />
       ))}
     </SimpleGrid>
   );
 }
 
-function RuleBookLink({ ruleBook }: { ruleBook: any }) {
+function RuleBookLink({ rulebook }: { rulebook: any }) {
   return (
-    <ExternalLink
-      href={`https://images.cardgame.tools/lotr/rules/${ruleBook.Filename}`}
-      target="_blank"
-    >
-      <Box display="flex" alignItems="flex-start" gap={2}>
-        <Icon size="lg" color="yellow.700">
-          <LuFileText />
-        </Icon>
-        <Box display="flex" flexDirection="column">
-          {ruleBook.Title}
-          <Text fontSize="sm" color="gray.emphasized">
-            Source: {ruleBook.Source}
-          </Text>
-        </Box>
+    <Box display="flex" alignItems="center" gap={2}>
+      <ExternalLink
+        href={`https://images.cardgame.tools/lotr/rules/${rulebook.Filename}.pdf`}
+        target="_blank"
+      >
+        <IconButton
+          size="xl"
+          color="sand.800"
+          _hover={{ color: "yellow.700" }}
+          variant="outline"
+        >
+          <TbFileTypePdf style={{ width: "1.3em", height: "1.3em" }} />
+        </IconButton>
+      </ExternalLink>
+      <Link to="/rulebooks/$rulebook" params={{ rulebook: rulebook.Filename }}>
+        <IconButton
+          size="xl"
+          color="sand.800"
+          _hover={{ color: "yellow.700" }}
+          variant="outline"
+        >
+          <TbFileTypeHtml style={{ width: "1.3em", height: "1.3em" }} />
+        </IconButton>
+      </Link>
+      <Box display="flex" flexDirection="column" color="fg" ml={2}>
+        {rulebook.Title}
+        <Text fontSize="sm" color="gray.emphasized">
+          Source: {rulebook.Source}
+        </Text>
       </Box>
-    </ExternalLink>
+    </Box>
   );
 }

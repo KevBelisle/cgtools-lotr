@@ -76,7 +76,7 @@ export default function NavBar() {
               Products
             </CustomButtonLink>
             <Menu.Root>
-              <Menu.Trigger>
+              <Menu.Trigger asChild>
                 <Button size="xs" variant={"surface"}>
                   More <LuChevronDown />
                 </Button>
