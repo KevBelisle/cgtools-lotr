@@ -1,5 +1,6 @@
 import { DisplaySelect } from "@/components/search/display-select";
 import { DisplayContext } from "@/components/ui/display-provider";
+import { RulebookLink } from "@/components/ui/rulebook-link";
 import { Tag } from "@/components/ui/tag";
 import {
   cardBaseQuery,
@@ -15,12 +16,10 @@ import {
   Alert,
   Box,
   Container,
-  Link as ExternalLink,
   Grid,
   GridItem,
   Heading,
   HStack,
-  IconButton,
   Image,
   List,
   Separator,
@@ -30,7 +29,6 @@ import {
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { jsonArrayFrom } from "kysely/helpers/sqlite";
 import { memo, ReactNode, useContext, useMemo, useState } from "react";
-import { TbFileTypeHtml, TbFileTypePdf } from "react-icons/tb";
 
 export const Route = createFileRoute("/products/$product-code")({
   component: RouteComponent,
@@ -631,54 +629,11 @@ function RouteComponent() {
             <Tag size="lg">{product.FirstReleased}</Tag>
           </HStack>
 
-          <Box
-            display="flex"
-            flexDirection="column"
-            gapX={8}
-            gapY={4}
-            flexWrap="wrap"
-          >
+          <SimpleGrid gap={4} columns={{ base: 1, xl: 2 }}>
             {product.RuleBooks.map((rulebook) => (
-              <Box display="flex" alignItems="center" gap={2}>
-                <ExternalLink
-                  href={`https://images.cardgame.tools/lotr/rules/${rulebook.Filename}.pdf`}
-                  target="_blank"
-                >
-                  <IconButton
-                    size="xl"
-                    color="sand.600"
-                    variant="outline"
-                    _hover={{ color: "yellow.700" }}
-                  >
-                    <TbFileTypePdf
-                      style={{ width: "1.3em", height: "1.3em" }}
-                    />
-                  </IconButton>
-                </ExternalLink>
-                <Link
-                  to="/rulebooks/$rulebook"
-                  params={{ rulebook: rulebook.Filename }}
-                >
-                  <IconButton
-                    size="xl"
-                    color="sand.600"
-                    variant="outline"
-                    _hover={{ color: "yellow.700" }}
-                  >
-                    <TbFileTypeHtml
-                      style={{ width: "1.3em", height: "1.3em" }}
-                    />
-                  </IconButton>
-                </Link>
-                <Box display="flex" flexDirection="column" color="fg" ml={2}>
-                  {rulebook.Title}
-                  <Text fontSize="sm" color="gray.emphasized">
-                    Source: {rulebook.Source}
-                  </Text>
-                </Box>
-              </Box>
+              <RulebookLink key={rulebook.Filename} rulebook={rulebook} />
             ))}
-          </Box>
+          </SimpleGrid>
           {cardNotice}
         </Box>
       </Box>

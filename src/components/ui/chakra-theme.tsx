@@ -118,6 +118,9 @@ const config = defineConfig({
       },
     },
   },
+  conditions: {
+    container_sm: "@container (width >= 26rem)",
+  },
 });
 
 export default createSystem(defaultConfig, config);

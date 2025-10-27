@@ -1,19 +1,10 @@
+import { RulebookLink } from "@/components/ui/rulebook-link";
 import { kysely } from "@/lotr/database-schema";
 import execCompiledQuery from "@/sqljs/exec-compiled-query";
-import {
-  Box,
-  Card,
-  Container,
-  Link as ExternalLink,
-  Heading,
-  IconButton,
-  SimpleGrid,
-  Text,
-} from "@chakra-ui/react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Card, Container, Heading, SimpleGrid } from "@chakra-ui/react";
+import { createFileRoute } from "@tanstack/react-router";
 import { jsonObjectFrom } from "kysely/helpers/sqlite";
 import { Fragment } from "react";
-import { TbFileTypeHtml, TbFileTypePdf } from "react-icons/tb";
 
 export const Route = createFileRoute("/rulebooks/")({
   component: RouteComponent,
@@ -168,12 +159,12 @@ function RouteComponent() {
             <Heading size="lg" textWrap="balance" mt={2} color="fg">
               Core
             </Heading>
-            <RuleBookLinkList rulebooks={repackagedCore} />
+            <RulebookLinkList rulebooks={repackagedCore} />
 
             <Heading size="lg" textWrap="balance" mt={2} color="fg">
               Starter decks
             </Heading>
-            <RuleBookLinkList rulebooks={repackagedStarterDecks} />
+            <RulebookLinkList rulebooks={repackagedStarterDecks} />
 
             <Heading size="lg" textWrap="balance" mt={2} color="fg">
               Cycles
@@ -183,14 +174,14 @@ function RouteComponent() {
                 <Heading size="md" textWrap="balance" mt={2} color="fg">
                   {cycleName} cycle
                 </Heading>
-                <RuleBookLinkList rulebooks={cycleRulebooks} />
+                <RulebookLinkList rulebooks={cycleRulebooks} />
               </Fragment>
             ))}
 
             <Heading size="lg" textWrap="balance" mt={2} color="fg">
               Lord of the Rings saga expansions
             </Heading>
-            <RuleBookLinkList rulebooks={repackagedLotrSaga} />
+            <RulebookLinkList rulebooks={repackagedLotrSaga} />
           </Card.Description>
         </Card.Body>
       </Card.Root>
@@ -218,7 +209,7 @@ function RouteComponent() {
               <Heading size="lg" textWrap="balance" mt={2} color="fg">
                 Core
               </Heading>
-              <RuleBookLinkList rulebooks={originalCore} />
+              <RulebookLinkList rulebooks={originalCore} />
 
               <Heading size="lg" textWrap="balance" mt={2} color="fg">
                 Cycles
@@ -228,19 +219,19 @@ function RouteComponent() {
                   <Heading size="md" textWrap="balance" mt={2} color="fg">
                     {cycleName} cycle
                   </Heading>
-                  <RuleBookLinkList rulebooks={cycleRulebooks} />
+                  <RulebookLinkList rulebooks={cycleRulebooks} />
                 </Fragment>
               ))}
 
               <Heading size="lg" textWrap="balance" mt={2} color="fg">
                 The Hobbit saga expansions
               </Heading>
-              <RuleBookLinkList rulebooks={originalHobbitSaga} />
+              <RulebookLinkList rulebooks={originalHobbitSaga} />
 
               <Heading size="lg" textWrap="balance" mt={2} color="fg">
                 Lord of the Rings saga expansions
               </Heading>
-              <RuleBookLinkList rulebooks={originalLotrSaga} />
+              <RulebookLinkList rulebooks={originalLotrSaga} />
             </Card.Description>
           </Card.Body>
         </Card.Root>
@@ -262,7 +253,7 @@ function RouteComponent() {
               Print-on-demand Scenarios
             </Card.Title>
             <Card.Description as="div">
-              <RuleBookLinkList rulebooks={pod} />
+              <RulebookLinkList rulebooks={pod} />
             </Card.Description>
           </Card.Body>
         </Card.Root>
@@ -284,7 +275,7 @@ function RouteComponent() {
               Nightmare Decks
             </Card.Title>
             <Card.Description as="div">
-              <RuleBookLinkList rulebooks={nightmare} />
+              <RulebookLinkList rulebooks={nightmare} />
             </Card.Description>
           </Card.Body>
         </Card.Root>
@@ -307,7 +298,7 @@ function RouteComponent() {
               General Documents
             </Card.Title>
             <Card.Description as="div">
-              <RuleBookLinkList rulebooks={noProduct} />
+              <RulebookLinkList rulebooks={noProduct} />
             </Card.Description>
           </Card.Body>
         </Card.Root>
@@ -316,48 +307,12 @@ function RouteComponent() {
   );
 }
 
-function RuleBookLinkList({ rulebooks }: { rulebooks: any[] }) {
+function RulebookLinkList({ rulebooks }: { rulebooks: any[] }) {
   return (
-    <SimpleGrid gap={4} minChildWidth="sm" mt={4} mb={6}>
+    <SimpleGrid gap={4} mt={4} mb={6} columns={{ base: 1, lg: 2 }}>
       {rulebooks.map((rb) => (
-        <RuleBookLink rulebook={rb} key={rb.Filename} />
+        <RulebookLink rulebook={rb} key={rb.Filename} />
       ))}
     </SimpleGrid>
-  );
-}
-
-function RuleBookLink({ rulebook }: { rulebook: any }) {
-  return (
-    <Box display="flex" alignItems="center" gap={2}>
-      <ExternalLink
-        href={`https://images.cardgame.tools/lotr/rules/${rulebook.Filename}.pdf`}
-        target="_blank"
-      >
-        <IconButton
-          size="xl"
-          color="sand.800"
-          _hover={{ color: "yellow.700" }}
-          variant="outline"
-        >
-          <TbFileTypePdf style={{ width: "1.3em", height: "1.3em" }} />
-        </IconButton>
-      </ExternalLink>
-      <Link to="/rulebooks/$rulebook" params={{ rulebook: rulebook.Filename }}>
-        <IconButton
-          size="xl"
-          color="sand.800"
-          _hover={{ color: "yellow.700" }}
-          variant="outline"
-        >
-          <TbFileTypeHtml style={{ width: "1.3em", height: "1.3em" }} />
-        </IconButton>
-      </Link>
-      <Box display="flex" flexDirection="column" color="fg" ml={2}>
-        {rulebook.Title}
-        <Text fontSize="sm" color="gray.emphasized">
-          Source: {rulebook.Source}
-        </Text>
-      </Box>
-    </Box>
   );
 }
