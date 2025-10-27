@@ -34,6 +34,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Generate chakra types
+        run: npx @chakra-ui/cli typegen ./src/components/ui/chakra-theme.tsx
+
       - name: Production build
         run: npm run build
 
