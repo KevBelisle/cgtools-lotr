@@ -186,123 +186,121 @@ function RouteComponent() {
         </Card.Body>
       </Card.Root>
 
-      <SimpleGrid gap={4} columns={{ base: 1, md: 2 }}>
-        <Card.Root
-          width="100%"
-          variant="outline"
-          borderWidth={2}
-          borderStyle="solid"
-          borderColor="red.700"
-          gridColumn={{ base: "", md: "auto / span 2" }}
-        >
-          <Card.Body gap="2">
-            <Card.Title
-              mb="2"
-              fontFamily="ringbearer"
-              fontWeight="normal"
-              fontSize="2xl"
-              as="h2"
-            >
-              Original Releases
-            </Card.Title>
-            <Card.Description as="div">
-              <Heading size="lg" textWrap="balance" mt={2} color="fg">
-                Core
-              </Heading>
-              <RulebookLinkList rulebooks={originalCore} />
+      <Card.Root
+        width="100%"
+        variant="outline"
+        borderWidth={2}
+        borderStyle="solid"
+        borderColor="red.700"
+        gridColumn={{ base: "", md: "auto / span 2" }}
+      >
+        <Card.Body gap="2">
+          <Card.Title
+            mb="2"
+            fontFamily="ringbearer"
+            fontWeight="normal"
+            fontSize="2xl"
+            as="h2"
+          >
+            Original Releases
+          </Card.Title>
+          <Card.Description as="div">
+            <Heading size="lg" textWrap="balance" mt={2} color="fg">
+              Core
+            </Heading>
+            <RulebookLinkList rulebooks={originalCore} />
 
-              <Heading size="lg" textWrap="balance" mt={2} color="fg">
-                Cycles
-              </Heading>
-              {originalCycles.map(([cycleName, cycleRulebooks]) => (
-                <Fragment key={cycleName}>
-                  <Heading size="md" textWrap="balance" mt={2} color="fg">
-                    {cycleName} cycle
-                  </Heading>
-                  <RulebookLinkList rulebooks={cycleRulebooks} />
-                </Fragment>
-              ))}
+            <Heading size="lg" textWrap="balance" mt={2} color="fg">
+              Cycles
+            </Heading>
+            {originalCycles.map(([cycleName, cycleRulebooks]) => (
+              <Fragment key={cycleName}>
+                <Heading size="md" textWrap="balance" mt={2} color="fg">
+                  {cycleName} cycle
+                </Heading>
+                <RulebookLinkList rulebooks={cycleRulebooks} />
+              </Fragment>
+            ))}
 
-              <Heading size="lg" textWrap="balance" mt={2} color="fg">
-                The Hobbit saga expansions
-              </Heading>
-              <RulebookLinkList rulebooks={originalHobbitSaga} />
+            <Heading size="lg" textWrap="balance" mt={2} color="fg">
+              The Hobbit saga expansions
+            </Heading>
+            <RulebookLinkList rulebooks={originalHobbitSaga} />
 
-              <Heading size="lg" textWrap="balance" mt={2} color="fg">
-                Lord of the Rings saga expansions
-              </Heading>
-              <RulebookLinkList rulebooks={originalLotrSaga} />
-            </Card.Description>
-          </Card.Body>
-        </Card.Root>
+            <Heading size="lg" textWrap="balance" mt={2} color="fg">
+              Lord of the Rings saga expansions
+            </Heading>
+            <RulebookLinkList rulebooks={originalLotrSaga} />
+          </Card.Description>
+        </Card.Body>
+      </Card.Root>
 
-        <Card.Root
-          width="100%"
-          variant="outline"
-          borderWidth={2}
-          borderStyle="solid"
-        >
-          <Card.Body gap="2">
-            <Card.Title
-              mb="2"
-              fontFamily="ringbearer"
-              fontWeight="normal"
-              fontSize="2xl"
-              as="h2"
-            >
-              Print-on-demand Scenarios
-            </Card.Title>
-            <Card.Description as="div">
-              <RulebookLinkList rulebooks={pod} />
-            </Card.Description>
-          </Card.Body>
-        </Card.Root>
+      <Card.Root
+        width="100%"
+        variant="outline"
+        borderWidth={2}
+        borderStyle="solid"
+      >
+        <Card.Body gap="2">
+          <Card.Title
+            mb="2"
+            fontFamily="ringbearer"
+            fontWeight="normal"
+            fontSize="2xl"
+            as="h2"
+          >
+            Print-on-demand Scenarios
+          </Card.Title>
+          <Card.Description as="div">
+            <RulebookLinkList rulebooks={pod} />
+          </Card.Description>
+        </Card.Body>
+      </Card.Root>
 
-        <Card.Root
-          width="100%"
-          variant="outline"
-          borderWidth={2}
-          borderStyle="solid"
-        >
-          <Card.Body gap="2">
-            <Card.Title
-              mb="2"
-              fontFamily="ringbearer"
-              fontWeight="normal"
-              fontSize="2xl"
-              as="h2"
-            >
-              Nightmare Decks
-            </Card.Title>
-            <Card.Description as="div">
-              <RulebookLinkList rulebooks={nightmare} />
-            </Card.Description>
-          </Card.Body>
-        </Card.Root>
+      <Card.Root
+        width="100%"
+        variant="outline"
+        borderWidth={2}
+        borderStyle="solid"
+      >
+        <Card.Body gap="2">
+          <Card.Title
+            mb="2"
+            fontFamily="ringbearer"
+            fontWeight="normal"
+            fontSize="2xl"
+            as="h2"
+          >
+            Nightmare Decks
+          </Card.Title>
+          <Card.Description as="div">
+            <RulebookLinkList rulebooks={nightmare} />
+          </Card.Description>
+        </Card.Body>
+      </Card.Root>
 
-        <Card.Root
-          width="100%"
-          variant="outline"
-          borderWidth={2}
-          borderStyle="solid"
-          gridColumn={{ base: "", md: "auto / span 2" }}
-        >
-          <Card.Body gap="2">
-            <Card.Title
-              mb="2"
-              fontFamily="ringbearer"
-              fontWeight="normal"
-              fontSize="2xl"
-              as="h2"
-            >
-              General Documents
-            </Card.Title>
-            <Card.Description as="div">
-              <RulebookLinkList rulebooks={noProduct} />
-            </Card.Description>
-          </Card.Body>
-        </Card.Root>
-      </SimpleGrid>
+      <Card.Root
+        width="100%"
+        variant="outline"
+        borderWidth={2}
+        borderStyle="solid"
+        gridColumn={{ base: "", md: "auto / span 2" }}
+      >
+        <Card.Body gap="2">
+          <Card.Title
+            mb="2"
+            fontFamily="ringbearer"
+            fontWeight="normal"
+            fontSize="2xl"
+            as="h2"
+          >
+            General Documents
+          </Card.Title>
+          <Card.Description as="div">
+            <RulebookLinkList rulebooks={noProduct} />
+          </Card.Description>
+        </Card.Body>
+      </Card.Root>
     </Container>
   );
 }
