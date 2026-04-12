@@ -29,11 +29,11 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 });
 
 function RootComponent() {
-  const { pathname, search } = useRouterState({ select: (s) => s.location });
+  const { pathname, searchStr } = useRouterState({ select: (s) => s.location });
 
   useEffect(() => {
-    window.umami?.track({ url: pathname + search, title: document.title });
-  }, [pathname, search]);
+    window.umami?.track({ url: pathname + searchStr, title: document.title });
+  }, [pathname, searchStr]);
 
   return (
     <>
