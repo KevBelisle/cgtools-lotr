@@ -1,5 +1,12 @@
 import { Toaster } from "@/components/ui/toaster";
-import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
+import { Outlet, createRootRouteWithContext, useRouterState } from "@tanstack/react-router";
+import { useEffect } from "react";
+
+declare global {
+  interface Window {
+    umami?: { track: (props?: object) => void };
+  }
+}
 
 import { NotFound } from "@/components/pages/not-found";
 import { SearchFilterContextType } from "@/components/ui/advanced-filters-provider";
@@ -22,6 +29,12 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 });
 
 function RootComponent() {
+  const { pathname, search } = useRouterState({ select: (s) => s.location });
+
+  useEffect(() => {
+    window.umami?.track({ url: pathname + search, title: document.title });
+  }, [pathname, search]);
+
   return (
     <>
       <NavBar />
