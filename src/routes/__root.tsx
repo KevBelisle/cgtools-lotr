@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 declare global {
   interface Window {
-    umami?: { track: (props?: object) => void };
+    umami?: { track: (props?: object | ((props: object) => object)) => void };
   }
 }
 
@@ -32,7 +32,7 @@ function RootComponent() {
   const { pathname, searchStr } = useRouterState({ select: (s) => s.location });
 
   useEffect(() => {
-    window.umami?.track({ url: pathname + searchStr, title: document.title });
+    window.umami?.track((props) => ({ ...props, url: pathname + searchStr, title: document.title }));
   }, [pathname, searchStr]);
 
   return (
