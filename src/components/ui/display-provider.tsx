@@ -11,7 +11,7 @@ export type DisplayContextType = [
 ];
 
 export const DisplayContext = createContext<DisplayContextType>([
-  displayOptions[0],
+  displayOptions[2],
   () => {},
   displayOptions,
 ]);
@@ -26,7 +26,7 @@ export function DisplayOptionProvider({
 }>) {
   const [displayOptionIndex, setDisplayOptionIndex] = usePersistedState<number>(
     persistedStateKey,
-    0,
+    2,
   );
 
   const displayOption = displayOptions[displayOptionIndex];
