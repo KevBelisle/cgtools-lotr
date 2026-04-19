@@ -6,7 +6,6 @@ import {
   Em,
   Field,
   Flex,
-  Portal,
   Select,
   SelectValueChangeDetails,
   Text,
@@ -70,18 +69,16 @@ function Dropdown({
           <Select.Indicator />
         </Select.IndicatorGroup>
       </Select.Control>
-      <Portal>
-        <Select.Positioner>
-          <Select.Content>
-            {options.items.map((option) => (
-              <Select.Item item={option} key={option.value}>
-                {option.label}
-                <Select.ItemIndicator />
-              </Select.Item>
-            ))}
-          </Select.Content>
-        </Select.Positioner>
-      </Portal>
+      <Select.Positioner>
+        <Select.Content>
+          {options.items.map((option) => (
+            <Select.Item item={option} key={option.value}>
+              {option.label}
+              <Select.ItemIndicator />
+            </Select.Item>
+          ))}
+        </Select.Content>
+      </Select.Positioner>
     </Select.Root>
   );
 }

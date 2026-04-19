@@ -7,12 +7,15 @@ import {
   Container,
   Group,
   IconButton,
+  Popover,
+  Portal,
   SimpleGrid,
 } from "@chakra-ui/react";
-import { ReactNode, useNavigate } from "@tanstack/react-router";
+import { ReactNode, useRouter } from "@tanstack/react-router";
 import { memo, useCallback, useContext } from "react";
 import { LuFilter } from "react-icons/lu";
 import { DisplaySelect } from "../search/display-select";
+import { SearchFilters } from "../search/search";
 import { OrderSelect } from "../search/sort-select";
 import { SearchFilterContext } from "../ui/advanced-filters-provider";
 import { DisplayContext } from "../ui/display-provider";
@@ -57,9 +60,16 @@ export const CardSearch = ({
   //const router = useRouter();
 
   const onChange = useCallback((e: any) => setQuery(e.target.value), []);
-  const navigate = useNavigate();
+  const router = useRouter();
 
-  const [searchFilters] = useContext(SearchFilterContext);
+  const [searchFilters, setSearchFiltersRaw] = useContext(SearchFilterContext);
+  const setSearchFilters: typeof setSearchFiltersRaw = useCallback(
+    (value) => {
+      setSearchFiltersRaw(value);
+      router.invalidate();
+    },
+    [setSearchFiltersRaw, router],
+  );
   const activeFiltersCount = searchFilters.filter(
     (filter) => filter.value !== undefined,
   ).length;
@@ -102,31 +112,48 @@ export const CardSearch = ({
             color={RCOOnlyFilter.checked ? "white" : "sand.200"}
           />
 
-          <IconButton
-            size="lg"
-            variant="subtle"
-            background="transparent"
-            onClick={() =>
-              navigate({ to: "/cards/search/advanced", search: { query } })
-            }
-          >
-            {activeFiltersCount == 0 ? (
-              <LuFilter />
-            ) : (
-              <>
-                <LuFilter />
-                <Badge
-                  size="xs"
-                  position={"absolute"}
-                  top={5}
-                  left={6}
-                  variant="solid"
+          <Popover.Root positioning={{ placement: "bottom-end" }}>
+            <Popover.Trigger asChild>
+              <IconButton
+                size="lg"
+                variant="subtle"
+                background="transparent"
+              >
+                {activeFiltersCount == 0 ? (
+                  <LuFilter />
+                ) : (
+                  <>
+                    <LuFilter />
+                    <Badge
+                      size="xs"
+                      position={"absolute"}
+                      top={5}
+                      left={6}
+                      variant="solid"
+                    >
+                      {activeFiltersCount}
+                    </Badge>
+                  </>
+                )}
+              </IconButton>
+            </Popover.Trigger>
+            <Portal>
+              <Popover.Positioner>
+                <Popover.Content
+                  maxHeight="70vh"
+                  overflowY="auto"
+                  width="sm"
                 >
-                  {activeFiltersCount}
-                </Badge>
-              </>
-            )}
-          </IconButton>
+                  <Popover.Body>
+                    <SearchFilters
+                      searchFilters={searchFilters}
+                      setSearchFilters={setSearchFilters}
+                    />
+                  </Popover.Body>
+                </Popover.Content>
+              </Popover.Positioner>
+            </Portal>
+          </Popover.Root>
           <OrderSelect background="transparent" />
           <DisplaySelect background="transparent" />
         </Group>

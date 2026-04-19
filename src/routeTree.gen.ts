@@ -27,7 +27,6 @@ import { Route as GlossarySearchRouteImport } from './routes/glossary/search/rou
 import { Route as CardsSearchRouteImport } from './routes/cards/search/route'
 import { Route as GlossarySearchIndexImport } from './routes/glossary/search/index'
 import { Route as CardsSearchIndexImport } from './routes/cards/search/index'
-import { Route as CardsSearchAdvancedImport } from './routes/cards/search/advanced'
 
 // Create/Update Routes
 
@@ -124,12 +123,6 @@ const GlossarySearchIndexRoute = GlossarySearchIndexImport.update({
 const CardsSearchIndexRoute = CardsSearchIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => CardsSearchRouteRoute,
-} as any)
-
-const CardsSearchAdvancedRoute = CardsSearchAdvancedImport.update({
-  id: '/advanced',
-  path: '/advanced',
   getParentRoute: () => CardsSearchRouteRoute,
 } as any)
 
@@ -235,13 +228,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RulebooksIndexImport
       parentRoute: typeof rootRoute
     }
-    '/cards/search/advanced': {
-      id: '/cards/search/advanced'
-      path: '/advanced'
-      fullPath: '/cards/search/advanced'
-      preLoaderRoute: typeof CardsSearchAdvancedImport
-      parentRoute: typeof CardsSearchRouteImport
-    }
     '/cards/search/': {
       id: '/cards/search/'
       path: '/'
@@ -284,12 +270,10 @@ const ProductsRouteRouteWithChildren = ProductsRouteRoute._addFileChildren(
 )
 
 interface CardsSearchRouteRouteChildren {
-  CardsSearchAdvancedRoute: typeof CardsSearchAdvancedRoute
   CardsSearchIndexRoute: typeof CardsSearchIndexRoute
 }
 
 const CardsSearchRouteRouteChildren: CardsSearchRouteRouteChildren = {
-  CardsSearchAdvancedRoute: CardsSearchAdvancedRoute,
   CardsSearchIndexRoute: CardsSearchIndexRoute,
 }
 
@@ -322,7 +306,6 @@ export interface FileRoutesByFullPath {
   '/rulebooks/$rulebook': typeof RulebooksRulebookRoute
   '/products/': typeof ProductsIndexRoute
   '/rulebooks': typeof RulebooksIndexRoute
-  '/cards/search/advanced': typeof CardsSearchAdvancedRoute
   '/cards/search/': typeof CardsSearchIndexRoute
   '/glossary/search/': typeof GlossarySearchIndexRoute
 }
@@ -339,7 +322,6 @@ export interface FileRoutesByTo {
   '/rulebooks/$rulebook': typeof RulebooksRulebookRoute
   '/products': typeof ProductsIndexRoute
   '/rulebooks': typeof RulebooksIndexRoute
-  '/cards/search/advanced': typeof CardsSearchAdvancedRoute
   '/cards/search': typeof CardsSearchIndexRoute
   '/glossary/search': typeof GlossarySearchIndexRoute
 }
@@ -360,7 +342,6 @@ export interface FileRoutesById {
   '/rulebooks/$rulebook': typeof RulebooksRulebookRoute
   '/products/': typeof ProductsIndexRoute
   '/rulebooks/': typeof RulebooksIndexRoute
-  '/cards/search/advanced': typeof CardsSearchAdvancedRoute
   '/cards/search/': typeof CardsSearchIndexRoute
   '/glossary/search/': typeof GlossarySearchIndexRoute
 }
@@ -382,7 +363,6 @@ export interface FileRouteTypes {
     | '/rulebooks/$rulebook'
     | '/products/'
     | '/rulebooks'
-    | '/cards/search/advanced'
     | '/cards/search/'
     | '/glossary/search/'
   fileRoutesByTo: FileRoutesByTo
@@ -398,7 +378,6 @@ export interface FileRouteTypes {
     | '/rulebooks/$rulebook'
     | '/products'
     | '/rulebooks'
-    | '/cards/search/advanced'
     | '/cards/search'
     | '/glossary/search'
   id:
@@ -417,7 +396,6 @@ export interface FileRouteTypes {
     | '/rulebooks/$rulebook'
     | '/products/'
     | '/rulebooks/'
-    | '/cards/search/advanced'
     | '/cards/search/'
     | '/glossary/search/'
   fileRoutesById: FileRoutesById
@@ -482,7 +460,6 @@ export const routeTree = rootRoute
     "/cards/search": {
       "filePath": "cards/search/route.tsx",
       "children": [
-        "/cards/search/advanced",
         "/cards/search/"
       ]
     },
@@ -527,10 +504,6 @@ export const routeTree = rootRoute
     },
     "/rulebooks/": {
       "filePath": "rulebooks/index.tsx"
-    },
-    "/cards/search/advanced": {
-      "filePath": "cards/search/advanced.tsx",
-      "parent": "/cards/search"
     },
     "/cards/search/": {
       "filePath": "cards/search/index.tsx",
