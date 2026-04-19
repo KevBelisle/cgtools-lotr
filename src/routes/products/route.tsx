@@ -23,6 +23,7 @@ function RouteComponent() {
     <DisplayOptionProvider
       displayOptions={displayOptionsWithList}
       persistedStateKey="products-display-option"
+      defaultDisplayOption="Card list"
     >
       <Outlet />
     </DisplayOptionProvider>

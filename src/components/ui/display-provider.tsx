@@ -19,17 +19,22 @@ export const DisplayContext = createContext<DisplayContextType>([
 export function DisplayOptionProvider({
   displayOptions,
   persistedStateKey,
+  defaultDisplayOption,
   children,
 }: PropsWithChildren<{
   displayOptions: DisplayOptionType[];
   persistedStateKey: string;
+  defaultDisplayOption?: string;
 }>) {
-  const [displayOptionIndex, setDisplayOptionIndex] = usePersistedState<number>(
+  const fallbackName = defaultDisplayOption ?? displayOptions[2]?.name ?? displayOptions[0]?.name;
+  const [displayOptionName, setDisplayOptionName] = usePersistedState<string>(
     persistedStateKey,
-    2,
+    fallbackName,
   );
 
-  const displayOption = displayOptions[displayOptionIndex];
+  const displayOption =
+    displayOptions.find((o) => o.name === displayOptionName) ??
+    displayOptions[0];
 
   const setDisplayOption: (
     value:
@@ -37,12 +42,14 @@ export function DisplayOptionProvider({
       | ((previousState: DisplayOptionType) => DisplayOptionType),
   ) => void | Promise<void> = (value) => {
     if (typeof value === "function") {
-      setDisplayOptionIndex((prevIndex) => {
-        const newValue = value(displayOptions[prevIndex]);
-        return displayOptions.indexOf(newValue);
+      setDisplayOptionName((prevName) => {
+        const prevOption =
+          displayOptions.find((o) => o.name === prevName) ?? displayOptions[0];
+        const newValue = value(prevOption);
+        return newValue.name;
       });
     } else {
-      setDisplayOptionIndex(displayOptions.indexOf(value));
+      setDisplayOptionName(value.name);
     }
   };
 
